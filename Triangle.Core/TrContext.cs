@@ -7,8 +7,8 @@ namespace Triangle.Core;
 
 public class TrContext(GL gl) : TrObject
 {
-    private readonly List<TrPipeline> _pipelines = [];
-    private readonly List<TrShader> _shaders = [];
+    private List<TrPipeline> _pipelines = [];
+    private List<TrShader> _shaders = [];
 
     public GL GL { get; } = gl;
 
@@ -28,16 +28,22 @@ public class TrContext(GL gl) : TrObject
         return shader;
     }
 
-    protected override void Destroy()
+    protected override void Destroy(bool disposing = false)
     {
-        foreach (TrPipeline pipeline in _pipelines)
+        if (disposing)
         {
-            pipeline.Dispose();
+            foreach (TrPipeline pipeline in _pipelines)
+            {
+                pipeline.Dispose();
+            }
+
+            foreach (TrShader shader in _shaders)
+            {
+                shader.Dispose();
+            }
         }
 
-        foreach (TrShader shader in _shaders)
-        {
-            shader.Dispose();
-        }
+        _pipelines = [];
+        _shaders = [];
     }
 }

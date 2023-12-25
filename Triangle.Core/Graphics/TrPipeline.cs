@@ -11,7 +11,7 @@ public class TrPipeline : TrGraphics<TrContext>
     {
         Shaders = new ReadOnlyCollection<TrShader>(shaders);
 
-        Init();
+        Initialize();
     }
 
     public bool IsDepthTest { get; set; } = true;
@@ -24,7 +24,7 @@ public class TrPipeline : TrGraphics<TrContext>
 
     public ReadOnlyCollection<TrShader> Shaders { get; }
 
-    protected override void Init()
+    protected override void Initialize()
     {
         GL gl = Context.GL;
 
@@ -47,7 +47,7 @@ public class TrPipeline : TrGraphics<TrContext>
         }
     }
 
-    protected override void Destroy()
+    protected override void Destroy(bool disposing = false)
     {
         GL gl = Context.GL;
 

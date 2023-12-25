@@ -9,16 +9,13 @@ public abstract class TrObject : IDisposable
         Dispose(disposing: false);
     }
 
-    protected abstract void Destroy();
+    protected abstract void Destroy(bool disposing = false);
 
     protected virtual void Dispose(bool disposing)
     {
         if (!disposedValue)
         {
-            if (!disposing)
-            {
-                Destroy();
-            }
+            Destroy(disposing);
 
             disposedValue = true;
         }

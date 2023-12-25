@@ -11,5 +11,5 @@ public abstract class TrGraphics<TContext> : TrObject where TContext : TrObject
 
     public uint Handle { get; protected set; }
 
-    protected abstract void Init();
+    protected abstract void Initialize();
 }

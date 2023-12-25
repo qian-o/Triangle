@@ -12,23 +12,23 @@ public class TrShader : TrGraphics<TrContext>
         ShaderType = shaderType;
         Source = source;
 
-        Init();
+        Initialize();
     }
 
     public TrShaderType ShaderType { get; }
 
     public string Source { get; }
 
-    protected override void Init()
+    protected override void Initialize()
     {
         GL gl = Context.GL;
 
         GLEnum shaderType = ShaderType switch
         {
-            Enums.TrShaderType.Vertex => GLEnum.VertexShader,
-            Enums.TrShaderType.Geometry => GLEnum.GeometryShader,
-            Enums.TrShaderType.Fragment => GLEnum.FragmentShader,
-            Enums.TrShaderType.Compute => GLEnum.ComputeShader,
+            TrShaderType.Vertex => GLEnum.VertexShader,
+            TrShaderType.Geometry => GLEnum.GeometryShader,
+            TrShaderType.Fragment => GLEnum.FragmentShader,
+            TrShaderType.Compute => GLEnum.ComputeShader,
             _ => throw new NotSupportedException()
         };
 
@@ -47,7 +47,7 @@ public class TrShader : TrGraphics<TrContext>
         }
     }
 
-    protected override void Destroy()
+    protected override void Destroy(bool disposing = false)
     {
         GL gl = Context.GL;
 
