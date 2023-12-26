@@ -2,14 +2,15 @@
 using Triangle.Core.Contracts;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
+using Triangle.Core.Structs;
 
 namespace Triangle.Core;
 
 public class TrContext(GL gl) : TrObject
 {
-    private List<TrRenderPass> _renderPasses = [];
-    private List<TrPipeline> _pipelines = [];
     private List<TrShader> _shaders = [];
+    private List<TrRenderPipeline> _renderPipelines = [];
+    private List<TrRenderPass> _renderPasses = [];
 
     public GL GL { get; } = gl;
 
@@ -21,15 +22,15 @@ public class TrContext(GL gl) : TrObject
         return shader;
     }
 
-    public TrPipeline CreatePipeline(TrShader[] shaders)
+    public TrRenderPipeline CreateRenderPipeline(TrDescriptor descriptor, IList<TrShader> shaders)
     {
-        TrPipeline pipeline = new(this, shaders);
-        _pipelines.Add(pipeline);
+        TrRenderPipeline renderPipeline = new(this, descriptor, shaders);
+        _renderPipelines.Add(renderPipeline);
 
-        return pipeline;
+        return renderPipeline;
     }
 
-    public TrRenderPass CreateRenderPass(TrRenderLayer renderLayer, TrPipeline[] pipelines)
+    public TrRenderPass CreateRenderPass(TrRenderLayer renderLayer, IList<TrRenderPipeline> pipelines)
     {
         TrRenderPass renderPass = new(this, renderLayer, pipelines);
         _renderPasses.Add(renderPass);
@@ -46,7 +47,7 @@ public class TrContext(GL gl) : TrObject
                 renderPass.Dispose();
             }
 
-            foreach (TrPipeline pipeline in _pipelines)
+            foreach (TrRenderPipeline pipeline in _renderPipelines)
             {
                 pipeline.Dispose();
             }
@@ -58,7 +59,7 @@ public class TrContext(GL gl) : TrObject
         }
 
         _renderPasses = [];
-        _pipelines = [];
+        _renderPipelines = [];
         _shaders = [];
     }
 }

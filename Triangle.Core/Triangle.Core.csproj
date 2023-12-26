@@ -15,15 +15,15 @@
 		<PackageReference Include="Silk.NET.OpenGLES" Version="2.20.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<Folder Include="Helpers\" />
+	</ItemGroup>
+
 	<PropertyGroup>
 		<AnalysisMode>All</AnalysisMode>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<Folder Include="Structs\" />
-	</ItemGroup>
 
 </Project>

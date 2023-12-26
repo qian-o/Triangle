@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triangle.Core", "Triangle.Core\Triangle.Core.csproj", "{035E62B5-AB02-45CF-82A6-5DC9F67717F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Triangle.Core", "Triangle.Core\Triangle.Core.csproj", "{035E62B5-AB02-45CF-82A6-5DC9F67717F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "设计规范", "设计规范", "{90FC6023-C916-4AD3-A172-F06838415FD8}"
+	ProjectSection(SolutionItems) = preProject
+		代码规范.md = 代码规范.md
+		开发文档.md = 开发文档.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
