@@ -12,23 +12,21 @@ public unsafe class TrBuffer : TrGraphics<TrContext>
         Size = size;
         BufferUsage = bufferUsage;
 
+        GL gl = Context.GL;
+
+        Handle = gl.GenBuffer();
+
+        GLEnum @enum = BufferUsage switch
         {
-            GL gl = Context.GL;
+            TrBufferUsage.Static => GLEnum.StaticDraw,
+            TrBufferUsage.Dynamic => GLEnum.DynamicDraw,
+            TrBufferUsage.Stream => GLEnum.StreamDraw,
+            _ => GLEnum.DynamicDraw,
+        };
 
-            Handle = gl.GenBuffer();
-
-            GLEnum @enum = BufferUsage switch
-            {
-                TrBufferUsage.Static => GLEnum.StaticDraw,
-                TrBufferUsage.Dynamic => GLEnum.DynamicDraw,
-                TrBufferUsage.Stream => GLEnum.StreamDraw,
-                _ => GLEnum.DynamicDraw,
-            };
-
-            gl.BindBuffer(GLEnum.ArrayBuffer, Handle);
-            gl.BufferData(GLEnum.ArrayBuffer, Size, null, @enum);
-            gl.BindBuffer(GLEnum.ArrayBuffer, 0);
-        }
+        gl.BindBuffer(GLEnum.ArrayBuffer, Handle);
+        gl.BufferData(GLEnum.ArrayBuffer, Size, null, @enum);
+        gl.BindBuffer(GLEnum.ArrayBuffer, 0);
     }
 
     public uint Size { get; }

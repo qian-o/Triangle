@@ -14,26 +14,24 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
     {
         Descriptor = descriptor;
 
+        GL gl = Context.GL;
+
+        Handle = gl.CreateProgram();
+
+        foreach (TrShader shader in shaders)
         {
-            GL gl = Context.GL;
+            gl.AttachShader(Handle, shader.Handle);
+        }
 
-            Handle = gl.CreateProgram();
+        gl.LinkProgram(Handle);
 
-            foreach (TrShader shader in shaders)
-            {
-                gl.AttachShader(Handle, shader.Handle);
-            }
+        string error = gl.GetProgramInfoLog(Handle);
 
-            gl.LinkProgram(Handle);
+        if (!string.IsNullOrEmpty(error))
+        {
+            gl.DeleteProgram(Handle);
 
-            string error = gl.GetProgramInfoLog(Handle);
-
-            if (!string.IsNullOrEmpty(error))
-            {
-                gl.DeleteProgram(Handle);
-
-                throw new TrException(error);
-            }
+            throw new TrException(error);
         }
     }
 
@@ -242,7 +240,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
         gl.UniformMatrix4(location, 1, false, (float*)&value);
     }
 
-    public void Render()
+    public void Bind()
     {
         GL gl = Context.GL;
 
@@ -301,5 +299,12 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
         gl.BlendEquation((GLEnum)BlendEquation);
 
         gl.ColorMask(IsColorWrite, IsColorWrite, IsColorWrite, IsColorWrite);
+    }
+
+    public void Unbind()
+    {
+        GL gl = Context.GL;
+
+        gl.UseProgram(0);
     }
 }

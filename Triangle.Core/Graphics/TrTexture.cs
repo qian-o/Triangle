@@ -12,21 +12,19 @@ public unsafe class TrTexture : TrGraphics<TrContext>
     {
         IsGenerateMipmap = isGenerateMipmap;
 
-        {
-            GL gl = Context.GL;
+        GL gl = Context.GL;
 
-            Handle = gl.GenTexture();
+        Handle = gl.GenTexture();
 
-            gl.GetFloat((GLEnum)EXT.MaxTextureMaxAnisotropyExt, out float maxAnisotropy);
+        gl.GetFloat((GLEnum)EXT.MaxTextureMaxAnisotropyExt, out float maxAnisotropy);
 
-            gl.BindTexture(GLEnum.Texture2D, Handle);
-            gl.TexParameter(GLEnum.Texture2D, (GLEnum)EXT.MaxTextureMaxAnisotropyExt, maxAnisotropy);
-            gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureMinFilter, (int)(IsGenerateMipmap ? GLEnum.LinearMipmapLinear : GLEnum.Linear));
-            gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureMagFilter, (int)GLEnum.Linear);
-            gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureWrapS, (int)textureWrap);
-            gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureWrapT, (int)textureWrap);
-            gl.BindTexture(GLEnum.Texture2D, 0);
-        }
+        gl.BindTexture(GLEnum.Texture2D, Handle);
+        gl.TexParameter(GLEnum.Texture2D, (GLEnum)EXT.MaxTextureMaxAnisotropyExt, maxAnisotropy);
+        gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureMinFilter, (int)(IsGenerateMipmap ? GLEnum.LinearMipmapLinear : GLEnum.Linear));
+        gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureMagFilter, (int)GLEnum.Linear);
+        gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureWrapS, (int)textureWrap);
+        gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureWrapT, (int)textureWrap);
+        gl.BindTexture(GLEnum.Texture2D, 0);
     }
 
     public bool IsGenerateMipmap { get; } = true;

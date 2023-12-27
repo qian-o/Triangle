@@ -5,11 +5,11 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Triangle.Core", "Triangle.Core\Triangle.Core.csproj", "{035E62B5-AB02-45CF-82A6-5DC9F67717F3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "设计规范", "设计规范", "{90FC6023-C916-4AD3-A172-F06838415FD8}"
-	ProjectSection(SolutionItems) = preProject
-		代码规范.md = 代码规范.md
-		开发文档.md = 开发文档.md
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Triangle.Render", "Triangle.Render\Triangle.Render.csproj", "{8D7AEB4B-D40E-48DE-8AB8-8784D64DD04F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{AFD79CBA-9E25-443C-AE6E-4E21EADA970B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForwardRendering", "ForwardRendering\ForwardRendering.csproj", "{BD84F59F-B83D-4DFB-BE06-7369CCF2A664}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +21,20 @@ Global
 		{035E62B5-AB02-45CF-82A6-5DC9F67717F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{035E62B5-AB02-45CF-82A6-5DC9F67717F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{035E62B5-AB02-45CF-82A6-5DC9F67717F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D7AEB4B-D40E-48DE-8AB8-8784D64DD04F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D7AEB4B-D40E-48DE-8AB8-8784D64DD04F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D7AEB4B-D40E-48DE-8AB8-8784D64DD04F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D7AEB4B-D40E-48DE-8AB8-8784D64DD04F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD84F59F-B83D-4DFB-BE06-7369CCF2A664}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD84F59F-B83D-4DFB-BE06-7369CCF2A664}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD84F59F-B83D-4DFB-BE06-7369CCF2A664}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD84F59F-B83D-4DFB-BE06-7369CCF2A664}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BD84F59F-B83D-4DFB-BE06-7369CCF2A664} = {AFD79CBA-9E25-443C-AE6E-4E21EADA970B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {114F0E19-6A25-4C8B-BF7E-81227EA8E9C9}
