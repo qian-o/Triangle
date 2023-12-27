@@ -1,6 +1,6 @@
 ﻿using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
-using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
 using Triangle.Core.Exceptions;
@@ -10,12 +10,31 @@ namespace Triangle.Core.Graphics;
 
 public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 {
-    internal TrRenderPipeline(TrContext context, TrDescriptor descriptor, IList<TrShader> shaders) : base(context)
+    public TrRenderPipeline(TrContext context, TrDescriptor descriptor, [NotNull] IList<TrShader> shaders) : base(context)
     {
         Descriptor = descriptor;
-        Shaders = new ReadOnlyCollection<TrShader>(shaders);
 
-        Initialize();
+        {
+            GL gl = Context.GL;
+
+            Handle = gl.CreateProgram();
+
+            foreach (TrShader shader in shaders)
+            {
+                gl.AttachShader(Handle, shader.Handle);
+            }
+
+            gl.LinkProgram(Handle);
+
+            string error = gl.GetProgramInfoLog(Handle);
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                gl.DeleteProgram(Handle);
+
+                throw new TrException(error);
+            }
+        }
     }
 
     public bool IsDepthTest { get; set; } = true;
@@ -26,7 +45,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 
     public bool IsStencilTest { get; set; } = true;
 
-    public int StencilMask { get; set; } = 0xFF;
+    public uint StencilMask { get; set; } = 0xFF;
 
     public TrStencilFunction StencilFunction { get; set; } = TrStencilFunction.Always;
 
@@ -50,39 +69,9 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 
     public TrDescriptor Descriptor { get; }
 
-    public ReadOnlyCollection<TrShader> Shaders { get; }
-
-    protected override void Initialize()
-    {
-        GL gl = Context.GL;
-
-        Handle = gl.CreateProgram();
-
-        foreach (TrShader shader in Shaders)
-        {
-            gl.AttachShader(Handle, shader.Handle);
-        }
-
-        gl.LinkProgram(Handle);
-
-        string error = gl.GetProgramInfoLog(Handle);
-
-        if (!string.IsNullOrEmpty(error))
-        {
-            Destroy();
-
-            throw new TrException(error);
-        }
-    }
-
     protected override void Destroy(bool disposing = false)
     {
         GL gl = Context.GL;
-
-        foreach (TrShader shader in Shaders)
-        {
-            gl.DetachShader(Handle, shader.Handle);
-        }
 
         gl.DeleteProgram(Handle);
     }
@@ -177,7 +166,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 IsColorWrite = true;
                 break;
             default:
-                throw new NotSupportedException();
+                throw new NotSupportedException("不支持的渲染层级。");
         }
     }
 
@@ -251,5 +240,66 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
         int location = gl.GetUniformLocation(Handle, name);
 
         gl.UniformMatrix4(location, 1, false, (float*)&value);
+    }
+
+    public void Render()
+    {
+        GL gl = Context.GL;
+
+        gl.UseProgram(Handle);
+
+        if (IsDepthTest)
+        {
+            gl.Enable(EnableCap.DepthTest);
+        }
+        else
+        {
+            gl.Disable(EnableCap.DepthTest);
+        }
+
+        gl.DepthMask(IsDepthWrite);
+
+        gl.DepthFunc((GLEnum)DepthFunction);
+
+        if (IsStencilTest)
+        {
+            gl.Enable(EnableCap.StencilTest);
+        }
+        else
+        {
+            gl.Disable(EnableCap.StencilTest);
+        }
+
+        gl.StencilFunc((GLEnum)StencilFunction, StencilReference, StencilMask);
+
+        gl.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Keep);
+
+        gl.StencilMask((uint)(IsStencilWrite ? 0xFF : 0x00));
+
+        if (IsCullFace)
+        {
+            gl.Enable(EnableCap.CullFace);
+        }
+        else
+        {
+            gl.Disable(EnableCap.CullFace);
+        }
+
+        gl.CullFace((GLEnum)CullFaceMode);
+
+        if (IsBlend)
+        {
+            gl.Enable(EnableCap.Blend);
+        }
+        else
+        {
+            gl.Disable(EnableCap.Blend);
+        }
+
+        gl.BlendFunc((GLEnum)SourceFactor, (GLEnum)DestinationFactor);
+
+        gl.BlendEquation((GLEnum)BlendEquation);
+
+        gl.ColorMask(IsColorWrite, IsColorWrite, IsColorWrite, IsColorWrite);
     }
 }

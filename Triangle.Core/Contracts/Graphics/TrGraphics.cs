@@ -10,6 +10,4 @@ public abstract class TrGraphics<TContext> : TrObject where TContext : TrObject
     public TContext Context { get; }
 
     public uint Handle { get; protected set; }
-
-    protected abstract void Initialize();
 }

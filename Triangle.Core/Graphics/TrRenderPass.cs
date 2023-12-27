@@ -4,23 +4,11 @@ using Triangle.Core.Enums;
 
 namespace Triangle.Core.Graphics;
 
-public class TrRenderPass : TrGraphics<TrContext>
+public class TrRenderPass(TrContext context, TrRenderLayer renderLayer, IList<TrRenderPipeline> pipelines) : TrGraphics<TrContext>(context)
 {
-    internal TrRenderPass(TrContext context, TrRenderLayer renderLayer, IList<TrRenderPipeline> pipelines) : base(context)
-    {
-        RenderLayer = renderLayer;
-        RenderPipelines = new ReadOnlyCollection<TrRenderPipeline>(pipelines);
+    public TrRenderLayer RenderLayer { get; } = renderLayer;
 
-        Initialize();
-    }
-
-    public TrRenderLayer RenderLayer { get; }
-
-    public ReadOnlyCollection<TrRenderPipeline> RenderPipelines { get; }
-
-    protected override void Initialize()
-    {
-    }
+    public ReadOnlyCollection<TrRenderPipeline> RenderPipelines { get; } = new ReadOnlyCollection<TrRenderPipeline>(pipelines);
 
     protected override void Destroy(bool disposing = false)
     {

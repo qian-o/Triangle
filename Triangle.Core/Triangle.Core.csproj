@@ -13,10 +13,7 @@
 		</PackageReference>
 		<PackageReference Include="Silk.NET.Maths" Version="2.20.0" />
 		<PackageReference Include="Silk.NET.OpenGLES" Version="2.20.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Helpers\" />
+		<PackageReference Include="Silk.NET.OpenGLES.Extensions.EXT" Version="2.20.0" />
 	</ItemGroup>
 
 	<PropertyGroup>

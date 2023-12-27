@@ -7,43 +7,33 @@ namespace Triangle.Core.Graphics;
 
 public class TrShader : TrGraphics<TrContext>
 {
-    internal TrShader(TrContext context, TrShaderType shaderType, string source) : base(context)
+    public TrShader(TrContext context, TrShaderType shaderType, string source) : base(context)
     {
-        ShaderType = shaderType;
-        Source = source;
-
-        Initialize();
-    }
-
-    public TrShaderType ShaderType { get; }
-
-    public string Source { get; }
-
-    protected override void Initialize()
-    {
-        GL gl = Context.GL;
-
-        GLEnum shaderType = ShaderType switch
         {
-            TrShaderType.Vertex => GLEnum.VertexShader,
-            TrShaderType.Geometry => GLEnum.GeometryShader,
-            TrShaderType.Fragment => GLEnum.FragmentShader,
-            TrShaderType.Compute => GLEnum.ComputeShader,
-            _ => throw new NotSupportedException()
-        };
+            GL gl = Context.GL;
 
-        Handle = gl.CreateShader(shaderType);
+            GLEnum @enum = shaderType switch
+            {
+                TrShaderType.Vertex => GLEnum.VertexShader,
+                TrShaderType.Geometry => GLEnum.GeometryShader,
+                TrShaderType.Fragment => GLEnum.FragmentShader,
+                TrShaderType.Compute => GLEnum.ComputeShader,
+                _ => throw new NotSupportedException("不支持的着色器类型。")
+            };
 
-        gl.ShaderSource(Handle, Source);
-        gl.CompileShader(Handle);
+            Handle = gl.CreateShader(@enum);
 
-        string error = gl.GetShaderInfoLog(Handle);
+            gl.ShaderSource(Handle, source);
+            gl.CompileShader(Handle);
 
-        if (!string.IsNullOrEmpty(error))
-        {
-            Destroy();
+            string error = gl.GetShaderInfoLog(Handle);
 
-            throw new TrException($"{shaderType}: {error}");
+            if (!string.IsNullOrEmpty(error))
+            {
+                gl.DeleteShader(Handle);
+
+                throw new TrException($"{shaderType}: {error}");
+            }
         }
     }
 
