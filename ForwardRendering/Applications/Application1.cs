@@ -1,31 +1,65 @@
 ﻿using Common;
 using Common.Contracts;
+using ForwardRendering.Materials;
 using Silk.NET.Maths;
+using Silk.NET.OpenGLES;
 using Silk.NET.Windowing;
+using System.Diagnostics.CodeAnalysis;
 using Triangle.Core;
+using Triangle.Core.Graphics;
+using Triangle.Render.Graphics;
+using Triangle.Render.Helpers;
 
 namespace ForwardRendering.Applications;
 
 public class Application1 : IApplication
 {
-    private IWindow _window = null!;
-    private TrContext _context = null!;
-    private Camera _camera = null!;
+    #region IDisposable
+    private bool disposedValue;
+    #endregion
 
-    public void Initialize(IWindow window, TrContext context, Camera camera)
+    #region Graphics
+    private SimpleMat simpleMat = null!;
+
+    private TrMesh cube = null!;
+    #endregion
+
+    ~Application1()
     {
-        _window = window;
-        _context = context;
-        _camera = camera;
+        Dispose(disposing: false);
+    }
+
+    public IWindow Window { get; private set; } = null!;
+
+    public TrContext Context { get; private set; } = null!;
+
+    public void Initialize(IWindow window, TrContext context)
+    {
+        Window = window;
+        Context = context;
+
+        simpleMat = new(Context);
+
+        cube = TrMeshFactory.CreateCube(Context, 0.5f);
     }
 
     public void Update(double deltaSeconds)
     {
     }
 
-    public void Render(double deltaSeconds)
+    public void Render([NotNull] Camera camera, [NotNull] TrFrame frame, double deltaSeconds)
     {
+        GL gl = Context.GL;
+
+        frame.Bind();
+
+        gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
+
+        simpleMat.Draw(cube, camera);
+
+        frame.Unbind();
     }
+
     public void ImGui()
     {
     }
@@ -34,7 +68,23 @@ public class Application1 : IApplication
     {
     }
 
-    public void Destroy()
+    protected virtual void Dispose(bool disposing)
     {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                cube.Dispose();
+                simpleMat.Dispose();
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

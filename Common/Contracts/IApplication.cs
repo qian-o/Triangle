@@ -1,20 +1,23 @@
 ﻿using Silk.NET.Maths;
 using Silk.NET.Windowing;
 using Triangle.Core;
+using Triangle.Core.Graphics;
 
 namespace Common.Contracts;
 
-public interface IApplication
+public interface IApplication : IDisposable
 {
-    void Initialize(IWindow window, TrContext context, Camera camera);
+    public IWindow Window { get; }
+
+    public TrContext Context { get; }
+
+    void Initialize(IWindow window, TrContext context);
 
     void Update(double deltaSeconds);
 
-    void Render(double deltaSeconds);
+    void Render(Camera camera, TrFrame frame, double deltaSeconds);
 
     void Resize(Vector2D<int> size);
 
     void ImGui();
-
-    void Destroy();
 }

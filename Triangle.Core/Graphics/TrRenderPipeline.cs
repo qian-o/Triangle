@@ -4,16 +4,13 @@ using System.Diagnostics.CodeAnalysis;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
 using Triangle.Core.Exceptions;
-using Triangle.Core.Structs;
 
 namespace Triangle.Core.Graphics;
 
 public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 {
-    public TrRenderPipeline(TrContext context, TrDescriptor descriptor, [NotNull] IList<TrShader> shaders) : base(context)
+    public TrRenderPipeline(TrContext context, [NotNull] IList<TrShader> shaders) : base(context)
     {
-        Descriptor = descriptor;
-
         GL gl = Context.GL;
 
         Handle = gl.CreateProgram();
@@ -65,13 +62,25 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 
     public bool IsColorWrite { get; set; } = true;
 
-    public TrDescriptor Descriptor { get; }
-
     protected override void Destroy(bool disposing = false)
     {
         GL gl = Context.GL;
 
         gl.DeleteProgram(Handle);
+    }
+
+    public int GetAttribLocation(string name)
+    {
+        GL gl = Context.GL;
+
+        return gl.GetAttribLocation(Handle, name);
+    }
+
+    public int GetUniformLocation(string name)
+    {
+        GL gl = Context.GL;
+
+        return gl.GetUniformLocation(Handle, name);
     }
 
     public void SetRenderLayer(TrRenderLayer renderLayer)
@@ -172,72 +181,56 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
     {
         GL gl = Context.GL;
 
-        int location = gl.GetUniformLocation(Handle, name);
-
-        gl.Uniform1(location, value);
+        gl.Uniform1(GetUniformLocation(name), value);
     }
 
     public void SetUniform(string name, float value)
     {
         GL gl = Context.GL;
 
-        int location = gl.GetUniformLocation(Handle, name);
-
-        gl.Uniform1(location, value);
+        gl.Uniform1(GetUniformLocation(name), value);
     }
 
     public void SetUniform(string name, Vector2D<float> value)
     {
         GL gl = Context.GL;
 
-        int location = gl.GetUniformLocation(Handle, name);
-
-        gl.Uniform2(location, value.X, value.Y);
+        gl.Uniform2(GetUniformLocation(name), value.X, value.Y);
     }
 
     public void SetUniform(string name, Vector3D<float> value)
     {
         GL gl = Context.GL;
 
-        int location = gl.GetUniformLocation(Handle, name);
-
-        gl.Uniform3(location, value.X, value.Y, value.Z);
+        gl.Uniform3(GetUniformLocation(name), value.X, value.Y, value.Z);
     }
 
     public void SetUniform(string name, Vector4D<float> value)
     {
         GL gl = Context.GL;
 
-        int location = gl.GetUniformLocation(Handle, name);
-
-        gl.Uniform4(location, value.X, value.Y, value.Z, value.W);
+        gl.Uniform4(GetUniformLocation(name), value.X, value.Y, value.Z, value.W);
     }
 
     public void SetUniform(string name, Matrix2X2<float> value)
     {
         GL gl = Context.GL;
 
-        int location = gl.GetUniformLocation(Handle, name);
-
-        gl.UniformMatrix2(location, 1, false, (float*)&value);
+        gl.UniformMatrix2(GetUniformLocation(name), 1, false, (float*)&value);
     }
 
     public void SetUniform(string name, Matrix3X3<float> value)
     {
         GL gl = Context.GL;
 
-        int location = gl.GetUniformLocation(Handle, name);
-
-        gl.UniformMatrix3(location, 1, false, (float*)&value);
+        gl.UniformMatrix3(GetUniformLocation(name), 1, false, (float*)&value);
     }
 
     public void SetUniform(string name, Matrix4X4<float> value)
     {
         GL gl = Context.GL;
 
-        int location = gl.GetUniformLocation(Handle, name);
-
-        gl.UniformMatrix4(location, 1, false, (float*)&value);
+        gl.UniformMatrix4(GetUniformLocation(name), 1, false, (float*)&value);
     }
 
     public void Bind()

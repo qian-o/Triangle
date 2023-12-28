@@ -3,21 +3,21 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Triangle.Render.Structs;
 
-public readonly struct TrVertex(Vector3D<float> position, Vector3D<float> normal, Vector2D<float> texCoords, Vector3D<float> tangent, Vector3D<float> bitangent) : IEquatable<TrVertex>
+public struct TrVertex(Vector3D<float> position = default, Vector3D<float> normal = default, Vector2D<float> texCoord = default, Vector3D<float> tangent = default, Vector3D<float> bitangent = default) : IEquatable<TrVertex>
 {
-    public Vector3D<float> Position { get; } = position;
+    public Vector3D<float> Position = position;
 
-    public Vector3D<float> Normal { get; } = normal;
+    public Vector3D<float> Normal = normal;
 
-    public Vector2D<float> TexCoords { get; } = texCoords;
+    public Vector2D<float> TexCoord = texCoord;
 
-    public Vector3D<float> Tangent { get; } = tangent;
+    public Vector3D<float> Tangent = tangent;
 
-    public Vector3D<float> Bitangent { get; } = bitangent;
+    public Vector3D<float> Bitangent = bitangent;
 
     public override readonly int GetHashCode()
     {
-        return HashCode.Combine(Position, Normal, TexCoords, Tangent, Bitangent);
+        return HashCode.Combine(Position, Normal, TexCoord, Tangent, Bitangent);
     }
 
     public override readonly bool Equals([NotNullWhen(true)] object? obj)
@@ -29,7 +29,7 @@ public readonly struct TrVertex(Vector3D<float> position, Vector3D<float> normal
     {
         return Position.Equals(other.Position)
                && Normal.Equals(other.Normal)
-               && TexCoords.Equals(other.TexCoords)
+               && TexCoord.Equals(other.TexCoord)
                && Tangent.Equals(other.Tangent)
                && Bitangent.Equals(other.Bitangent);
     }

@@ -11,6 +11,15 @@
 		<ProjectReference Include="..\Common\Common.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Update="Resources\Shaders\SimpleShader.frag">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Resources\Shaders\SimpleShader.vert">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
 	<PropertyGroup>
 		<AnalysisMode>All</AnalysisMode>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>

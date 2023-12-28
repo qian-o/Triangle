@@ -8,12 +8,12 @@ using Silk.NET.Windowing;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Triangle.Core;
+using Triangle.Core.Graphics;
 
 namespace Common;
 
 public unsafe class Rendering : IDisposable
 {
-    private readonly IApplication _application;
     private readonly IWindow _window;
 
     #region IDisposable
@@ -27,6 +27,7 @@ public unsafe class Rendering : IDisposable
     private ImGuiController imGuiController = null!;
     private Camera camera = null!;
     private string renderer = string.Empty;
+    private TrFrame frame = null!;
     #endregion
 
     #region Input
@@ -43,7 +44,7 @@ public unsafe class Rendering : IDisposable
 
     public Rendering([NotNull] IApplication application)
     {
-        _application = application;
+        Application = application;
 
         WindowOptions windowOptions = WindowOptions.Default;
         windowOptions.API = new GraphicsAPI(ContextAPI.OpenGLES, new APIVersion(3, 2));
@@ -66,6 +67,8 @@ public unsafe class Rendering : IDisposable
         Dispose(disposing: false);
     }
 
+    public IApplication Application { get; }
+
     private void OnLoad()
     {
         gl = _window.CreateOpenGLES();
@@ -78,11 +81,12 @@ public unsafe class Rendering : IDisposable
             Fov = 45.0f
         };
         renderer = Marshal.PtrToStringAnsi((nint)gl.GetString(GLEnum.Renderer))!;
+        frame = new TrFrame(trContext, true);
 
         mouse = inputContext.Mice[0];
         keyboard = inputContext.Keyboards[0];
 
-        _application.Initialize(_window, trContext, camera);
+        Application.Initialize(_window, trContext);
     }
 
     private void OnUpdate(double deltaSeconds)
@@ -146,14 +150,15 @@ public unsafe class Rendering : IDisposable
         camera.Width = _window.Size.X;
         camera.Height = _window.Size.Y;
 
-        _application.Update(deltaSeconds);
+        Application.Update(deltaSeconds);
     }
 
     private void OnRender(double deltaSeconds)
     {
         gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
 
-        _application.Render(deltaSeconds);
+        frame.Update(_window.Size.X, _window.Size.Y);
+        Application.Render(camera, frame, deltaSeconds);
 
         imGuiController.Update((float)deltaSeconds);
 
@@ -167,14 +172,14 @@ public unsafe class Rendering : IDisposable
         ImGui.DragFloat("Camera Sensitivity", ref cameraSensitivity, 0.2f, 0.2f, 10.0f);
         ImGui.End();
 
-        _application.ImGui();
+        Application.ImGui();
 
         imGuiController.Render();
     }
 
     private void OnFramebufferResize(Vector2D<int> size)
     {
-        _application.Resize(size);
+        Application.Resize(size);
     }
 
     private void OnClosing()
@@ -190,8 +195,7 @@ public unsafe class Rendering : IDisposable
         {
             if (disposing)
             {
-                _application.Destroy();
-
+                frame.Dispose();
                 imGuiController.Dispose();
                 trContext.Dispose();
                 inputContext.Dispose();

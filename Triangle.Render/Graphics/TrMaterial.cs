@@ -6,12 +6,11 @@ namespace Triangle.Render.Graphics;
 
 public abstract class TrMaterial : TrGraphics<TrContext>
 {
-    protected TrMaterial(TrContext context, TrRenderPass renderPass) : base(context)
+    protected TrMaterial(TrContext context) : base(context)
     {
-        RenderPass = renderPass;
     }
 
-    public TrRenderPass RenderPass { get; }
+    public TrRenderPass? RenderPass { get; protected set; }
 
-    public abstract void Draw(TrMesh mesh);
+    public abstract void Draw(TrMesh mesh, params object[] args);
 }
