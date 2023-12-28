@@ -49,21 +49,21 @@ public unsafe class TrFrame : TrGraphics<TrContext>
 
     public void Update(int width, int height)
     {
-        if (Handle == 0)
+        if (Width == width && Height == height)
         {
             return;
         }
 
-        if (Width == width && Height == height)
+        Width = width;
+        Height = height;
+
+        if (Handle == 0)
         {
             return;
         }
 
         GL gl = Context.GL;
         ExtMultisampledRenderToTexture? mrt = Context.MRT;
-
-        Width = width;
-        Height = height;
 
         gl.BindTexture(GLEnum.Texture2D, ColorBuffer);
         gl.TexImage2D(GLEnum.Texture2D, 0, (int)GLEnum.Rgb, (uint)Width, (uint)Height, 0, GLEnum.Rgb, GLEnum.UnsignedByte, null);
