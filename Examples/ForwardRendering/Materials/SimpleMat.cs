@@ -12,9 +12,7 @@ namespace ForwardRendering.Materials;
 
 public unsafe class SimpleMat : TrMaterial
 {
-#pragma warning disable CA2213
     private readonly TrRenderPipeline renderPipeline;
-#pragma warning restore CA2213
 
     public SimpleMat(TrContext context) : base(context)
     {
