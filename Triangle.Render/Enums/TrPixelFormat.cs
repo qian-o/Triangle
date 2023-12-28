@@ -1,4 +1,4 @@
-﻿namespace Triangle.Core.Enums;
+﻿namespace Triangle.Render.Enums;
 
 public enum TrPixelFormat
 {

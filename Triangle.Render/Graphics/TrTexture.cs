@@ -1,10 +1,12 @@
 ﻿using Silk.NET.OpenGLES;
 using Silk.NET.OpenGLES.Extensions.EXT;
+using Triangle.Core;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
-using Triangle.Core.Helpers;
+using Triangle.Render.Enums;
+using Triangle.Render.Helpers;
 
-namespace Triangle.Core.Graphics;
+namespace Triangle.Render.Graphics;
 
 public unsafe class TrTexture : TrGraphics<TrContext>
 {
