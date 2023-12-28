@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Triangle.Render", "Triangle
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{AFD79CBA-9E25-443C-AE6E-4E21EADA970B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{AF4DE868-D334-4E34-8BA7-3F62563408D0}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForwardRendering", "ForwardRendering\ForwardRendering.csproj", "{BD84F59F-B83D-4DFB-BE06-7369CCF2A664}"
 EndProject
 Global
@@ -25,6 +27,10 @@ Global
 		{8D7AEB4B-D40E-48DE-8AB8-8784D64DD04F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D7AEB4B-D40E-48DE-8AB8-8784D64DD04F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D7AEB4B-D40E-48DE-8AB8-8784D64DD04F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF4DE868-D334-4E34-8BA7-3F62563408D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF4DE868-D334-4E34-8BA7-3F62563408D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF4DE868-D334-4E34-8BA7-3F62563408D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF4DE868-D334-4E34-8BA7-3F62563408D0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BD84F59F-B83D-4DFB-BE06-7369CCF2A664}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BD84F59F-B83D-4DFB-BE06-7369CCF2A664}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD84F59F-B83D-4DFB-BE06-7369CCF2A664}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -34,6 +40,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{AF4DE868-D334-4E34-8BA7-3F62563408D0} = {AFD79CBA-9E25-443C-AE6E-4E21EADA970B}
 		{BD84F59F-B83D-4DFB-BE06-7369CCF2A664} = {AFD79CBA-9E25-443C-AE6E-4E21EADA970B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
