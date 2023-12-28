@@ -13,7 +13,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Triangle.Render\Triangle.Render.csproj" />
+		<ProjectReference Include="..\..\Source\Triangle.Render\Triangle.Render.csproj" />
 	</ItemGroup>
 
 	<PropertyGroup>
