@@ -2,6 +2,7 @@
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
 using Triangle.Core.Exceptions;
+using Triangle.Core.Helpers;
 
 namespace Triangle.Core.Graphics;
 
@@ -11,16 +12,7 @@ public class TrShader : TrGraphics<TrContext>
     {
         GL gl = Context.GL;
 
-        GLEnum @enum = shaderType switch
-        {
-            TrShaderType.Vertex => GLEnum.VertexShader,
-            TrShaderType.Geometry => GLEnum.GeometryShader,
-            TrShaderType.Fragment => GLEnum.FragmentShader,
-            TrShaderType.Compute => GLEnum.ComputeShader,
-            _ => throw new NotSupportedException("不支持的着色器类型。")
-        };
-
-        Handle = gl.CreateShader(@enum);
+        Handle = gl.CreateShader(shaderType.ToGL());
 
         gl.ShaderSource(Handle, source);
         gl.CompileShader(Handle);

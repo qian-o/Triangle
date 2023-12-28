@@ -2,34 +2,31 @@
 using System.Diagnostics.CodeAnalysis;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
+using Triangle.Core.Exceptions;
+using Triangle.Core.Helpers;
 
 namespace Triangle.Core.Graphics;
 
-public unsafe class TrBuffer : TrGraphics<TrContext>
+public unsafe class TrBuffer<TDataType> : TrGraphics<TrContext> where TDataType : unmanaged
 {
-    public TrBuffer(TrContext context, TrBufferUsage bufferUsage, uint size) : base(context)
+    public TrBuffer(TrContext context, TrBufferTarget bufferTarget, TrBufferUsage bufferUsage, uint length) : base(context)
     {
-        Size = size;
+        Length = length;
+        BufferTarget = bufferTarget;
         BufferUsage = bufferUsage;
 
         GL gl = Context.GL;
 
         Handle = gl.GenBuffer();
 
-        GLEnum @enum = BufferUsage switch
-        {
-            TrBufferUsage.Static => GLEnum.StaticDraw,
-            TrBufferUsage.Dynamic => GLEnum.DynamicDraw,
-            TrBufferUsage.Stream => GLEnum.StreamDraw,
-            _ => GLEnum.DynamicDraw,
-        };
-
-        gl.BindBuffer(GLEnum.ArrayBuffer, Handle);
-        gl.BufferData(GLEnum.ArrayBuffer, Size, null, @enum);
-        gl.BindBuffer(GLEnum.ArrayBuffer, 0);
+        gl.BindBuffer(BufferTarget.ToGL(), Handle);
+        gl.BufferData(BufferTarget.ToGL(), (uint)(Length * sizeof(TDataType)), null, BufferUsage.ToGL());
+        gl.BindBuffer(BufferTarget.ToGL(), 0);
     }
 
-    public uint Size { get; }
+    public uint Length { get; }
+
+    public TrBufferTarget BufferTarget { get; }
 
     public TrBufferUsage BufferUsage { get; }
 
@@ -40,38 +37,42 @@ public unsafe class TrBuffer : TrGraphics<TrContext>
         gl.DeleteBuffer(Handle);
     }
 
-    public void SetData<T>([NotNull] T[] data, uint offset = 0) where T : unmanaged
+    public void SetData([NotNull] TDataType[] data, uint offset = 0)
     {
-        GL gl = Context.GL;
+        if (data.Length != Length)
+        {
+            throw new TrException("数据长度必须等于缓冲区长度。");
+        }
 
-        gl.BindBuffer(GLEnum.ArrayBuffer, Handle);
-        gl.BufferSubData<T>(GLEnum.ArrayBuffer, (int)(offset * sizeof(T)), (uint)(data.Length * sizeof(T)), data);
-        gl.BindBuffer(GLEnum.ArrayBuffer, 0);
+        fixed (TDataType* dataPtr = data)
+        {
+            SetData(dataPtr, offset);
+        }
     }
 
-    public void SetData<T>(T* data, int length, uint offset = 0) where T : unmanaged
+    public void SetData(TDataType* data, uint offset = 0)
     {
         GL gl = Context.GL;
 
-        gl.BindBuffer(GLEnum.ArrayBuffer, Handle);
-        gl.BufferSubData(GLEnum.ArrayBuffer, (int)(offset * sizeof(T)), (uint)(length * sizeof(T)), data);
-        gl.BindBuffer(GLEnum.ArrayBuffer, 0);
+        gl.BindBuffer(BufferTarget.ToGL(), Handle);
+        gl.BufferSubData(BufferTarget.ToGL(), (int)(offset * sizeof(TDataType)), (uint)(Length * sizeof(TDataType)), data);
+        gl.BindBuffer(BufferTarget.ToGL(), 0);
     }
 
-    public T[] GetData<T>(int length) where T : unmanaged
+    public TDataType[] GetData()
     {
         GL gl = Context.GL;
 
-        T[] result = new T[length];
+        TDataType[] result = new TDataType[Length];
 
-        gl.BindBuffer(GLEnum.ArrayBuffer, Handle);
-        void* mapBuffer = gl.MapBufferRange(GLEnum.ArrayBuffer, 0, (uint)(length * sizeof(T)), (uint)GLEnum.MapReadBit);
+        gl.BindBuffer(BufferTarget.ToGL(), Handle);
+        void* mapBuffer = gl.MapBufferRange(BufferTarget.ToGL(), 0, (uint)(Length * sizeof(TDataType)), (uint)GLEnum.MapReadBit);
 
-        Span<T> resultSpan = new(mapBuffer, length);
+        Span<TDataType> resultSpan = new(mapBuffer, (int)Length);
         resultSpan.CopyTo(result);
 
-        gl.UnmapBuffer(GLEnum.ArrayBuffer);
-        gl.BindBuffer(GLEnum.ArrayBuffer, 0);
+        gl.UnmapBuffer(BufferTarget.ToGL());
+        gl.BindBuffer(BufferTarget.ToGL(), 0);
 
         return result;
     }
