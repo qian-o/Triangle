@@ -1,10 +1,12 @@
 ﻿using Common;
 using Common.Contracts;
 using ForwardRendering.Materials;
+using ImGuiNET;
 using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
 using Silk.NET.Windowing;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using Triangle.Core;
 using Triangle.Core.Graphics;
 using Triangle.Render.Graphics;
@@ -60,8 +62,15 @@ public class Application1 : IApplication
         frame.Unbind();
     }
 
-    public void ImGui()
+    public void DrawImGui()
     {
+        ImGui.Begin("Application1");
+
+        Vector4 color = simpleMat.Color.ToSystem();
+        ImGui.ColorEdit4("SimpleMat.Color", ref color);
+        simpleMat.Color = color.ToGeneric();
+
+        ImGui.End();
     }
 
     public void Resize(Vector2D<int> size)

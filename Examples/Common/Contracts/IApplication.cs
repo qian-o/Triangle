@@ -17,7 +17,7 @@ public interface IApplication : IDisposable
 
     void Render(Camera camera, TrFrame frame, double deltaSeconds);
 
-    void Resize(Vector2D<int> size);
+    void DrawImGui();
 
-    void ImGui();
+    void Resize(Vector2D<int> size);
 }

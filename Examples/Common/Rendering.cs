@@ -172,7 +172,7 @@ public unsafe class Rendering : IDisposable
         ImGui.DragFloat("Camera Sensitivity", ref cameraSensitivity, 0.2f, 0.2f, 10.0f);
         ImGui.End();
 
-        Application.ImGui();
+        Application.DrawImGui();
 
         imGuiController.Render();
     }
