@@ -30,17 +30,9 @@ public class Application1 : BaseApplication
     private Vector3D<float> scale = new(1.0f, 1.0f, 1.0f);
     #endregion
 
-    public IWindow Window { get; private set; } = null!;
-
-    public TrContext Context { get; private set; } = null!;
-
-    public Camera Camera { get; private set; } = null!;
-
     public override void Initialize(IWindow window, TrContext context, Camera camera)
     {
-        Window = window;
-        Context = context;
-        Camera = camera;
+        base.Initialize(window, context, camera);
 
         simpleMat = new(Context);
 

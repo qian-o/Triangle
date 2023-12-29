@@ -14,7 +14,18 @@ public abstract class BaseApplication : IApplication
         Dispose(disposing: false);
     }
 
-    public abstract void Initialize(IWindow window, TrContext context, Camera camera);
+    public IWindow Window { get; private set; } = null!;
+
+    public TrContext Context { get; private set; } = null!;
+
+    public Camera Camera { get; private set; } = null!;
+
+    public virtual void Initialize(IWindow window, TrContext context, Camera camera)
+    {
+        Window = window;
+        Context = context;
+        Camera = camera;
+    }
 
     public abstract void Update(double deltaSeconds);
 
