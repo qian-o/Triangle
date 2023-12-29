@@ -83,7 +83,8 @@ public class Application1 : BaseApplication
 
     protected override void Destroy(bool disposing = false)
     {
-        cube.Dispose();
         simpleMat.Dispose();
+
+        cube.Dispose();
     }
 }

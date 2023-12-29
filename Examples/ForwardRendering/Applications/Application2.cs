@@ -70,5 +70,10 @@ public class Application2 : BaseApplication
 
     protected override void Destroy(bool disposing = false)
     {
+        gridMat.Dispose();
+        simpleMat.Dispose();
+
+        grid.Dispose();
+        cube.Dispose();
     }
 }
