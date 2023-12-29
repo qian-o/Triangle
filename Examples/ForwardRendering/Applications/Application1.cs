@@ -14,42 +14,44 @@ using Triangle.Render.Helpers;
 
 namespace ForwardRendering.Applications;
 
-public class Application1 : IApplication
+public class Application1 : BaseApplication
 {
-    #region IDisposable
-    private bool disposedValue;
-    #endregion
-
-    #region Graphics
-    private SimpleMat simpleMat = null!;
-
+    #region Meshes
     private TrMesh cube = null!;
     #endregion
 
-    ~Application1()
-    {
-        Dispose(disposing: false);
-    }
+    #region Materials
+    private SimpleMat simpleMat = null!;
+    #endregion
+
+    #region Transform
+    private Vector3D<float> translation = new(0.0f, 0.0f, 0.0f);
+    private Vector3D<float> rotation = new(0.0f, 0.0f, 0.0f);
+    private Vector3D<float> scale = new(1.0f, 1.0f, 1.0f);
+    #endregion
 
     public IWindow Window { get; private set; } = null!;
 
     public TrContext Context { get; private set; } = null!;
 
-    public void Initialize(IWindow window, TrContext context)
+    public Camera Camera { get; private set; } = null!;
+
+    public override void Initialize(IWindow window, TrContext context, Camera camera)
     {
         Window = window;
         Context = context;
+        Camera = camera;
 
         simpleMat = new(Context);
 
         cube = TrMeshFactory.CreateCube(Context, 0.5f);
     }
 
-    public void Update(double deltaSeconds)
+    public override void Update(double deltaSeconds)
     {
     }
 
-    public void Render([NotNull] Camera camera, [NotNull] TrFrame frame, double deltaSeconds)
+    public override void Render([NotNull] TrFrame frame, double deltaSeconds)
     {
         GL gl = Context.GL;
 
@@ -57,43 +59,41 @@ public class Application1 : IApplication
 
         gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
 
-        simpleMat.Draw(cube, camera);
+        simpleMat.Draw(cube, Camera, Matrix4X4.CreateScale(scale) * Matrix4X4.CreateTranslation(translation));
 
         frame.Unbind();
     }
 
-    public void DrawImGui()
+    public override void DrawImGui()
     {
-        ImGui.Begin("Application1");
+        Vector3 v1 = translation.ToSystem();
+        ImGui.DragFloat3("Translation", ref v1, 0.01f);
+        translation = v1.ToGeneric();
 
-        Vector4 color = simpleMat.Color.ToSystem();
-        ImGui.ColorEdit4("SimpleMat.Color", ref color);
-        simpleMat.Color = color.ToGeneric();
+        Vector3 v2 = rotation.ToSystem();
+        ImGui.DragFloat3("Rotation", ref v2, 0.01f);
+        rotation = v2.ToGeneric();
 
-        ImGui.End();
+        Vector3 v3 = scale.ToSystem();
+        ImGui.DragFloat3("Scale", ref v3, 0.01f);
+        scale = v3.ToGeneric();
+
+        Vector4 v4 = simpleMat.Color.ToSystem();
+        ImGui.ColorEdit4("SimpleMat.Color", ref v4);
+        simpleMat.Color = v4.ToGeneric();
     }
 
-    public void Resize(Vector2D<int> size)
+    public override void WindowResize(Vector2D<int> size)
     {
     }
 
-    protected virtual void Dispose(bool disposing)
+    public override void FramebufferResize(Vector2D<int> size)
     {
-        if (!disposedValue)
-        {
-            if (disposing)
-            {
-                cube.Dispose();
-                simpleMat.Dispose();
-            }
-
-            disposedValue = true;
-        }
     }
 
-    public void Dispose()
+    protected override void Destroy(bool disposing = false)
     {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
+        cube.Dispose();
+        simpleMat.Dispose();
     }
 }

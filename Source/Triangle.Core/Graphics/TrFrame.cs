@@ -45,6 +45,11 @@ public unsafe class TrFrame : TrGraphics<TrContext>
 
     protected override void Destroy(bool disposing = false)
     {
+        GL gl = Context.GL;
+
+        gl.DeleteFramebuffer(Handle);
+        gl.DeleteTexture(ColorBuffer);
+        gl.DeleteRenderbuffer(DepthStencilBuffer);
     }
 
     public void Update(int width, int height)

@@ -29,12 +29,13 @@ public unsafe class SimpleMat : TrMaterial
 
     public override void Draw([NotNull] TrMesh mesh, params object[] args)
     {
-        if (args == null || args.Length == 0)
+        if (args == null || args.Length != 2)
         {
             return;
         }
 
         Camera camera = (Camera)args[0];
+        Matrix4X4<float> model = (Matrix4X4<float>)args[1];
 
         GL gl = Context.GL;
 
@@ -46,7 +47,7 @@ public unsafe class SimpleMat : TrMaterial
             mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Normal"), 3, nameof(TrVertex.Normal));
             mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_TexCoord"), 2, nameof(TrVertex.TexCoord));
 
-            renderPipeline.SetUniform("Uni_Model", Matrix4X4<float>.Identity);
+            renderPipeline.SetUniform("Uni_Model", model);
             renderPipeline.SetUniform("Uni_View", camera.View);
             renderPipeline.SetUniform("Uni_Projection", camera.Projection);
             renderPipeline.SetUniform("Uni_Color", Color);

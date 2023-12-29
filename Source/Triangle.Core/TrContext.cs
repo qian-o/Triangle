@@ -22,5 +22,9 @@ public class TrContext : TrObject
 
     protected override void Destroy(bool disposing = false)
     {
+        if (disposing)
+        {
+            MRT?.Dispose();
+        }
     }
 }
