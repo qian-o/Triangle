@@ -1,5 +1,6 @@
 ﻿using Silk.NET.Maths;
 using Silk.NET.Windowing;
+using System.Diagnostics.CodeAnalysis;
 using Triangle.Core;
 using Triangle.Core.Graphics;
 
@@ -20,7 +21,7 @@ public abstract class BaseApplication : IApplication
 
     public Camera Camera { get; private set; } = null!;
 
-    public virtual void Initialize(IWindow window, TrContext context, Camera camera)
+    public virtual void Initialize([NotNull] IWindow window, [NotNull] TrContext context, [NotNull] Camera camera)
     {
         Window = window;
         Context = context;

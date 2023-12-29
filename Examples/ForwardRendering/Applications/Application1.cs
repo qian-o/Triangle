@@ -30,7 +30,7 @@ public class Application1 : BaseApplication
     private Vector3D<float> scale = new(1.0f, 1.0f, 1.0f);
     #endregion
 
-    public override void Initialize(IWindow window, TrContext context, Camera camera)
+    public override void Initialize([NotNull] IWindow window, [NotNull] TrContext context, [NotNull] Camera camera)
     {
         base.Initialize(window, context, camera);
 

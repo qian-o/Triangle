@@ -55,11 +55,12 @@ public unsafe class Rendering : TrObject
     private bool firstFrame = true;
     #endregion
 
-    public Rendering([NotNull] IApplication application)
+    public Rendering([NotNull] IApplication application, string title)
     {
         _application = application;
 
         WindowOptions windowOptions = WindowOptions.Default;
+        windowOptions.Title = title;
         windowOptions.API = new GraphicsAPI(ContextAPI.OpenGLES, new APIVersion(3, 2));
         windowOptions.Samples = 8;
         windowOptions.VSync = false;
