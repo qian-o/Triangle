@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
 using Triangle.Core.Exceptions;
+using Triangle.Core.Helpers;
 
 namespace Triangle.Core.Graphics;
 
@@ -32,6 +33,8 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
         }
     }
 
+    public bool IsColorWrite { get; set; } = true;
+
     public bool IsDepthTest { get; set; } = true;
 
     public bool IsDepthWrite { get; set; } = true;
@@ -40,17 +43,19 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 
     public bool IsStencilTest { get; set; } = true;
 
-    public uint StencilMask { get; set; } = 0xFF;
+    public bool IsStencilWrite { get; set; } = true;
 
     public TrStencilFunction StencilFunction { get; set; } = TrStencilFunction.Always;
 
     public int StencilReference { get; set; }
 
-    public bool IsStencilWrite { get; set; } = true;
+    public uint StencilMask { get; set; } = 0xFF;
 
     public bool IsCullFace { get; set; } = true;
 
-    public TrCullFaceMode CullFaceMode { get; set; } = TrCullFaceMode.CounterClockwise;
+    public TrTriangleFace TriangleFace { get; set; } = TrTriangleFace.Back;
+
+    public TrFrontFaceDirection FrontFaceDirection { get; set; } = TrFrontFaceDirection.CounterClockwise;
 
     public bool IsBlend { get; set; } = true;
 
@@ -59,8 +64,6 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
     public TrBlendFactor DestinationFactor { get; set; } = TrBlendFactor.OneMinusSrcAlpha;
 
     public TrBlendEquation BlendEquation { get; set; } = TrBlendEquation.Add;
-
-    public bool IsColorWrite { get; set; } = true;
 
     protected override void Destroy(bool disposing = false)
     {
@@ -88,6 +91,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
         switch (renderLayer)
         {
             case TrRenderLayer.Background:
+                IsColorWrite = true;
                 IsDepthTest = true;
                 IsDepthWrite = true;
                 DepthFunction = TrDepthFunction.LessOrEqual;
@@ -97,14 +101,15 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 StencilReference = 0;
                 StencilMask = 0xFF;
                 IsCullFace = false;
-                CullFaceMode = TrCullFaceMode.CounterClockwise;
+                TriangleFace = TrTriangleFace.Back;
+                FrontFaceDirection = TrFrontFaceDirection.CounterClockwise;
                 IsBlend = false;
                 SourceFactor = TrBlendFactor.One;
                 DestinationFactor = TrBlendFactor.Zero;
                 BlendEquation = TrBlendEquation.Add;
-                IsColorWrite = true;
                 break;
             case TrRenderLayer.Geometry:
+                IsColorWrite = true;
                 IsDepthTest = true;
                 IsDepthWrite = true;
                 DepthFunction = TrDepthFunction.Less;
@@ -114,14 +119,15 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 StencilReference = 0;
                 StencilMask = 0xFF;
                 IsCullFace = true;
-                CullFaceMode = TrCullFaceMode.CounterClockwise;
-                IsBlend = false;
-                SourceFactor = TrBlendFactor.One;
-                DestinationFactor = TrBlendFactor.Zero;
+                TriangleFace = TrTriangleFace.Back;
+                FrontFaceDirection = TrFrontFaceDirection.CounterClockwise;
+                IsBlend = true;
+                SourceFactor = TrBlendFactor.SrcAlpha;
+                DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
                 BlendEquation = TrBlendEquation.Add;
-                IsColorWrite = true;
                 break;
             case TrRenderLayer.Opaque:
+                IsColorWrite = true;
                 IsDepthTest = true;
                 IsDepthWrite = true;
                 DepthFunction = TrDepthFunction.Less;
@@ -131,14 +137,15 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 StencilReference = 0;
                 StencilMask = 0xFF;
                 IsCullFace = true;
-                CullFaceMode = TrCullFaceMode.CounterClockwise;
+                TriangleFace = TrTriangleFace.Back;
+                FrontFaceDirection = TrFrontFaceDirection.CounterClockwise;
                 IsBlend = false;
                 SourceFactor = TrBlendFactor.One;
                 DestinationFactor = TrBlendFactor.Zero;
                 BlendEquation = TrBlendEquation.Add;
-                IsColorWrite = true;
                 break;
             case TrRenderLayer.Transparent:
+                IsColorWrite = true;
                 IsDepthTest = true;
                 IsDepthWrite = false;
                 DepthFunction = TrDepthFunction.Less;
@@ -148,14 +155,15 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 StencilReference = 0;
                 StencilMask = 0xFF;
                 IsCullFace = true;
-                CullFaceMode = TrCullFaceMode.CounterClockwise;
+                TriangleFace = TrTriangleFace.Back;
+                FrontFaceDirection = TrFrontFaceDirection.CounterClockwise;
                 IsBlend = true;
                 SourceFactor = TrBlendFactor.SrcAlpha;
                 DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
                 BlendEquation = TrBlendEquation.Add;
-                IsColorWrite = true;
                 break;
             case TrRenderLayer.Overlay:
+                IsColorWrite = true;
                 IsDepthTest = false;
                 IsDepthWrite = false;
                 DepthFunction = TrDepthFunction.Less;
@@ -165,12 +173,12 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 StencilReference = 0;
                 StencilMask = 0xFF;
                 IsCullFace = false;
-                CullFaceMode = TrCullFaceMode.CounterClockwise;
+                TriangleFace = TrTriangleFace.Back;
+                FrontFaceDirection = TrFrontFaceDirection.CounterClockwise;
                 IsBlend = true;
                 SourceFactor = TrBlendFactor.SrcAlpha;
                 DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
                 BlendEquation = TrBlendEquation.Add;
-                IsColorWrite = true;
                 break;
             default:
                 throw new NotSupportedException("不支持的渲染层级。");
@@ -239,59 +247,60 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 
         gl.UseProgram(Handle);
 
+        gl.ColorMask(IsColorWrite, IsColorWrite, IsColorWrite, IsColorWrite);
+
         if (IsDepthTest)
         {
-            gl.Enable(EnableCap.DepthTest);
+            gl.Enable(GLEnum.DepthTest);
         }
         else
         {
-            gl.Disable(EnableCap.DepthTest);
+            gl.Disable(GLEnum.DepthTest);
         }
 
         gl.DepthMask(IsDepthWrite);
 
-        gl.DepthFunc((GLEnum)DepthFunction);
+        gl.DepthFunc(DepthFunction.ToGL());
 
         if (IsStencilTest)
         {
-            gl.Enable(EnableCap.StencilTest);
+            gl.Enable(GLEnum.StencilTest);
         }
         else
         {
-            gl.Disable(EnableCap.StencilTest);
+            gl.Disable(GLEnum.StencilTest);
         }
-
-        gl.StencilFunc((GLEnum)StencilFunction, StencilReference, StencilMask);
-
-        gl.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Keep);
 
         gl.StencilMask((uint)(IsStencilWrite ? 0xFF : 0x00));
 
+        gl.StencilFunc(StencilFunction.ToGL(), StencilReference, StencilMask);
+
+        gl.StencilOp(GLEnum.Keep, GLEnum.Keep, GLEnum.Keep);
+
         if (IsCullFace)
         {
-            gl.Enable(EnableCap.CullFace);
+            gl.Enable(GLEnum.CullFace);
         }
         else
         {
-            gl.Disable(EnableCap.CullFace);
+            gl.Disable(GLEnum.CullFace);
         }
 
-        gl.CullFace((GLEnum)CullFaceMode);
+        gl.CullFace(TriangleFace.ToGL());
+        gl.FrontFace(FrontFaceDirection.ToGL());
 
         if (IsBlend)
         {
-            gl.Enable(EnableCap.Blend);
+            gl.Enable(GLEnum.Blend);
         }
         else
         {
-            gl.Disable(EnableCap.Blend);
+            gl.Disable(GLEnum.Blend);
         }
 
-        gl.BlendFunc((GLEnum)SourceFactor, (GLEnum)DestinationFactor);
+        gl.BlendFunc(SourceFactor.ToGL(), DestinationFactor.ToGL());
 
-        gl.BlendEquation((GLEnum)BlendEquation);
-
-        gl.ColorMask(IsColorWrite, IsColorWrite, IsColorWrite, IsColorWrite);
+        gl.BlendEquation(BlendEquation.ToGL());
     }
 
     public void Unbind()

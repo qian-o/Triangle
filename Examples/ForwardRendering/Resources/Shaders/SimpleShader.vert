@@ -12,10 +12,11 @@ uniform mat4 Uni_Model;
 uniform mat4 Uni_View;
 uniform mat4 Uni_Projection;
 
-void main() {
-  Out_Position = vec3(Uni_Model * vec4(In_Position, 1.0));
-  Out_Normal = mat3(Uni_View * Uni_Model) * In_Normal;
-  Out_UV = In_TexCoord;
+void main()
+{
+    Out_Position = vec3(Uni_Model * vec4(In_Position, 1.0));
+    Out_Normal = mat3(Uni_View * Uni_Model) * In_Normal;
+    Out_UV = In_TexCoord;
 
-  gl_Position = Uni_Projection * Uni_View * Uni_Model * vec4(Out_Position, 1.0);
+    gl_Position = Uni_Projection * Uni_View * Uni_Model * vec4(Out_Position, 1.0);
 }

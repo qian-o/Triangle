@@ -10,4 +10,7 @@ out vec4 Out_Color;
 
 uniform vec4 Uni_Color;
 
-void main() { Out_Color = Uni_Color; }
+void main()
+{
+    Out_Color = Uni_Color;
+}

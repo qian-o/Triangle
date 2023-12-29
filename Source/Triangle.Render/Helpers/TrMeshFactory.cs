@@ -61,4 +61,19 @@ public static class TrMeshFactory
 
         return new(context, vertices, vertices.Select((a, b) => (uint)b).ToArray());
     }
+
+    public static TrMesh CreateGrid(this TrContext context)
+    {
+        TrVertex[] vertices =
+        [
+            new(new(-1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(0.0f, 0.0f)),
+            new(new(-1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(1.0f, 0.0f)),
+            new(new(1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(1.0f, 1.0f)),
+            new(new(1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(1.0f, 1.0f)),
+            new(new(1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(0.0f, 1.0f)),
+            new(new(-1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(0.0f, 0.0f))
+        ];
+
+        return new(context, vertices, vertices.Select((a, b) => (uint)b).ToArray());
+    }
 }

@@ -1,5 +1,4 @@
 ﻿using Common.Contracts;
-using Common.Helpers;
 using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
@@ -12,6 +11,7 @@ using System.Runtime.InteropServices;
 using Triangle.Core;
 using Triangle.Core.Contracts;
 using Triangle.Core.Graphics;
+using Triangle.Core.Helpers;
 
 namespace Common;
 

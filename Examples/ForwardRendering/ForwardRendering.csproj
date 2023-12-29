@@ -12,6 +12,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="Resources\Shaders\GridShader.frag">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Resources\Shaders\GridShader.vert">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="Resources\Shaders\SimpleShader.frag">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

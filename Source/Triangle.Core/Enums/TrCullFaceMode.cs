@@ -1,6 +1,6 @@
 ﻿namespace Triangle.Core.Enums;
 
-public enum TrCullFaceMode
+public enum TrFrontFaceDirection
 {
     CounterClockwise,
     Clockwise

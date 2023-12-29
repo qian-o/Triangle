@@ -1,4 +1,5 @@
-﻿using Triangle.Core;
+﻿using System.Diagnostics.CodeAnalysis;
+using Triangle.Core;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Graphics;
 
@@ -6,11 +7,17 @@ namespace Triangle.Render.Graphics;
 
 public abstract class TrMaterial : TrGraphics<TrContext>
 {
+    private TrRenderPass? renderPass;
+
     protected TrMaterial(TrContext context) : base(context)
     {
     }
 
-    public TrRenderPass? RenderPass { get; protected set; }
+    public TrRenderPass RenderPass => renderPass ??= CreateRenderPass();
 
-    public abstract void Draw(TrMesh mesh, params object[] args);
+    public abstract TrRenderPass CreateRenderPass();
+
+    public abstract void Draw([NotNull] TrMesh mesh, params object[] args);
+
+    public abstract void ImGuiEdit();
 }

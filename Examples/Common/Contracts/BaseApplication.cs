@@ -30,7 +30,7 @@ public abstract class BaseApplication : IApplication
 
     public abstract void Update(double deltaSeconds);
 
-    public abstract void Render(TrFrame frame, double deltaSeconds);
+    public abstract void Render([NotNull] TrFrame frame, double deltaSeconds);
 
     public abstract void DrawImGui();
 

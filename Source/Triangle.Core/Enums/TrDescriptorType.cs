@@ -10,5 +10,5 @@ public enum TrDescriptorType
     Matrix4x4,
     Sampler2D,
     SamplerCube,
-    StructuredBuffer,
+    StructuredBuffer
 }

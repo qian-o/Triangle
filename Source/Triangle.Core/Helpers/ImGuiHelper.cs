@@ -1,7 +1,7 @@
 ﻿using ImGuiNET;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Common.Helpers;
+namespace Triangle.Core.Helpers;
 
 public static class ImGuiHelper
 {

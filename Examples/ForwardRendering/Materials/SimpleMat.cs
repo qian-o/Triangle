@@ -1,7 +1,9 @@
 ﻿using Common;
+using ImGuiNET;
 using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
@@ -10,11 +12,13 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials;
 
-public unsafe class SimpleMat : TrMaterial
+public unsafe class SimpleMat(TrContext context) : TrMaterial(context)
 {
-    private readonly TrRenderPipeline renderPipeline;
+    private TrRenderPipeline renderPipeline = null!;
 
-    public SimpleMat(TrContext context) : base(context)
+    public Vector4D<float> Color { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
+
+    public override TrRenderPass CreateRenderPass()
     {
         using TrShader vert = new(Context, TrShaderType.Vertex, File.ReadAllText("Resources/Shaders/SimpleShader.vert"));
         using TrShader frag = new(Context, TrShaderType.Fragment, File.ReadAllText("Resources/Shaders/SimpleShader.frag"));
@@ -22,10 +26,8 @@ public unsafe class SimpleMat : TrMaterial
         renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);
 
-        RenderPass = new(Context, [renderPipeline]);
+        return new TrRenderPass(Context, [renderPipeline]);
     }
-
-    public Vector4D<float> Color { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
 
     public override void Draw([NotNull] TrMesh mesh, params object[] args)
     {
@@ -60,10 +62,17 @@ public unsafe class SimpleMat : TrMaterial
         }
     }
 
+    public override void ImGuiEdit()
+    {
+        Vector4 color = Color.ToSystem();
+        ImGui.ColorEdit4("Color", ref color);
+        Color = color.ToGeneric();
+    }
+
     protected override void Destroy(bool disposing = false)
     {
-        renderPipeline.Dispose();
+        RenderPass.Dispose();
 
-        RenderPass?.Dispose();
+        renderPipeline.Dispose();
     }
 }

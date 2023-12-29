@@ -5,9 +5,9 @@ public enum TrStencilFunction
     Never,
     Less,
     Equal,
-    LessThanOrEqual,
+    LessOrEqual,
     Greater,
     NotEqual,
-    GreaterThanOrEqual,
+    GreaterOrEqual,
     Always
 }

@@ -14,6 +14,7 @@
 		<PackageReference Include="Silk.NET.Maths" Version="2.20.0" />
 		<PackageReference Include="Silk.NET.OpenGLES" Version="2.20.0" />
 		<PackageReference Include="Silk.NET.OpenGLES.Extensions.EXT" Version="2.20.0" />
+		<PackageReference Include="Silk.NET.OpenGLES.Extensions.ImGui" Version="2.20.0" />
 	</ItemGroup>
 
 	<PropertyGroup>
