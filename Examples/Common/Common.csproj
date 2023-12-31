@@ -4,22 +4,13 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<AnalysisLevel>latest-Recommended</AnalysisLevel>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Silk.NET.Input" Version="2.20.0" />
-		<PackageReference Include="Silk.NET.Windowing" Version="2.20.0" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Source\Triangle.Render\Triangle.Render.csproj" />
 	</ItemGroup>
-
-	<PropertyGroup>
-		<AnalysisMode>All</AnalysisMode>
-		<EnableNETAnalyzers>true</EnableNETAnalyzers>
-		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-	</PropertyGroup>
 
 </Project>

@@ -1,4 +1,3 @@
 is_global = true
 
 dotnet_code_quality.ca1051.exclude_structs = true
-dotnet_diagnostic.CA2213.severity = none
