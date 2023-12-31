@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Contracts;
+using Common.Models;
 using ForwardRendering.Materials;
 using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
@@ -41,6 +42,8 @@ public class Application2 : BaseApplication
 
     public override void Render([NotNull] TrFrame frame, double deltaSeconds)
     {
+        TrParameter parameter = new(Camera, Matrix4X4<float>.Identity);
+
         GL gl = Context.GL;
 
         frame.Bind();
@@ -48,8 +51,8 @@ public class Application2 : BaseApplication
         gl.ClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
 
-        simpleMat.Draw(cube, Camera, Matrix4X4<float>.Identity);
-        gridMat.Draw(grid, Camera);
+        simpleMat.Draw(cube, parameter);
+        gridMat.Draw(grid, parameter);
 
         frame.Unbind();
     }

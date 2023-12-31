@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Contracts;
+using Common.Models;
 using ForwardRendering.Materials;
 using ImGuiNET;
 using Silk.NET.Maths;
@@ -45,13 +46,15 @@ public class Application1 : BaseApplication
 
     public override void Render([NotNull] TrFrame frame, double deltaSeconds)
     {
+        TrParameter parameter = new(Camera, Matrix4X4.CreateScale(scale) * Matrix4X4.CreateTranslation(translation));
+
         GL gl = Context.GL;
 
         frame.Bind();
 
         gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
 
-        simpleMat.Draw(cube, Camera, Matrix4X4.CreateScale(scale) * Matrix4X4.CreateTranslation(translation));
+        simpleMat.Draw(cube, parameter);
 
         frame.Unbind();
     }

@@ -1,4 +1,4 @@
-﻿using Common;
+﻿using Common.Models;
 using ImGuiNET;
 using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
@@ -12,7 +12,7 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials;
 
-public unsafe class SimpleMat(TrContext context) : TrMaterial(context)
+public unsafe class SimpleMat(TrContext context) : TrMaterial<TrParameter>(context)
 {
     private TrRenderPipeline renderPipeline = null!;
 
@@ -29,16 +29,8 @@ public unsafe class SimpleMat(TrContext context) : TrMaterial(context)
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    public override void Draw([NotNull] TrMesh mesh, params object[] args)
+    public override void Draw([NotNull] TrMesh mesh, [NotNull] TrParameter parameter)
     {
-        if (args == null || args.Length != 2)
-        {
-            return;
-        }
-
-        Camera camera = (Camera)args[0];
-        Matrix4X4<float> model = (Matrix4X4<float>)args[1];
-
         GL gl = Context.GL;
 
         foreach (TrRenderPipeline renderPipeline in RenderPass!.RenderPipelines)
@@ -49,9 +41,9 @@ public unsafe class SimpleMat(TrContext context) : TrMaterial(context)
             mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Normal"), 3, nameof(TrVertex.Normal));
             mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_TexCoord"), 2, nameof(TrVertex.TexCoord));
 
-            renderPipeline.SetUniform("Uni_Model", model);
-            renderPipeline.SetUniform("Uni_View", camera.View);
-            renderPipeline.SetUniform("Uni_Projection", camera.Projection);
+            renderPipeline.SetUniform("Uni_Model", parameter.Model);
+            renderPipeline.SetUniform("Uni_View", parameter.Camera.View);
+            renderPipeline.SetUniform("Uni_Projection", parameter.Camera.Projection);
             renderPipeline.SetUniform("Uni_Color", Color);
 
             gl.BindVertexArray(mesh.Handle);

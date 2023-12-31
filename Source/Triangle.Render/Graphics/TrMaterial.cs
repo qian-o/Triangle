@@ -5,7 +5,7 @@ using Triangle.Core.Graphics;
 
 namespace Triangle.Render.Graphics;
 
-public abstract class TrMaterial : TrGraphics<TrContext>
+public abstract class TrMaterial<TParameter> : TrGraphics<TrContext>
 {
     private TrRenderPass? renderPass;
 
@@ -17,7 +17,7 @@ public abstract class TrMaterial : TrGraphics<TrContext>
 
     public abstract TrRenderPass CreateRenderPass();
 
-    public abstract void Draw([NotNull] TrMesh mesh, params object[] args);
+    public abstract void Draw([NotNull] TrMesh mesh, [NotNull] TParameter parameter);
 
     public abstract void ImGuiEdit();
 }

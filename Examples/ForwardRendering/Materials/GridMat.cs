@@ -1,4 +1,4 @@
-﻿using Common;
+﻿using Common.Models;
 using ImGuiNET;
 using Silk.NET.OpenGLES;
 using System.Diagnostics.CodeAnalysis;
@@ -10,7 +10,7 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials;
 
-public unsafe class GridMat(TrContext context) : TrMaterial(context)
+public unsafe class GridMat(TrContext context) : TrMaterial<TrParameter>(context)
 {
     private TrRenderPipeline renderPipeline = null!;
 
@@ -35,15 +35,8 @@ public unsafe class GridMat(TrContext context) : TrMaterial(context)
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    public override void Draw([NotNull] TrMesh mesh, params object[] args)
+    public override void Draw([NotNull] TrMesh mesh, [NotNull] TrParameter parameter)
     {
-        if (args == null || args.Length != 1)
-        {
-            return;
-        }
-
-        Camera camera = (Camera)args[0];
-
         GL gl = Context.GL;
 
         foreach (TrRenderPipeline renderPipeline in RenderPass!.RenderPipelines)
@@ -52,10 +45,10 @@ public unsafe class GridMat(TrContext context) : TrMaterial(context)
 
             mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Position"), 3, nameof(TrVertex.Position));
 
-            renderPipeline.SetUniform("Uni_View", camera.View);
-            renderPipeline.SetUniform("Uni_Projection", camera.Projection);
-            renderPipeline.SetUniform("Uni_Near", camera.Near);
-            renderPipeline.SetUniform("Uni_Far", camera.Far);
+            renderPipeline.SetUniform("Uni_View", parameter.Camera.View);
+            renderPipeline.SetUniform("Uni_Projection", parameter.Camera.Projection);
+            renderPipeline.SetUniform("Uni_Near", parameter.Camera.Near);
+            renderPipeline.SetUniform("Uni_Far", parameter.Camera.Far);
             renderPipeline.SetUniform("Uni_PrimaryScale", PrimaryScale);
             renderPipeline.SetUniform("Uni_SecondaryScale", SecondaryScale);
             renderPipeline.SetUniform("Uni_GridIntensity", GridIntensity);
