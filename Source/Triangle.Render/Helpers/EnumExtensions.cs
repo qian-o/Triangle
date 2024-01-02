@@ -2,6 +2,7 @@
 using Triangle.Render.Enums;
 
 namespace Triangle.Render.Helpers;
+
 public static class EnumExtensions
 {
     public static (GLEnum Target, GLEnum Format) ToGL(this TrPixelFormat pixelFormat)
