@@ -188,6 +188,8 @@ public unsafe class Rendering : TrObject
 
         if (firstFrame)
         {
+            ImGui.StyleColorsLight();
+
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
             if (File.Exists($"{_application.GetType().Name}.ini"))
