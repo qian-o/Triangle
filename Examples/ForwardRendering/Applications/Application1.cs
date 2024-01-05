@@ -1,15 +1,10 @@
-﻿using Common;
-using Common.Contracts;
+﻿using Common.Contracts;
 using Common.Models;
 using ForwardRendering.Materials;
 using ImGuiNET;
 using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
-using Silk.NET.Windowing;
-using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
-using Triangle.Core;
-using Triangle.Core.Graphics;
 using Triangle.Render.Graphics;
 using Triangle.Render.Helpers;
 
@@ -17,6 +12,10 @@ namespace ForwardRendering.Applications;
 
 public class Application1 : BaseApplication
 {
+    #region Viewports
+    private TrViewport main = null!;
+    #endregion
+
     #region Meshes
     private TrMesh cube = null!;
     #endregion
@@ -31,9 +30,10 @@ public class Application1 : BaseApplication
     private Vector3D<float> scale = new(1.0f, 1.0f, 1.0f);
     #endregion
 
-    public override void Initialize([NotNull] IWindow window, [NotNull] TrContext context, [NotNull] Camera camera)
+
+    public override void Loaded()
     {
-        base.Initialize(window, context, camera);
+        main = new(Input, Context, "Main");
 
         cube = TrMeshFactory.CreateCube(Context);
 
@@ -42,25 +42,30 @@ public class Application1 : BaseApplication
 
     public override void Update(double deltaSeconds)
     {
+        main.Update(deltaSeconds);
     }
 
-    public override void Render([NotNull] TrFrame frame, double deltaSeconds)
+    public override void Render(double deltaSeconds)
     {
-        TrParameter parameter = new(Camera, Matrix4X4.CreateScale(scale) * Matrix4X4.CreateTranslation(translation));
-
         GL gl = Context.GL;
 
-        frame.Bind();
+        main.Begin();
+
+        TrParameter parameter = new(main.Camera, Matrix4X4.CreateScale(scale) * Matrix4X4.CreateTranslation(translation));
 
         gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
 
         simpleMat.Draw(cube, parameter);
 
-        frame.Unbind();
+        main.End();
     }
 
     public override void DrawImGui()
     {
+        main.DrawHost();
+
+        ImGui.Begin("Properties");
+
         Vector3 v1 = translation.ToSystem();
         ImGui.DragFloat3("Translation", ref v1, 0.01f);
         translation = v1.ToGeneric();
@@ -74,13 +79,11 @@ public class Application1 : BaseApplication
         scale = v3.ToGeneric();
 
         simpleMat.ImGuiEdit();
+
+        ImGui.End();
     }
 
     public override void WindowResize(Vector2D<int> size)
-    {
-    }
-
-    public override void FramebufferResize(Vector2D<int> size)
     {
     }
 
@@ -89,5 +92,7 @@ public class Application1 : BaseApplication
         simpleMat.Dispose();
 
         cube.Dispose();
+
+        main.Dispose();
     }
 }

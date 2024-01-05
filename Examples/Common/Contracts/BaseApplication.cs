@@ -1,8 +1,8 @@
-﻿using Silk.NET.Maths;
+﻿using Silk.NET.Input;
+using Silk.NET.Maths;
 using Silk.NET.Windowing;
 using System.Diagnostics.CodeAnalysis;
 using Triangle.Core;
-using Triangle.Core.Graphics;
 
 namespace Common.Contracts;
 
@@ -17,26 +17,28 @@ public abstract class BaseApplication : IApplication
 
     public IWindow Window { get; private set; } = null!;
 
+    public IInputContext Input { get; private set; } = null!;
+
     public TrContext Context { get; private set; } = null!;
 
-    public Camera Camera { get; private set; } = null!;
-
-    public virtual void Initialize([NotNull] IWindow window, [NotNull] TrContext context, [NotNull] Camera camera)
+    public void Initialize([NotNull] IWindow window, [NotNull] IInputContext input, [NotNull] TrContext context)
     {
         Window = window;
+        Input = input;
         Context = context;
-        Camera = camera;
+
+        Loaded();
     }
+
+    public abstract void Loaded();
 
     public abstract void Update(double deltaSeconds);
 
-    public abstract void Render([NotNull] TrFrame frame, double deltaSeconds);
+    public abstract void Render(double deltaSeconds);
 
     public abstract void DrawImGui();
 
     public abstract void WindowResize(Vector2D<int> size);
-
-    public abstract void FramebufferResize(Vector2D<int> size);
 
     protected abstract void Destroy(bool disposing = false);
 
