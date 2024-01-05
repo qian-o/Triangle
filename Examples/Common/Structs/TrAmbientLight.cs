@@ -2,7 +2,7 @@
 
 namespace Common.Structs;
 
-public struct TrAmbientLight
+public struct TrAmbientLight(Vector3D<float> color)
 {
-    public Vector3D<float> Color;
+    public Vector3D<float> Color = color;
 }

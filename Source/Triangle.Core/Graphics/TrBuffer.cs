@@ -9,7 +9,7 @@ namespace Triangle.Core.Graphics;
 
 public unsafe class TrBuffer<TDataType> : TrGraphics<TrContext> where TDataType : unmanaged
 {
-    public TrBuffer(TrContext context, TrBufferTarget bufferTarget, TrBufferUsage bufferUsage, uint length) : base(context)
+    public TrBuffer(TrContext context, TrBufferTarget bufferTarget, TrBufferUsage bufferUsage, uint length = 1) : base(context)
     {
         Length = length;
         BufferTarget = bufferTarget;
@@ -56,6 +56,15 @@ public unsafe class TrBuffer<TDataType> : TrGraphics<TrContext> where TDataType 
 
         gl.BindBuffer(BufferTarget.ToGL(), Handle);
         gl.BufferSubData(BufferTarget.ToGL(), (int)(offset * sizeof(TDataType)), (uint)(Length * sizeof(TDataType)), data);
+        gl.BindBuffer(BufferTarget.ToGL(), 0);
+    }
+
+    public void SetData(TDataType data, uint offset = 0)
+    {
+        GL gl = Context.GL;
+
+        gl.BindBuffer(BufferTarget.ToGL(), Handle);
+        gl.BufferSubData(BufferTarget.ToGL(), (int)(offset * sizeof(TDataType)), (uint)sizeof(TDataType), &data);
         gl.BindBuffer(BufferTarget.ToGL(), 0);
     }
 

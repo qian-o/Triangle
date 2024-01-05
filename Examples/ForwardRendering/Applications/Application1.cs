@@ -51,7 +51,9 @@ public class Application1 : BaseApplication
 
         main.Begin();
 
-        TrParameter parameter = new(main.Camera, Matrix4X4.CreateScale(scale) * Matrix4X4.CreateTranslation(translation));
+        Matrix4X4<float> model = Matrix4X4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix4X4.CreateScale(scale) * Matrix4X4.CreateTranslation(translation);
+
+        TrParameter parameter = new(main.Camera, model);
 
         gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
 

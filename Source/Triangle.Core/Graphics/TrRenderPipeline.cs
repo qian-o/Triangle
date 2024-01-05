@@ -1,6 +1,7 @@
 ﻿using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
 using Triangle.Core.Exceptions;
@@ -239,6 +240,58 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
         GL gl = Context.GL;
 
         gl.UniformMatrix4(GetUniformLocation(name), 1, false, (float*)&value);
+    }
+
+    public void SetUniform<T>(string name, T value) where T : struct
+    {
+        foreach (FieldInfo field in value.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public))
+        {
+            Type fieldType = field.FieldType;
+
+            if (fieldType == typeof(int))
+            {
+                SetUniform($"{name}.{field.Name}", (int)field.GetValue(value)!);
+            }
+            else if (fieldType == typeof(float))
+            {
+                SetUniform($"{name}.{field.Name}", (float)field.GetValue(value)!);
+            }
+            else if (fieldType == typeof(Vector2D<float>))
+            {
+                SetUniform($"{name}.{field.Name}", (Vector2D<float>)field.GetValue(value)!);
+            }
+            else if (fieldType == typeof(Vector3D<float>))
+            {
+                SetUniform($"{name}.{field.Name}", (Vector3D<float>)field.GetValue(value)!);
+            }
+            else if (fieldType == typeof(Vector4D<float>))
+            {
+                SetUniform($"{name}.{field.Name}", (Vector4D<float>)field.GetValue(value)!);
+            }
+            else if (fieldType == typeof(Matrix2X2<float>))
+            {
+                SetUniform($"{name}.{field.Name}", (Matrix2X2<float>)field.GetValue(value)!);
+            }
+            else if (fieldType == typeof(Matrix3X3<float>))
+            {
+                SetUniform($"{name}.{field.Name}", (Matrix3X3<float>)field.GetValue(value)!);
+            }
+            else if (fieldType == typeof(Matrix4X4<float>))
+            {
+                SetUniform($"{name}.{field.Name}", (Matrix4X4<float>)field.GetValue(value)!);
+            }
+            else
+            {
+                throw new NotSupportedException($"不支持的类型：{fieldType}。");
+            }
+        }
+    }
+
+    public void BindUniformBlock<T>(uint bindingPoint, TrBuffer<T> ubo) where T : unmanaged
+    {
+        GL gl = Context.GL;
+
+        gl.BindBufferBase(GLEnum.UniformBuffer, bindingPoint, ubo.Handle);
     }
 
     public void Bind()

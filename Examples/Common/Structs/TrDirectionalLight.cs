@@ -2,9 +2,9 @@
 
 namespace Common.Structs;
 
-public struct TrDirectionalLight
+public struct TrDirectionalLight(Vector3D<float> direction, Vector3D<float> color)
 {
-    public Vector3D<float> Color;
+    public Vector3D<float> Direction = direction;
 
-    public Vector3D<float> Direction;
+    public Vector3D<float> Color = color;
 }
