@@ -20,7 +20,7 @@ public class Application3 : BaseApplication
     #endregion
 
     #region Materials
-    private SimpleMat simpleMat = null!;
+    private DiffuseVertexLevelMat diffuseVertexLevelMat = null!;
     #endregion
 
     public override void Initialize([NotNull] IWindow window, [NotNull] TrContext context, [NotNull] Camera camera)
@@ -29,7 +29,7 @@ public class Application3 : BaseApplication
 
         goldStar = TrMeshFactory.AssimpParsing(Context, "Resources/Models/Gold Star.glb")[0];
 
-        simpleMat = new(Context);
+        diffuseVertexLevelMat = new(Context);
     }
 
     public override void Update(double deltaSeconds)
@@ -47,14 +47,14 @@ public class Application3 : BaseApplication
         gl.ClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
 
-        simpleMat.Draw(goldStar, parameter);
+        diffuseVertexLevelMat.Draw(goldStar, parameter);
 
         frame.Unbind();
     }
 
     public override void DrawImGui()
     {
-        simpleMat.ImGuiEdit();
+        diffuseVertexLevelMat.ImGuiEdit();
     }
 
     public override void WindowResize(Vector2D<int> size)
@@ -67,7 +67,7 @@ public class Application3 : BaseApplication
 
     protected override void Destroy(bool disposing = false)
     {
-        simpleMat.Dispose();
+        diffuseVertexLevelMat.Dispose();
 
         goldStar.Dispose();
     }

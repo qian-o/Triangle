@@ -18,5 +18,5 @@ void main()
     Out_Normal = mat3(Uni_View * Uni_Model) * In_Normal;
     Out_UV = In_TexCoord;
 
-    gl_Position = Uni_Projection * Uni_View * Uni_Model * vec4(Out_Position, 1.0);
+    gl_Position = Uni_Projection * Uni_View * Uni_Model * vec4(In_Position, 1.0);
 }
