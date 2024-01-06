@@ -14,7 +14,7 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials;
 
-public unsafe class DiffuseVertexLevelMat(TrContext context) : TrMaterial<TrParameter>(context)
+public unsafe class DiffusePixelLevelMat(TrContext context) : TrMaterial<TrParameter>(context)
 {
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -65,8 +65,8 @@ public unsafe class DiffuseVertexLevelMat(TrContext context) : TrMaterial<TrPara
 
     public override TrRenderPass CreateRenderPass()
     {
-        using TrShader vert = new(Context, TrShaderType.Vertex, File.ReadAllText("Resources/Shaders/DiffuseVertexLevelShader.vert"));
-        using TrShader frag = new(Context, TrShaderType.Fragment, File.ReadAllText("Resources/Shaders/DiffuseVertexLevelShader.frag"));
+        using TrShader vert = new(Context, TrShaderType.Vertex, File.ReadAllText("Resources/Shaders/DiffusePixelLevelShader.vert"));
+        using TrShader frag = new(Context, TrShaderType.Fragment, File.ReadAllText("Resources/Shaders/DiffusePixelLevelShader.frag"));
 
         renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);

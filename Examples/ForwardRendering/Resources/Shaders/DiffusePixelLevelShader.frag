@@ -1,22 +1,14 @@
 #version 320 es
 
-in vec3 In_Position;
-in vec3 In_Normal;
-in vec2 In_TexCoord;
+precision highp float;
 
-out VertexData
+in VertexData
 {
-    vec4 Color;
+    vec3 Normal;
 }
-Out;
+In;
 
-layout(std140, binding = 0) uniform Matrix
-{
-    mat4 ObjectToWorld;
-    mat4 ObjectToClip;
-    mat4 WorldToObject;
-}
-Uni_Matrix;
+out vec4 Out_Color;
 
 layout(std140, binding = 1) uniform Material
 {
@@ -44,12 +36,10 @@ float saturate(float value)
 
 void main()
 {
-    vec3 worldNormal = normalize(mat3(Uni_Matrix.WorldToObject) * In_Normal);
+    vec3 worldNormal = normalize(In.Normal);
     vec3 worldLightDir = normalize(-Uni_DirectionalLight.Direction);
 
     vec3 diffuse = Uni_DirectionalLight.Color * Uni_Material.Diffuse.rgb * saturate(dot(worldNormal, worldLightDir));
 
-    Out.Color = vec4(Uni_AmbientLight.Color + diffuse, 1.0);
-
-    gl_Position = Uni_Matrix.ObjectToClip * vec4(In_Position, 1.0);
+    Out_Color = vec4(Uni_AmbientLight.Color + diffuse, 1.0);
 }

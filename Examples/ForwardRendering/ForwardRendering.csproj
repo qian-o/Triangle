@@ -18,6 +18,12 @@
 		<None Update="Resources\Models\Gold Star.glb">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+		<None Update="Resources\Shaders\DiffusePixelLevelShader.frag">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Resources\Shaders\DiffusePixelLevelShader.vert">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="Resources\Shaders\DiffuseVertexLevelShader.frag">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

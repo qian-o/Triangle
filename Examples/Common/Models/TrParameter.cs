@@ -5,11 +5,11 @@ namespace Common.Models;
 
 public class TrParameter(Camera camera, Matrix4X4<float> model, TrAmbientLight ambientLight = default, TrDirectionalLight directionalLight = default)
 {
-    public Camera Camera { get; } = camera;
+    public Camera Camera { get; set; } = camera;
 
-    public Matrix4X4<float> Model { get; } = model;
+    public Matrix4X4<float> Model { get; set; } = model;
 
-    public TrAmbientLight AmbientLight { get; } = ambientLight;
+    public TrAmbientLight AmbientLight { get; set; } = ambientLight;
 
-    public TrDirectionalLight DirectionalLight { get; } = directionalLight;
+    public TrDirectionalLight DirectionalLight { get; set; } = directionalLight;
 }
