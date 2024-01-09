@@ -14,7 +14,7 @@ public interface IApplication : IDisposable
 
     void Render(double deltaSeconds);
 
-    void DrawImGui();
+    void ImGuiRender();
 
     void WindowResize(Vector2D<int> size);
 }

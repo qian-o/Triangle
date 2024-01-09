@@ -126,26 +126,27 @@ public class TrViewport : TrGraphics<TrContext>
 
     public void DrawHost()
     {
-        ImGui.Begin($"{Name} - Frame Id: {_frame.Handle}");
-
-        IsHovered = ImGui.IsWindowHovered();
-
-        Vector2 size = ImGui.GetContentRegionAvail();
-
-        int newWidth = Convert.ToInt32(size.X);
-        int newHeight = Convert.ToInt32(size.Y);
-
-        if (newWidth - Width != 0 || newHeight - Height != 0)
+        if (ImGui.Begin($"{Name} - Frame Id: {_frame.Handle}"))
         {
-            Width = newWidth;
-            Height = newHeight;
+            IsHovered = ImGui.IsWindowHovered();
 
-            FramebufferResize?.Invoke(new Vector2D<int>(Width, Height));
+            Vector2 size = ImGui.GetContentRegionAvail();
+
+            int newWidth = Convert.ToInt32(size.X);
+            int newHeight = Convert.ToInt32(size.Y);
+
+            if (newWidth - Width != 0 || newHeight - Height != 0)
+            {
+                Width = newWidth;
+                Height = newHeight;
+
+                FramebufferResize?.Invoke(new Vector2D<int>(Width, Height));
+            }
+
+            ImGui.Image((nint)_frame.ColorBuffer, size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
+
+            ImGui.End();
         }
-
-        ImGui.Image((nint)_frame.ColorBuffer, size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
-
-        ImGui.End();
     }
 
     protected override void Destroy(bool disposing = false)

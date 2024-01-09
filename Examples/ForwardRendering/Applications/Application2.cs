@@ -58,16 +58,17 @@ public class Application2 : BaseApplication
         main.End();
     }
 
-    public override void DrawImGui()
+    public override void ImGuiRender()
     {
         main.DrawHost();
 
-        ImGui.Begin("Properties");
+        if (ImGui.Begin("Properties"))
+        {
+            gridMat.ImGuiEdit();
+            simpleMat.ImGuiEdit();
 
-        gridMat.ImGuiEdit();
-        simpleMat.ImGuiEdit();
-
-        ImGui.End();
+            ImGui.End();
+        }
     }
 
     public override void WindowResize(Vector2D<int> size)

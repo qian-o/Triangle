@@ -74,42 +74,43 @@ public class Application3 : BaseApplication
         main.End();
     }
 
-    public override void DrawImGui()
+    public override void ImGuiRender()
     {
         main.DrawHost();
 
-        ImGui.Begin("Properties");
+        if (ImGui.Begin("Properties"))
+        {
+            diffuseVertexLevelMat.ImGuiEdit();
+            diffusePixelLevelMat.Diffuse = diffuseVertexLevelMat.Diffuse;
 
-        diffuseVertexLevelMat.ImGuiEdit();
-        diffusePixelLevelMat.Diffuse = diffuseVertexLevelMat.Diffuse;
+            Vector3 v1 = translation.ToSystem();
+            ImGui.DragFloat3("Translation", ref v1, 0.01f);
+            translation = v1.ToGeneric();
 
-        Vector3 v1 = translation.ToSystem();
-        ImGui.DragFloat3("Translation", ref v1, 0.01f);
-        translation = v1.ToGeneric();
+            Vector3 v2 = rotation.ToSystem();
+            ImGui.DragFloat3("Rotation", ref v2, 0.01f);
+            rotation = v2.ToGeneric();
 
-        Vector3 v2 = rotation.ToSystem();
-        ImGui.DragFloat3("Rotation", ref v2, 0.01f);
-        rotation = v2.ToGeneric();
+            Vector3 v3 = scale.ToSystem();
+            ImGui.DragFloat3("Scale", ref v3, 0.01f);
+            scale = v3.ToGeneric();
 
-        Vector3 v3 = scale.ToSystem();
-        ImGui.DragFloat3("Scale", ref v3, 0.01f);
-        scale = v3.ToGeneric();
+            Vector3 v4 = ambientLight.Color.ToSystem();
+            ImGui.ColorEdit3("Ambient Light", ref v4);
+            ambientLight.Color = v4.ToGeneric();
 
-        Vector3 v4 = ambientLight.Color.ToSystem();
-        ImGui.ColorEdit3("Ambient Light", ref v4);
-        ambientLight.Color = v4.ToGeneric();
+            Vector3 v5 = directionalLight.Color.ToSystem();
+            ImGui.ColorEdit3("Directional Light", ref v5);
+            directionalLight.Color = v5.ToGeneric();
 
-        Vector3 v5 = directionalLight.Color.ToSystem();
-        ImGui.ColorEdit3("Directional Light", ref v5);
-        directionalLight.Color = v5.ToGeneric();
+            Vector3 v6 = directionalRotation.ToSystem();
+            ImGui.DragFloat3("Directional Rotation", ref v6, 0.01f);
+            directionalRotation = v6.ToGeneric();
 
-        Vector3 v6 = directionalRotation.ToSystem();
-        ImGui.DragFloat3("Directional Rotation", ref v6, 0.01f);
-        directionalRotation = v6.ToGeneric();
+            directionalLight.Direction = Vector3D.Transform(new Vector3D<float>(-1.0f, -1.0f, -1.0f), Matrix4X4.CreateFromYawPitchRoll(directionalRotation.Y, directionalRotation.X, directionalRotation.Z));
 
-        directionalLight.Direction = Vector3D.Transform(new Vector3D<float>(-1.0f, -1.0f, -1.0f), Matrix4X4.CreateFromYawPitchRoll(directionalRotation.Y, directionalRotation.X, directionalRotation.Z));
-
-        ImGui.End();
+            ImGui.End();
+        }
     }
 
     public override void WindowResize(Vector2D<int> size)

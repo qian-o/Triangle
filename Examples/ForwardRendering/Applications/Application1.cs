@@ -62,27 +62,28 @@ public class Application1 : BaseApplication
         main.End();
     }
 
-    public override void DrawImGui()
+    public override void ImGuiRender()
     {
         main.DrawHost();
 
-        ImGui.Begin("Properties");
+        if (ImGui.Begin("Properties"))
+        {
+            Vector3 v1 = translation.ToSystem();
+            ImGui.DragFloat3("Translation", ref v1, 0.01f);
+            translation = v1.ToGeneric();
 
-        Vector3 v1 = translation.ToSystem();
-        ImGui.DragFloat3("Translation", ref v1, 0.01f);
-        translation = v1.ToGeneric();
+            Vector3 v2 = rotation.ToSystem();
+            ImGui.DragFloat3("Rotation", ref v2, 0.01f);
+            rotation = v2.ToGeneric();
 
-        Vector3 v2 = rotation.ToSystem();
-        ImGui.DragFloat3("Rotation", ref v2, 0.01f);
-        rotation = v2.ToGeneric();
+            Vector3 v3 = scale.ToSystem();
+            ImGui.DragFloat3("Scale", ref v3, 0.01f);
+            scale = v3.ToGeneric();
 
-        Vector3 v3 = scale.ToSystem();
-        ImGui.DragFloat3("Scale", ref v3, 0.01f);
-        scale = v3.ToGeneric();
+            simpleMat.ImGuiEdit();
 
-        simpleMat.ImGuiEdit();
-
-        ImGui.End();
+            ImGui.End();
+        }
     }
 
     public override void WindowResize(Vector2D<int> size)

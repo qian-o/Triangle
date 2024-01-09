@@ -36,7 +36,7 @@ public abstract class BaseApplication : IApplication
 
     public abstract void Render(double deltaSeconds);
 
-    public abstract void DrawImGui();
+    public abstract void ImGuiRender();
 
     public abstract void WindowResize(Vector2D<int> size);
 

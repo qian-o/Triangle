@@ -8,7 +8,6 @@ using Silk.NET.Windowing;
 using System.Runtime.InteropServices;
 using Triangle.Core;
 using Triangle.Core.Contracts;
-using Triangle.Core.Helpers;
 
 namespace Common;
 
@@ -103,19 +102,30 @@ public unsafe class RenderHost<TApplication> : TrObject where TApplication : IAp
 
         ImGui.DockSpaceOverViewport();
 
-        _application.DrawImGui();
+        _application.ImGuiRender();
 
-        ImGui.Begin("Info");
-        ImGui.Text(renderer);
-        ImGui.Value("FPS", ImGui.GetIO().Framerate);
-        ImGui.End();
-
-        ImGui.Begin("Settings");
-        ImGuiHelper.Button("Save Layout", () =>
+        if (ImGui.Begin("Info"))
         {
-            ImGui.SaveIniSettingsToDisk($"{_application.GetType().Name}.ini");
-        });
-        ImGui.End();
+            ImGui.Text(renderer);
+            ImGui.Value("FPS", ImGui.GetIO().Framerate);
+
+            ImGui.End();
+        }
+
+        if (ImGui.BeginMainMenuBar())
+        {
+            if (ImGui.BeginMenu("Settings"))
+            {
+                if (ImGui.MenuItem("Save Layout"))
+                {
+                    ImGui.SaveIniSettingsToDisk($"{_application.GetType().Name}.ini");
+                }
+
+                ImGui.EndMenu();
+            }
+
+            ImGui.EndMainMenuBar();
+        }
 
         imGuiController.Render();
     }
