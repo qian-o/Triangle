@@ -9,10 +9,6 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<PublishAot>True</PublishAot>
-	</PropertyGroup>
-
-	<PropertyGroup>
 		<AnalysisLevel>latest-Recommended</AnalysisLevel>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 	</PropertyGroup>

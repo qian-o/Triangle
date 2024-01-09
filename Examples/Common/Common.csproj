@@ -8,10 +8,6 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<IsAotCompatible>true</IsAotCompatible>
-	</PropertyGroup>
-
-	<PropertyGroup>
 		<AnalysisLevel>latest-Recommended</AnalysisLevel>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 	</PropertyGroup>
