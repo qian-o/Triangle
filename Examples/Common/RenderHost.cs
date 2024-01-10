@@ -32,7 +32,7 @@ public unsafe class RenderHost<TApplication> : TrObject where TApplication : IAp
     {
         WindowOptions windowOptions = WindowOptions.Default;
         windowOptions.Title = title;
-        windowOptions.API = new GraphicsAPI(ContextAPI.OpenGLES, new APIVersion(3, 2));
+        windowOptions.API = new GraphicsAPI(ContextAPI.OpenGLES, ContextProfile.Core, ContextFlags.Default, new APIVersion(3, 2));
         windowOptions.Samples = 8;
         windowOptions.VSync = false;
         windowOptions.PreferredDepthBufferBits = 32;
