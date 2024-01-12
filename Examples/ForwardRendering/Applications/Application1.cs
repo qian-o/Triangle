@@ -35,7 +35,7 @@ public class Application1 : BaseApplication
     {
         main = new(Input, Context, "Main");
 
-        cube = TrMeshFactory.CreateCube(Context);
+        cube = Context.CreateCube();
 
         simpleMat = new(Context);
     }

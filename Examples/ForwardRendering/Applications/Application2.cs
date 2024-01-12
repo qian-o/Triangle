@@ -29,8 +29,8 @@ public class Application2 : BaseApplication
     {
         main = new(Input, Context, "Main");
 
-        grid = TrMeshFactory.CreateGrid(Context);
-        cube = TrMeshFactory.CreateCube(Context);
+        grid = Context.CreateGrid();
+        cube = Context.CreateCube();
 
         gridMat = new(Context);
         simpleMat = new(Context);

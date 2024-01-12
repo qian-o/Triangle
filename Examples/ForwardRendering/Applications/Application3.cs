@@ -43,7 +43,7 @@ public class Application3 : BaseApplication
     {
         main = new(Input, Context, "Main");
 
-        goldStar = TrMeshFactory.AssimpParsing(Context, "Resources/Models/Gold Star.glb")[0];
+        goldStar = Context.AssimpParsing("Resources/Models/Gold Star.glb")[0];
 
         diffuseVertexLevelMat = new(Context);
         diffusePixelLevelMat = new(Context);
