@@ -12,7 +12,7 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials.Chapter5;
 
-public unsafe class SimpleMat(TrContext context) : TrMaterial<TrParameter>(context)
+public unsafe class SimpleMat(TrContext context) : TrMaterial<TrParameter>(context, "Simple")
 {
     private TrRenderPipeline renderPipeline = null!;
 
@@ -53,10 +53,8 @@ public unsafe class SimpleMat(TrContext context) : TrMaterial<TrParameter>(conte
         }
     }
 
-    public override void AdjustImGuiProperties()
+    protected override void AdjustImGuiPropertiesCore()
     {
-        ImGui.SeparatorText("Simple Material");
-
         Vector4 color = Color.ToSystem();
         ImGui.ColorEdit4("Color", ref color);
         Color = color.ToGeneric();

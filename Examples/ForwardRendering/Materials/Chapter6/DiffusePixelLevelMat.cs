@@ -14,7 +14,7 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials.Chapter6;
 
-public unsafe class DiffusePixelLevelMat(TrContext context) : TrMaterial<TrParameter>(context)
+public unsafe class DiffusePixelLevelMat(TrContext context) : TrMaterial<TrParameter>(context, "DiffusePixelLevel")
 {
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -124,10 +124,8 @@ public unsafe class DiffusePixelLevelMat(TrContext context) : TrMaterial<TrParam
         }
     }
 
-    public override void AdjustImGuiProperties()
+    protected override void AdjustImGuiPropertiesCore()
     {
-        ImGui.SeparatorText("DiffusePixelLevel Material");
-
         Vector4 diffuse = Diffuse.ToSystem();
         ImGui.ColorEdit4("Diffuse", ref diffuse);
         Diffuse = diffuse.ToGeneric();

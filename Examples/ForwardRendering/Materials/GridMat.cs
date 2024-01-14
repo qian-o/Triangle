@@ -10,7 +10,7 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials;
 
-public unsafe class GridMat(TrContext context) : TrMaterial<TrParameter>(context)
+public unsafe class GridMat(TrContext context) : TrMaterial<TrParameter>(context, "Grid")
 {
     private TrRenderPipeline renderPipeline = null!;
 
@@ -65,10 +65,8 @@ public unsafe class GridMat(TrContext context) : TrMaterial<TrParameter>(context
         }
     }
 
-    public override void AdjustImGuiProperties()
+    protected override void AdjustImGuiPropertiesCore()
     {
-        ImGui.SeparatorText("Grid Material");
-
         float distance = Distance;
         ImGui.SliderFloat("Distance", ref distance, 0.0f, 10.0f);
         Distance = distance;

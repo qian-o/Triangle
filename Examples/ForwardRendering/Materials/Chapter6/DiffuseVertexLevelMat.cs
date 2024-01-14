@@ -14,7 +14,7 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials.Chapter6;
 
-public unsafe class DiffuseVertexLevelMat(TrContext context) : TrMaterial<TrParameter>(context)
+public unsafe class DiffuseVertexLevelMat(TrContext context) : TrMaterial<TrParameter>(context, "DiffuseVertexLevel")
 {
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -124,10 +124,8 @@ public unsafe class DiffuseVertexLevelMat(TrContext context) : TrMaterial<TrPara
         }
     }
 
-    public override void AdjustImGuiProperties()
+    protected override void AdjustImGuiPropertiesCore()
     {
-        ImGui.SeparatorText("DiffuseVertexLevel Material");
-
         Vector4 diffuse = Diffuse.ToSystem();
         ImGui.ColorEdit4("Diffuse", ref diffuse);
         Diffuse = diffuse.ToGeneric();
