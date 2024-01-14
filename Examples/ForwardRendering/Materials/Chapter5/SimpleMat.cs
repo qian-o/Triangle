@@ -1,16 +1,16 @@
-﻿using Common.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
+using Common.Models;
 using ImGuiNET;
 using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
-using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
 using Triangle.Render.Graphics;
 using Triangle.Render.Structs;
 
-namespace ForwardRendering.Materials;
+namespace ForwardRendering.Materials.Chapter5;
 
 public unsafe class SimpleMat(TrContext context) : TrMaterial<TrParameter>(context)
 {
@@ -20,8 +20,8 @@ public unsafe class SimpleMat(TrContext context) : TrMaterial<TrParameter>(conte
 
     public override TrRenderPass CreateRenderPass()
     {
-        using TrShader vert = new(Context, TrShaderType.Vertex, File.ReadAllText("Resources/Shaders/Simple.vert"));
-        using TrShader frag = new(Context, TrShaderType.Fragment, File.ReadAllText("Resources/Shaders/Simple.frag"));
+        using TrShader vert = new(Context, TrShaderType.Vertex, File.ReadAllText("Resources/Shaders/Chapter5/Simple.vert"));
+        using TrShader frag = new(Context, TrShaderType.Fragment, File.ReadAllText("Resources/Shaders/Chapter5/Simple.frag"));
 
         renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);

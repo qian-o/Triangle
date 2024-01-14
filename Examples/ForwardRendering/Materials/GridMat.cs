@@ -1,7 +1,7 @@
-﻿using Common.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using Common.Models;
 using ImGuiNET;
 using Silk.NET.OpenGLES;
-using System.Diagnostics.CodeAnalysis;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;

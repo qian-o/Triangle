@@ -1,7 +1,7 @@
-﻿using Silk.NET.Maths;
-using Silk.NET.OpenGLES;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using Silk.NET.Maths;
+using Silk.NET.OpenGLES;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
 using Triangle.Core.Exceptions;

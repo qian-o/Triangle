@@ -1,6 +1,7 @@
 ﻿using Common.Contracts;
 using Common.Models;
 using ForwardRendering.Materials;
+using ForwardRendering.Materials.Chapter5;
 using ImGuiNET;
 using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
@@ -12,7 +13,7 @@ namespace ForwardRendering.Applications;
 public class Application2 : BaseApplication
 {
     #region Viewports
-    private TrViewport main = null!;
+    private TrScene main = null!;
     #endregion
 
     #region Meshes

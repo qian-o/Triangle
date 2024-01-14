@@ -1,10 +1,10 @@
-﻿using Common.Contracts;
+﻿using System.Numerics;
+using Common.Contracts;
 using Common.Models;
-using ForwardRendering.Materials;
+using ForwardRendering.Materials.Chapter5;
 using ImGuiNET;
 using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
-using System.Numerics;
 using Triangle.Render.Graphics;
 using Triangle.Render.Helpers;
 
@@ -13,7 +13,7 @@ namespace ForwardRendering.Applications;
 public class Application1 : BaseApplication
 {
     #region Viewports
-    private TrViewport main = null!;
+    private TrScene main = null!;
     #endregion
 
     #region Meshes

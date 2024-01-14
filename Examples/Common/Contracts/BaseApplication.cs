@@ -1,7 +1,7 @@
-﻿using Silk.NET.Input;
+﻿using System.Diagnostics.CodeAnalysis;
+using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.Windowing;
-using System.Diagnostics.CodeAnalysis;
 using Triangle.Core;
 
 namespace Common.Contracts;

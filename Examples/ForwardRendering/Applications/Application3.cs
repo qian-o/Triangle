@@ -1,11 +1,11 @@
-﻿using Common.Contracts;
+﻿using System.Numerics;
+using Common.Contracts;
 using Common.Models;
 using Common.Structs;
-using ForwardRendering.Materials;
+using ForwardRendering.Materials.Chapter6;
 using ImGuiNET;
 using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
-using System.Numerics;
 using Triangle.Render.Graphics;
 using Triangle.Render.Helpers;
 
@@ -14,7 +14,7 @@ namespace ForwardRendering.Applications;
 public class Application3 : BaseApplication
 {
     #region Viewports
-    private TrViewport main = null!;
+    private TrScene main = null!;
     #endregion
 
     #region Meshes
@@ -31,6 +31,7 @@ public class Application3 : BaseApplication
     #region Materials
     private DiffuseVertexLevelMat diffuseVertexLevelMat = null!;
     private DiffusePixelLevelMat diffusePixelLevelMat = null!;
+    private HalfLambertMat halfLambertMat = null!;
     #endregion
 
     #region Lights
@@ -47,6 +48,7 @@ public class Application3 : BaseApplication
 
         diffuseVertexLevelMat = new(Context);
         diffusePixelLevelMat = new(Context);
+        halfLambertMat = new(Context);
     }
 
     public override void Update(double deltaSeconds)
@@ -71,6 +73,9 @@ public class Application3 : BaseApplication
         parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
         diffusePixelLevelMat.Draw(goldStar, parameter);
 
+        parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
+        halfLambertMat.Draw(goldStar, parameter);
+
         main.End();
     }
 
@@ -82,6 +87,7 @@ public class Application3 : BaseApplication
         {
             diffuseVertexLevelMat.ImGuiEdit();
             diffusePixelLevelMat.Diffuse = diffuseVertexLevelMat.Diffuse;
+            halfLambertMat.Diffuse = diffuseVertexLevelMat.Diffuse;
 
             Vector3 v1 = translation.ToSystem();
             ImGui.DragFloat3("Translation", ref v1, 0.01f);
@@ -119,6 +125,7 @@ public class Application3 : BaseApplication
 
     protected override void Destroy(bool disposing = false)
     {
+        halfLambertMat.Dispose();
         diffusePixelLevelMat.Dispose();
         diffuseVertexLevelMat.Dispose();
 

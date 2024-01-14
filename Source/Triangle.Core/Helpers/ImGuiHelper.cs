@@ -1,5 +1,5 @@
-﻿using ImGuiNET;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using ImGuiNET;
 
 namespace Triangle.Core.Helpers;
 

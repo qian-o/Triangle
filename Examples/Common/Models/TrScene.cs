@@ -1,14 +1,14 @@
-﻿using ImGuiNET;
+﻿using System.Numerics;
+using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
-using System.Numerics;
 using Triangle.Core;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Graphics;
 
 namespace Common.Models;
 
-public class TrViewport : TrGraphics<TrContext>
+public class TrScene : TrGraphics<TrContext>
 {
     public event Action<Vector2D<int>>? FramebufferResize;
 
@@ -19,7 +19,7 @@ public class TrViewport : TrGraphics<TrContext>
     private bool firstMove = true;
     private Vector2D<float> lastPos;
 
-    public TrViewport(IInputContext input, TrContext context, string name) : base(context)
+    public TrScene(IInputContext input, TrContext context, string name) : base(context)
     {
         Name = name;
         Camera = new Camera
@@ -51,7 +51,7 @@ public class TrViewport : TrGraphics<TrContext>
     {
         if (IsHovered)
         {
-            if (_mouse.IsButtonPressed(MouseButton.Middle))
+            if (_mouse.IsButtonPressed(MouseButton.Right))
             {
                 Vector2D<float> vector = new(_mouse.Position.X, _mouse.Position.Y);
 

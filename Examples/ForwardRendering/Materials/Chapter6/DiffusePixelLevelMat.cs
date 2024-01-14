@@ -1,10 +1,10 @@
-﻿using Common.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
+using System.Runtime.InteropServices;
+using Common.Models;
 using ImGuiNET;
 using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
-using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
-using System.Runtime.InteropServices;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
@@ -12,7 +12,7 @@ using Triangle.Core.Helpers;
 using Triangle.Render.Graphics;
 using Triangle.Render.Structs;
 
-namespace ForwardRendering.Materials;
+namespace ForwardRendering.Materials.Chapter6;
 
 public unsafe class DiffusePixelLevelMat(TrContext context) : TrMaterial<TrParameter>(context)
 {
@@ -65,8 +65,8 @@ public unsafe class DiffusePixelLevelMat(TrContext context) : TrMaterial<TrParam
 
     public override TrRenderPass CreateRenderPass()
     {
-        using TrShader vert = new(Context, TrShaderType.Vertex, File.ReadAllText("Resources/Shaders/DiffusePixelLevel.vert"));
-        using TrShader frag = new(Context, TrShaderType.Fragment, File.ReadAllText("Resources/Shaders/DiffusePixelLevel.frag"));
+        using TrShader vert = new(Context, TrShaderType.Vertex, File.ReadAllText("Resources/Shaders/Chapter6/DiffusePixelLevel.vert"));
+        using TrShader frag = new(Context, TrShaderType.Fragment, File.ReadAllText("Resources/Shaders/Chapter6/DiffusePixelLevel.frag"));
 
         renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);

@@ -1,10 +1,10 @@
-﻿using Common.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
+using System.Runtime.InteropServices;
+using Common.Models;
 using ImGuiNET;
 using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
-using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
-using System.Runtime.InteropServices;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
@@ -12,9 +12,9 @@ using Triangle.Core.Helpers;
 using Triangle.Render.Graphics;
 using Triangle.Render.Structs;
 
-namespace ForwardRendering.Materials;
+namespace ForwardRendering.Materials.Chapter6;
 
-public unsafe class DiffuseVertexLevelMat(TrContext context) : TrMaterial<TrParameter>(context)
+public unsafe class HalfLambertMat(TrContext context) : TrMaterial<TrParameter>(context)
 {
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -65,8 +65,8 @@ public unsafe class DiffuseVertexLevelMat(TrContext context) : TrMaterial<TrPara
 
     public override TrRenderPass CreateRenderPass()
     {
-        using TrShader vert = new(Context, TrShaderType.Vertex, File.ReadAllText("Resources/Shaders/DiffuseVertexLevel.vert"));
-        using TrShader frag = new(Context, TrShaderType.Fragment, File.ReadAllText("Resources/Shaders/DiffuseVertexLevel.frag"));
+        using TrShader vert = new(Context, TrShaderType.Vertex, File.ReadAllText("Resources/Shaders/Chapter6/HalfLambert.vert"));
+        using TrShader frag = new(Context, TrShaderType.Fragment, File.ReadAllText("Resources/Shaders/Chapter6/HalfLambert.frag"));
 
         renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);

@@ -1,11 +1,11 @@
-﻿using Common.Contracts;
+﻿using System.Runtime.InteropServices;
+using Common.Contracts;
 using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
 using Silk.NET.OpenGLES.Extensions.ImGui;
 using Silk.NET.Windowing;
-using System.Runtime.InteropServices;
 using Triangle.Core;
 using Triangle.Core.Contracts;
 
