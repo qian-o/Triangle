@@ -16,13 +16,7 @@ public unsafe class GridMat(TrContext context) : TrMaterial<TrParameter>(context
 
     public float Distance { get; set; } = 6.0f;
 
-    public float PrimaryScale { get; set; }
-
-    public float SecondaryScale { get; set; }
-
     public float GridIntensity { get; set; } = 1.0f;
-
-    public float Fade { get; set; }
 
     public override TrRenderPass CreateRenderPass()
     {
@@ -37,6 +31,15 @@ public unsafe class GridMat(TrContext context) : TrMaterial<TrParameter>(context
 
     public override void Draw([NotNull] TrMesh mesh, [NotNull] TrParameter parameter)
     {
+        double logDistance = Math.Log2(Distance);
+        double upperDistance = Math.Pow(2.0, Math.Floor(logDistance) + 1);
+        double lowerDistance = Math.Pow(2.0, Math.Floor(logDistance));
+        float fade = Convert.ToSingle((Distance - lowerDistance) / (upperDistance - lowerDistance));
+
+        double level = -Math.Floor(logDistance);
+        float primaryScale = Convert.ToSingle(Math.Pow(2.0, level));
+        float secondaryScale = Convert.ToSingle(Math.Pow(2.0, level + 1));
+
         GL gl = Context.GL;
 
         foreach (TrRenderPipeline renderPipeline in RenderPass!.RenderPipelines)
@@ -49,10 +52,10 @@ public unsafe class GridMat(TrContext context) : TrMaterial<TrParameter>(context
             renderPipeline.SetUniform("Uni_Projection", parameter.Camera.Projection);
             renderPipeline.SetUniform("Uni_Near", parameter.Camera.Near);
             renderPipeline.SetUniform("Uni_Far", parameter.Camera.Far);
-            renderPipeline.SetUniform("Uni_PrimaryScale", PrimaryScale);
-            renderPipeline.SetUniform("Uni_SecondaryScale", SecondaryScale);
+            renderPipeline.SetUniform("Uni_PrimaryScale", primaryScale);
+            renderPipeline.SetUniform("Uni_SecondaryScale", secondaryScale);
             renderPipeline.SetUniform("Uni_GridIntensity", GridIntensity);
-            renderPipeline.SetUniform("Uni_Fade", Fade);
+            renderPipeline.SetUniform("Uni_Fade", fade);
 
             gl.BindVertexArray(mesh.Handle);
             gl.DrawElements(GLEnum.Triangles, (uint)mesh.IndexLength, GLEnum.UnsignedInt, null);
@@ -62,8 +65,10 @@ public unsafe class GridMat(TrContext context) : TrMaterial<TrParameter>(context
         }
     }
 
-    public override void ImGuiEdit()
+    public override void AdjustImGuiProperties()
     {
+        ImGui.SeparatorText("Grid Material");
+
         float distance = Distance;
         ImGui.SliderFloat("Distance", ref distance, 0.0f, 10.0f);
         Distance = distance;
@@ -71,15 +76,6 @@ public unsafe class GridMat(TrContext context) : TrMaterial<TrParameter>(context
         float gridIntensity = GridIntensity;
         ImGui.SliderFloat("Grid Intensity", ref gridIntensity, 0.0f, 1.0f);
         GridIntensity = gridIntensity;
-
-        double logDistance = Math.Log2(Distance);
-        double upperDistance = Math.Pow(2.0, Math.Floor(logDistance) + 1);
-        double lowerDistance = Math.Pow(2.0, Math.Floor(logDistance));
-        Fade = Convert.ToSingle((Distance - lowerDistance) / (upperDistance - lowerDistance));
-
-        double level = -Math.Floor(logDistance);
-        PrimaryScale = Convert.ToSingle(Math.Pow(2.0, level));
-        SecondaryScale = Convert.ToSingle(Math.Pow(2.0, level + 1));
     }
 
     protected override void Destroy(bool disposing = false)

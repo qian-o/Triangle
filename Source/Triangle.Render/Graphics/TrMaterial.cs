@@ -19,5 +19,5 @@ public abstract class TrMaterial<TParameter> : TrGraphics<TrContext>
 
     public abstract void Draw([NotNull] TrMesh mesh, [NotNull] TParameter parameter);
 
-    public abstract void ImGuiEdit();
+    public abstract void AdjustImGuiProperties();
 }

@@ -11,6 +11,7 @@ namespace Common.Models;
 public class TrScene : TrGraphics<TrContext>
 {
     public event Action<Vector2D<int>>? FramebufferResize;
+    public event Action? DrawContentInWindow;
 
     private readonly IMouse _mouse;
     private readonly IKeyboard _keyboard;
@@ -35,6 +36,8 @@ public class TrScene : TrGraphics<TrContext>
 
     public string Name { get; }
 
+    public string HostName => $"{Name} - Frame Id: {_frame.Handle}";
+
     public Camera Camera { get; }
 
     public int Width { get; private set; }
@@ -42,6 +45,8 @@ public class TrScene : TrGraphics<TrContext>
     public int Height { get; private set; }
 
     public bool IsHovered { get; private set; }
+
+    public bool IsClosed { get; private set; }
 
     public float CameraSpeed { get; set; } = 2.0f;
 
@@ -126,7 +131,13 @@ public class TrScene : TrGraphics<TrContext>
 
     public void DrawHost()
     {
-        if (ImGui.Begin($"{Name} - Frame Id: {_frame.Handle}"))
+        if (IsClosed)
+        {
+            return;
+        }
+
+        bool isOpen = true;
+        if (ImGui.Begin(HostName, ref isOpen, ImGuiWindowFlags.NoSavedSettings))
         {
             IsHovered = ImGui.IsWindowHovered();
 
@@ -145,8 +156,12 @@ public class TrScene : TrGraphics<TrContext>
 
             ImGui.Image((nint)_frame.ColorBuffer, size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
 
+            DrawContentInWindow?.Invoke();
+
             ImGui.End();
         }
+
+        IsClosed = !isOpen;
     }
 
     protected override void Destroy(bool disposing = false)

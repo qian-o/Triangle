@@ -7,7 +7,7 @@ internal sealed class Program
 {
     static void Main(string[] _)
     {
-        using RenderHost<Application3> renderHost = new("Forward Rendering");
+        using RenderHost<TutorialApplication> renderHost = new("Forward Rendering");
         renderHost.Run();
     }
 }

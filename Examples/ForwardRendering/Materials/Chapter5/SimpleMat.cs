@@ -53,8 +53,10 @@ public unsafe class SimpleMat(TrContext context) : TrMaterial<TrParameter>(conte
         }
     }
 
-    public override void ImGuiEdit()
+    public override void AdjustImGuiProperties()
     {
+        ImGui.SeparatorText("Simple Material");
+
         Vector4 color = Color.ToSystem();
         ImGui.ColorEdit4("Color", ref color);
         Color = color.ToGeneric();

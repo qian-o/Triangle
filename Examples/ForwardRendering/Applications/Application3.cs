@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-using Common.Contracts;
+using Common.Contracts.Applications;
 using Common.Models;
 using Common.Structs;
 using ForwardRendering.Materials.Chapter6;
@@ -85,7 +85,7 @@ public class Application3 : BaseApplication
 
         if (ImGui.Begin("Properties"))
         {
-            diffuseVertexLevelMat.ImGuiEdit();
+            diffuseVertexLevelMat.AdjustImGuiProperties();
             diffusePixelLevelMat.Diffuse = diffuseVertexLevelMat.Diffuse;
             halfLambertMat.Diffuse = diffuseVertexLevelMat.Diffuse;
 

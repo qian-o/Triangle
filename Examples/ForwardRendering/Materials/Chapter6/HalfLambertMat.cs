@@ -124,8 +124,10 @@ public unsafe class HalfLambertMat(TrContext context) : TrMaterial<TrParameter>(
         }
     }
 
-    public override void ImGuiEdit()
+    public override void AdjustImGuiProperties()
     {
+        ImGui.SeparatorText("HalfLambert Material");
+
         Vector4 diffuse = Diffuse.ToSystem();
         ImGui.ColorEdit4("Diffuse", ref diffuse);
         Diffuse = diffuse.ToGeneric();

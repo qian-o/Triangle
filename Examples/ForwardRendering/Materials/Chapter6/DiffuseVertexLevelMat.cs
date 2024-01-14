@@ -124,8 +124,10 @@ public unsafe class DiffuseVertexLevelMat(TrContext context) : TrMaterial<TrPara
         }
     }
 
-    public override void ImGuiEdit()
+    public override void AdjustImGuiProperties()
     {
+        ImGui.SeparatorText("DiffuseVertexLevel Material");
+
         Vector4 diffuse = Diffuse.ToSystem();
         ImGui.ColorEdit4("Diffuse", ref diffuse);
         Diffuse = diffuse.ToGeneric();

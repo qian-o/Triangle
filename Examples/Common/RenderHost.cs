@@ -1,5 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-using Common.Contracts;
+using Common.Contracts.Applications;
 using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
@@ -63,7 +63,7 @@ public unsafe class RenderHost<TApplication> : TrObject where TApplication : IAp
         gl = _window.CreateOpenGLES();
         inputContext = _window.CreateInput();
         trContext = new TrContext(gl);
-        imGuiController = new ImGuiController(gl, _window, inputContext);
+        imGuiController = new ImGuiController(gl, _window, inputContext, new ImGuiFontConfig("Resources/Fonts/MSYH.TTC", 14, (a) => a.Fonts.GetGlyphRangesChineseFull()));
 
         renderer = Marshal.PtrToStringAnsi((nint)gl.GetString(GLEnum.Renderer))!;
 
@@ -89,6 +89,8 @@ public unsafe class RenderHost<TApplication> : TrObject where TApplication : IAp
         if (firstFrame)
         {
             ImGui.StyleColorsLight();
+            ImGui.GetStyle().FrameRounding = 6.0f;
+            ImGui.GetStyle().FrameBorderSize = 1.0f;
 
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
