@@ -21,28 +21,28 @@
 		<None Update="Resources\Models\Gold Star.glb">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Update="Resources\Shaders\DiffusePixelLevelShader.frag">
+		<None Update="Resources\Shaders\DiffusePixelLevel.frag">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Update="Resources\Shaders\DiffusePixelLevelShader.vert">
+		<None Update="Resources\Shaders\DiffusePixelLevel.vert">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Update="Resources\Shaders\DiffuseVertexLevelShader.frag">
+		<None Update="Resources\Shaders\DiffuseVertexLevel.frag">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Update="Resources\Shaders\DiffuseVertexLevelShader.vert">
+		<None Update="Resources\Shaders\DiffuseVertexLevel.vert">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Update="Resources\Shaders\GridShader.frag">
+		<None Update="Resources\Shaders\Grid.frag">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Update="Resources\Shaders\GridShader.vert">
+		<None Update="Resources\Shaders\Grid.vert">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Update="Resources\Shaders\SimpleShader.frag">
+		<None Update="Resources\Shaders\Simple.frag">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Update="Resources\Shaders\SimpleShader.vert">
+		<None Update="Resources\Shaders\Simple.vert">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
