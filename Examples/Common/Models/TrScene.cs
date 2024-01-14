@@ -44,6 +44,8 @@ public class TrScene : TrGraphics<TrContext>
 
     public int Height { get; private set; }
 
+    public bool IsHovered { get; private set; }
+
     public bool IsFocused { get; private set; }
 
     public bool IsClosed { get; private set; }
@@ -54,7 +56,7 @@ public class TrScene : TrGraphics<TrContext>
 
     public void Update(double deltaSeconds)
     {
-        if (IsFocused)
+        if (IsHovered)
         {
             if (_mouse.IsButtonPressed(MouseButton.Right))
             {
@@ -139,6 +141,7 @@ public class TrScene : TrGraphics<TrContext>
         bool isOpen = true;
         if (ImGui.Begin(HostName, ref isOpen, ImGuiWindowFlags.NoSavedSettings))
         {
+            IsHovered = ImGui.IsWindowHovered();
             IsFocused = ImGui.IsWindowFocused();
 
             Vector2 size = ImGui.GetContentRegionAvail();
