@@ -9,4 +9,6 @@ public interface ITutorial : IDisposable
     void Update(double deltaSeconds);
 
     void Render(double deltaSeconds);
+
+    void ImGuiRender();
 }

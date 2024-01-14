@@ -14,6 +14,8 @@ public class TutorialApplication : BaseApplication
     private readonly List<ITutorial> _tutorials = [];
     private readonly List<(string DisplayName, string Description, Type Type)> _allTutorials = [];
 
+    private ITutorial? _lastFocusedTutorial;
+
     public override void Loaded()
     {
         Type[] types = Assembly.GetExecutingAssembly().GetTypes().Where(x => x.GetInterfaces().Contains(typeof(ITutorial)) && !x.IsAbstract).ToArray();
@@ -67,12 +69,18 @@ public class TutorialApplication : BaseApplication
         {
             if (x.Scene.IsClosed)
             {
+                if (_lastFocusedTutorial == x)
+                {
+                    _lastFocusedTutorial = null;
+                }
+
                 x.Dispose();
             }
 
             return x.Scene.IsClosed;
         });
 
+        ITutorial? tut = _lastFocusedTutorial;
         foreach (ITutorial tutorial in _tutorials)
         {
             TrScene scene = tutorial.Scene;
@@ -82,7 +90,15 @@ public class TutorialApplication : BaseApplication
             ImGui.SetNextWindowDockID(id, ImGuiCond.Once);
 
             scene.DrawHost();
+
+            if (scene.IsFocused)
+            {
+                tut = tutorial;
+            }
         }
+
+        _lastFocusedTutorial = tut;
+        _lastFocusedTutorial?.ImGuiRender();
     }
 
     public override void WindowResize(Vector2D<int> size)
@@ -91,9 +107,12 @@ public class TutorialApplication : BaseApplication
 
     protected override void Destroy(bool disposing = false)
     {
+        _lastFocusedTutorial = null;
+
         foreach (ITutorial tutorial in _tutorials)
         {
             tutorial.Dispose();
         }
+        _tutorials.Clear();
     }
 }

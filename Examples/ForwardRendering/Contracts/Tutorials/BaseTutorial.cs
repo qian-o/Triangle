@@ -27,7 +27,6 @@ public abstract class BaseTutorial : ITutorial
         Input = input;
         Context = context;
         Scene = new TrScene(input, context, name);
-        Scene.DrawContentInWindow += Scene_DrawContentInWindow;
 
         _grid = Context.CreateGrid();
         _gridMat = new(Context);
@@ -70,7 +69,7 @@ public abstract class BaseTutorial : ITutorial
         Scene.End();
     }
 
-    private void Scene_DrawContentInWindow()
+    public virtual void ImGuiRender()
     {
         if (ImGui.Begin("Properties"))
         {
