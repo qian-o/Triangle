@@ -39,7 +39,6 @@ public unsafe class SimpleMat(TrContext context) : TrMaterial<TrParameter>(conte
 
             mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Position"), 3, nameof(TrVertex.Position));
             mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Normal"), 3, nameof(TrVertex.Normal));
-            mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_TexCoord"), 2, nameof(TrVertex.TexCoord));
 
             renderPipeline.SetUniform("Uni_Model", parameter.Model);
             renderPipeline.SetUniform("Uni_View", parameter.Camera.View);
