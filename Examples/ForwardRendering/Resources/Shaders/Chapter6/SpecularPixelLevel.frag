@@ -13,8 +13,9 @@ out vec4 Out_Color;
 
 layout(std140, binding = 1) uniform Vectors
 {
-    vec4 WorldSpaceCameraPos;
+    vec3 CameraPosition;
 }
+Uni_Vectors;
 
 layout(std140, binding = 2) uniform Material
 {
@@ -32,6 +33,7 @@ Uni_AmbientLight;
 
 layout(std140, binding = 4) uniform DirectionalLight
 {
+    vec3 Position;
     vec3 Direction;
     vec3 Color;
 }
@@ -44,14 +46,14 @@ float saturate(float value)
 
 void main()
 {
-    vec3 worldNormal = normalize(In.worldNormal);
-    vec3 worldLightDir = normalize(-Uni_DirectionalLight.Direction);
+    vec3 worldNormal = normalize(In.WorldNormal);
+    vec3 worldLightDir = normalize(Uni_DirectionalLight.Position);
 
     vec3 diffuse = Uni_DirectionalLight.Color * Uni_Material.Diffuse.rgb * saturate(dot(worldNormal, worldLightDir));
 
     vec3 reflectDir = normalize(reflect(-worldLightDir, worldNormal));
 
-    vec3 viewDir = normalize(WorldSpaceCameraPos.xyz - In.WorldPos);
+    vec3 viewDir = normalize(Uni_Vectors.CameraPosition - In.WorldPos);
 
     vec3 specular = Uni_DirectionalLight.Color * Uni_Material.Specular.rgb *
                     pow(saturate(dot(reflectDir, viewDir)), Uni_Material.Gloss);

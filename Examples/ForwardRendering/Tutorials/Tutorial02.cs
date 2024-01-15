@@ -99,7 +99,7 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
         directionalLight.Color = v5.ToGeneric();
 
         Vector3 v6 = directionalRotation.RadianToDegree().ToSystem();
-        ImGui.DragFloat3("Directional Rotation", ref v6, 1.0f, -360.0f, 360.0f);
+        ImGui.DragFloat3("Directional Rotation", ref v6, 0.5f, -360.0f, 360.0f);
         directionalRotation = v6.ToGeneric().DegreeToRadian();
 
         directionalLight.Direction = Vector3D.Transform(new Vector3D<float>(0.0f, 0.0f, -1.0f), Matrix4X4.CreateFromYawPitchRoll(directionalRotation.Y, directionalRotation.X, directionalRotation.Z));
