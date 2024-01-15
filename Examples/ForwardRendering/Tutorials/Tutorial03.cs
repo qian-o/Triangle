@@ -14,12 +14,12 @@ using Triangle.Render.Helpers;
 
 namespace ForwardRendering.Tutorials;
 
-[DisplayName("漫反射场景")]
-[Description("使用 Diffuse 相关材质渲染五角星。")]
-public class Tutorial02(IInputContext input, TrContext context, string name) : BaseTutorial(input, context, name)
+[DisplayName("高光反射场景")]
+[Description("使用 Specular 相关材质渲染胶囊体。")]
+public class Tutorial03(IInputContext input, TrContext context, string name) : BaseTutorial(input, context, name)
 {
     #region Meshes
-    private TrMesh goldStar = null!;
+    private TrMesh capsule = null!;
     #endregion
 
     #region Transforms
@@ -30,9 +30,7 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
     #endregion
 
     #region Materials
-    private DiffuseVertexLevelMat diffuseVertexLevelMat = null!;
-    private DiffusePixelLevelMat diffusePixelLevelMat = null!;
-    private HalfLambertMat halfLambertMat = null!;
+    private SpecularPixelLevelMat specularPixelLevelMat = null!;
     #endregion
 
     #region Lights
@@ -42,11 +40,9 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
 
     protected override void Loaded()
     {
-        goldStar = Context.AssimpParsing("Resources/Models/Gold Star.glb")[0];
+        capsule = Context.AssimpParsing("Resources/Models/Capsule.glb")[0];
 
-        diffuseVertexLevelMat = new(Context);
-        diffusePixelLevelMat = new(Context);
-        halfLambertMat = new(Context);
+        specularPixelLevelMat = new(Context);
     }
 
     protected override void UpdateScene(double deltaSeconds)
@@ -59,21 +55,12 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
 
         TrParameter parameter = new(Scene.Camera, model, ambientLight, directionalLight);
 
-        parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-2.0f, 0.0f, 0.0f));
-        diffuseVertexLevelMat.Draw(goldStar, parameter);
-
-        parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
-        diffusePixelLevelMat.Draw(goldStar, parameter);
-
-        parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
-        halfLambertMat.Draw(goldStar, parameter);
+        specularPixelLevelMat.Draw(capsule, parameter);
     }
 
     protected override void EditProperties()
     {
-        diffuseVertexLevelMat.AdjustImGuiProperties();
-        diffusePixelLevelMat.AdjustImGuiProperties();
-        halfLambertMat.AdjustImGuiProperties();
+        specularPixelLevelMat.AdjustImGuiProperties();
 
         ImGui.SeparatorText("Transforms");
 
@@ -108,9 +95,7 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
 
     protected override void Destroy(bool disposing = false)
     {
-        halfLambertMat.Dispose();
-        diffusePixelLevelMat.Dispose();
-        diffuseVertexLevelMat.Dispose();
-        goldStar.Dispose();
+        specularPixelLevelMat.Dispose();
+        capsule.Dispose();
     }
 }
