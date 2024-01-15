@@ -24,6 +24,7 @@ Uni_AmbientLight;
 
 layout(std140, binding = 3) uniform DirectionalLight
 {
+    vec3 Position;
     vec3 Direction;
     vec3 Color;
 }
@@ -32,7 +33,7 @@ Uni_DirectionalLight;
 void main()
 {
     vec3 worldNormal = normalize(In.Normal);
-    vec3 worldLightDir = normalize(-Uni_DirectionalLight.Direction);
+    vec3 worldLightDir = normalize(Uni_DirectionalLight.Position);
 
     float halfLambert = dot(worldNormal, worldLightDir) * 0.5 + 0.5;
 

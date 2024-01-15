@@ -32,6 +32,7 @@ Uni_AmbientLight;
 
 layout(std140, binding = 3) uniform DirectionalLight
 {
+    vec3 Position;
     vec3 Direction;
     vec3 Color;
 }
@@ -45,7 +46,7 @@ float saturate(float value)
 void main()
 {
     vec3 worldNormal = normalize(mat3(Uni_Matrix.WorldToObject) * In_Normal);
-    vec3 worldLightDir = normalize(-Uni_DirectionalLight.Direction);
+    vec3 worldLightDir = normalize(Uni_DirectionalLight.Position);
 
     vec3 diffuse = Uni_DirectionalLight.Color * Uni_Material.Diffuse.rgb * saturate(dot(worldNormal, worldLightDir));
 

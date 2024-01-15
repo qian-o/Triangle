@@ -48,9 +48,12 @@ public unsafe class DiffuseVertexLevelMat(TrContext context) : TrMaterial<TrPara
     private struct UniDirectionalLight
     {
         [FieldOffset(0)]
-        public Vector3D<float> Direction;
+        public Vector3D<float> Position;
 
         [FieldOffset(16)]
+        public Vector3D<float> Direction;
+
+        [FieldOffset(32)]
         public Vector3D<float> Color;
     }
     #endregion
@@ -107,6 +110,7 @@ public unsafe class DiffuseVertexLevelMat(TrContext context) : TrMaterial<TrPara
             });
             uboDirectionalLight.SetData(new UniDirectionalLight()
             {
+                Position = -parameter.DirectionalLight.Direction,
                 Direction = parameter.DirectionalLight.Direction,
                 Color = parameter.DirectionalLight.Color
             });
