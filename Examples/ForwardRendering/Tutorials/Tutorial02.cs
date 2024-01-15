@@ -8,6 +8,7 @@ using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
+using Triangle.Core.Helpers;
 using Triangle.Render.Graphics;
 using Triangle.Render.Helpers;
 
@@ -25,7 +26,7 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
     private Vector3D<float> translation = new(0.0f, 0.0f, 0.0f);
     private Vector3D<float> rotation = new(0.0f, 0.0f, 0.0f);
     private Vector3D<float> scale = new(10.0f, 10.0f, 10.0f);
-    private Vector3D<float> directionalRotation = new(0.0f, -2.0f, 0.0f);
+    private Vector3D<float> directionalRotation = new(-1.0471976f, 1.0471976f, 0.0f);
     #endregion
 
     #region Materials
@@ -36,7 +37,7 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
 
     #region Lights
     private TrAmbientLight ambientLight = new(new Vector3D<float>(0.498f, 0.514f, 0.545f));
-    private TrDirectionalLight directionalLight = new(new Vector3D<float>(-1.0f, -1.0f, -1.0f), new Vector3D<float>(1.0f, 0.9569f, 0.8392f));
+    private TrDirectionalLight directionalLight = new(new Vector3D<float>(0.0f, 0.0f, -1.0f), new Vector3D<float>(1.0f, 0.9569f, 0.8392f));
     #endregion
 
     protected override void Loaded()
@@ -97,11 +98,11 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
         ImGui.ColorEdit3("Directional Light", ref v5);
         directionalLight.Color = v5.ToGeneric();
 
-        Vector3 v6 = directionalRotation.ToSystem();
-        ImGui.DragFloat3("Directional Rotation", ref v6, 0.01f);
-        directionalRotation = v6.ToGeneric();
+        Vector3 v6 = directionalRotation.RadianToDegree().ToSystem();
+        ImGui.DragFloat3("Directional Rotation", ref v6, 1.0f, -360.0f, 360.0f);
+        directionalRotation = v6.ToGeneric().DegreeToRadian();
 
-        directionalLight.Direction = Vector3D.Transform(new Vector3D<float>(-1.0f, -1.0f, -1.0f), Matrix4X4.CreateFromYawPitchRoll(directionalRotation.Y, directionalRotation.X, directionalRotation.Z));
+        directionalLight.Direction = Vector3D.Transform(new Vector3D<float>(0.0f, 0.0f, -1.0f), Matrix4X4.CreateFromYawPitchRoll(directionalRotation.Y, directionalRotation.X, directionalRotation.Z));
     }
 
     protected override void Destroy(bool disposing = false)
