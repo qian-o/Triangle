@@ -32,6 +32,7 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
     #region Materials
     private SpecularVertexLevelMat specularVertexLevelMat = null!;
     private SpecularPixelLevelMat specularPixelLevelMat = null!;
+    private BlinnPhongMat blinnPhongMat = null!;
     #endregion
 
     #region Lights
@@ -45,6 +46,7 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
 
         specularVertexLevelMat = new(Context);
         specularPixelLevelMat = new(Context);
+        blinnPhongMat = new(Context);
     }
 
     protected override void UpdateScene(double deltaSeconds)
@@ -62,12 +64,16 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
 
         parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
         specularPixelLevelMat.Draw(capsule, parameter);
+
+        parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
+        blinnPhongMat.Draw(capsule, parameter);
     }
 
     protected override void EditProperties()
     {
         specularVertexLevelMat.AdjustImGuiProperties();
         specularPixelLevelMat.AdjustImGuiProperties();
+        blinnPhongMat.AdjustImGuiProperties();
 
         ImGui.SeparatorText("Transforms");
 
@@ -102,6 +108,7 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
 
     protected override void Destroy(bool disposing = false)
     {
+        blinnPhongMat.Dispose();
         specularPixelLevelMat.Dispose();
         specularVertexLevelMat.Dispose();
         capsule.Dispose();
