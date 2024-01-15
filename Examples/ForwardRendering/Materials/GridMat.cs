@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Common.Models;
 using ImGuiNET;
-using Silk.NET.OpenGLES;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
@@ -10,7 +9,7 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials;
 
-public unsafe class GridMat(TrContext context) : TrMaterial<TrParameter>(context, "Grid")
+public class GridMat(TrContext context) : TrMaterial<TrParameter>(context, "Grid")
 {
     private TrRenderPipeline renderPipeline = null!;
 
@@ -40,8 +39,6 @@ public unsafe class GridMat(TrContext context) : TrMaterial<TrParameter>(context
         float primaryScale = Convert.ToSingle(Math.Pow(2.0, level));
         float secondaryScale = Convert.ToSingle(Math.Pow(2.0, level + 1));
 
-        GL gl = Context.GL;
-
         foreach (TrRenderPipeline renderPipeline in RenderPass!.RenderPipelines)
         {
             renderPipeline.Bind();
@@ -57,9 +54,7 @@ public unsafe class GridMat(TrContext context) : TrMaterial<TrParameter>(context
             renderPipeline.SetUniform("Uni_GridIntensity", GridIntensity);
             renderPipeline.SetUniform("Uni_Fade", fade);
 
-            gl.BindVertexArray(mesh.Handle);
-            gl.DrawElements(GLEnum.Triangles, (uint)mesh.IndexLength, GLEnum.UnsignedInt, null);
-            gl.BindVertexArray(0);
+            mesh.Draw();
 
             renderPipeline.Unbind();
         }

@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using Common.Models;
 using ImGuiNET;
 using Silk.NET.Maths;
-using Silk.NET.OpenGLES;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
@@ -14,7 +13,7 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials.Chapter6;
 
-public unsafe class DiffusePixelLevelMat(TrContext context) : TrMaterial<TrParameter>(context, "DiffusePixelLevel")
+public class DiffusePixelLevelMat(TrContext context) : TrMaterial<TrParameter>(context, "DiffusePixelLevel")
 {
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -84,8 +83,6 @@ public unsafe class DiffusePixelLevelMat(TrContext context) : TrMaterial<TrParam
 
     public override void Draw([NotNull] TrMesh mesh, [NotNull] TrParameter parameter)
     {
-        GL gl = Context.GL;
-
         foreach (TrRenderPipeline renderPipeline in RenderPass!.RenderPipelines)
         {
             renderPipeline.Bind();
@@ -120,9 +117,7 @@ public unsafe class DiffusePixelLevelMat(TrContext context) : TrMaterial<TrParam
             renderPipeline.BindUniformBlock(2, uboAmbientLight);
             renderPipeline.BindUniformBlock(3, uboDirectionalLight);
 
-            gl.BindVertexArray(mesh.Handle);
-            gl.DrawElements(GLEnum.Triangles, (uint)mesh.IndexLength, GLEnum.UnsignedInt, null);
-            gl.BindVertexArray(0);
+            mesh.Draw();
 
             renderPipeline.Unbind();
         }

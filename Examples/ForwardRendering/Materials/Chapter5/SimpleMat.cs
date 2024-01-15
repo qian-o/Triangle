@@ -3,7 +3,6 @@ using System.Numerics;
 using Common.Models;
 using ImGuiNET;
 using Silk.NET.Maths;
-using Silk.NET.OpenGLES;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
@@ -12,7 +11,7 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials.Chapter5;
 
-public unsafe class SimpleMat(TrContext context) : TrMaterial<TrParameter>(context, "Simple")
+public class SimpleMat(TrContext context) : TrMaterial<TrParameter>(context, "Simple")
 {
     private TrRenderPipeline renderPipeline = null!;
 
@@ -31,8 +30,6 @@ public unsafe class SimpleMat(TrContext context) : TrMaterial<TrParameter>(conte
 
     public override void Draw([NotNull] TrMesh mesh, [NotNull] TrParameter parameter)
     {
-        GL gl = Context.GL;
-
         foreach (TrRenderPipeline renderPipeline in RenderPass!.RenderPipelines)
         {
             renderPipeline.Bind();
@@ -45,9 +42,7 @@ public unsafe class SimpleMat(TrContext context) : TrMaterial<TrParameter>(conte
             renderPipeline.SetUniform("Uni_Projection", parameter.Camera.Projection);
             renderPipeline.SetUniform("Uni_Color", Color);
 
-            gl.BindVertexArray(mesh.Handle);
-            gl.DrawElements(GLEnum.Triangles, (uint)mesh.IndexLength, GLEnum.UnsignedInt, null);
-            gl.BindVertexArray(0);
+            mesh.Draw();
 
             renderPipeline.Unbind();
         }

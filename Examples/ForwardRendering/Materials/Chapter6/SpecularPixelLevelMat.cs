@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using Common.Models;
 using ImGuiNET;
 using Silk.NET.Maths;
-using Silk.NET.OpenGLES;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
@@ -14,7 +13,7 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials.Chapter6;
 
-public unsafe class SpecularPixelLevelMat(TrContext context) : TrMaterial<TrParameter>(context, "SpecularPixelLevel")
+public class SpecularPixelLevelMat(TrContext context) : TrMaterial<TrParameter>(context, "SpecularPixelLevel")
 {
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -103,8 +102,6 @@ public unsafe class SpecularPixelLevelMat(TrContext context) : TrMaterial<TrPara
 
     public override void Draw([NotNull] TrMesh mesh, [NotNull] TrParameter parameter)
     {
-        GL gl = Context.GL;
-
         foreach (TrRenderPipeline renderPipeline in RenderPass!.RenderPipelines)
         {
             renderPipeline.Bind();
@@ -146,9 +143,7 @@ public unsafe class SpecularPixelLevelMat(TrContext context) : TrMaterial<TrPara
             renderPipeline.BindUniformBlock(3, uboAmbientLight);
             renderPipeline.BindUniformBlock(4, uboDirectionalLight);
 
-            gl.BindVertexArray(mesh.Handle);
-            gl.DrawElements(GLEnum.Triangles, (uint)mesh.IndexLength, GLEnum.UnsignedInt, null);
-            gl.BindVertexArray(0);
+            mesh.Draw();
 
             renderPipeline.Unbind();
         }

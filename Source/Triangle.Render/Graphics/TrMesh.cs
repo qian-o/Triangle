@@ -57,4 +57,13 @@ public unsafe class TrMesh : TrGraphics<TrContext>
 
         gl.BindVertexArray(0);
     }
+
+    public void Draw()
+    {
+        GL gl = Context.GL;
+
+        gl.BindVertexArray(Handle);
+        gl.DrawElements(GLEnum.Triangles, (uint)IndexLength, GLEnum.UnsignedInt, null);
+        gl.BindVertexArray(0);
+    }
 }
