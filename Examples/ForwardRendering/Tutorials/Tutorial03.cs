@@ -30,6 +30,7 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
     #endregion
 
     #region Materials
+    private SpecularVertexLevelMat specularVertexLevelMat = null!;
     private SpecularPixelLevelMat specularPixelLevelMat = null!;
     #endregion
 
@@ -42,6 +43,7 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
     {
         capsule = Context.AssimpParsing("Resources/Models/Capsule.glb")[0];
 
+        specularVertexLevelMat = new(Context);
         specularPixelLevelMat = new(Context);
     }
 
@@ -55,11 +57,16 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
 
         TrParameter parameter = new(Scene.Camera, model, ambientLight, directionalLight);
 
+        parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-3.0f, 0.0f, 0.0f));
+        specularVertexLevelMat.Draw(capsule, parameter);
+
+        parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
         specularPixelLevelMat.Draw(capsule, parameter);
     }
 
     protected override void EditProperties()
     {
+        specularVertexLevelMat.AdjustImGuiProperties();
         specularPixelLevelMat.AdjustImGuiProperties();
 
         ImGui.SeparatorText("Transforms");
@@ -96,6 +103,7 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
     protected override void Destroy(bool disposing = false)
     {
         specularPixelLevelMat.Dispose();
+        specularVertexLevelMat.Dispose();
         capsule.Dispose();
     }
 }
