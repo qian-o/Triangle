@@ -66,6 +66,8 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 
     public TrBlendEquation BlendEquation { get; set; } = TrBlendEquation.Add;
 
+    public bool IsMultisample { get; set; } = true;
+
     protected override void Destroy(bool disposing = false)
     {
         GL gl = Context.GL;
@@ -108,6 +110,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 SourceFactor = TrBlendFactor.One;
                 DestinationFactor = TrBlendFactor.Zero;
                 BlendEquation = TrBlendEquation.Add;
+                IsMultisample = true;
                 break;
             case TrRenderLayer.Geometry:
                 IsColorWrite = true;
@@ -126,6 +129,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 SourceFactor = TrBlendFactor.SrcAlpha;
                 DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
                 BlendEquation = TrBlendEquation.Add;
+                IsMultisample = true;
                 break;
             case TrRenderLayer.Opaque:
                 IsColorWrite = true;
@@ -144,6 +148,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 SourceFactor = TrBlendFactor.One;
                 DestinationFactor = TrBlendFactor.Zero;
                 BlendEquation = TrBlendEquation.Add;
+                IsMultisample = true;
                 break;
             case TrRenderLayer.Transparent:
                 IsColorWrite = true;
@@ -162,6 +167,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 SourceFactor = TrBlendFactor.SrcAlpha;
                 DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
                 BlendEquation = TrBlendEquation.Add;
+                IsMultisample = true;
                 break;
             case TrRenderLayer.Overlay:
                 IsColorWrite = true;
@@ -180,6 +186,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 SourceFactor = TrBlendFactor.SrcAlpha;
                 DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
                 BlendEquation = TrBlendEquation.Add;
+                IsMultisample = true;
                 break;
             default:
                 throw new NotSupportedException("不支持的渲染层级。");
@@ -354,6 +361,15 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
         gl.BlendFunc(SourceFactor.ToGL(), DestinationFactor.ToGL());
 
         gl.BlendEquation(BlendEquation.ToGL());
+
+        if (IsMultisample)
+        {
+            gl.Enable(GLEnum.Multisample);
+        }
+        else
+        {
+            gl.Disable(GLEnum.Multisample);
+        }
     }
 
     public void Unbind()
