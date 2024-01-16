@@ -1,5 +1,4 @@
-﻿using Silk.NET.OpenGLES;
-using Silk.NET.OpenGLES.Extensions.EXT;
+﻿using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
 
 namespace Triangle.Core.Graphics;
@@ -68,32 +67,19 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         }
 
         GL gl = Context.GL;
-        ExtMultisampledRenderToTexture? mrt = Context.MRT;
 
         gl.BindTexture(GLEnum.Texture2D, ColorBuffer);
         gl.TexImage2D(GLEnum.Texture2D, 0, (int)GLEnum.Rgb, (uint)Width, (uint)Height, 0, GLEnum.Rgb, GLEnum.UnsignedByte, null);
         gl.BindTexture(GLEnum.Texture2D, 0);
 
         gl.BindRenderbuffer(GLEnum.Renderbuffer, DepthStencilBuffer);
-        if (mrt != null)
-        {
-            mrt.RenderbufferStorageMultisample((EXT)GLEnum.Renderbuffer, Samples, (EXT)GLEnum.Depth32fStencil8, (uint)Width, (uint)Height);
-        }
-        else
-        {
-            gl.RenderbufferStorage(GLEnum.Renderbuffer, GLEnum.Depth32fStencil8, (uint)Width, (uint)Height);
-        }
+        gl.RenderbufferStorageMultisample(GLEnum.Renderbuffer, Samples, GLEnum.Depth32fStencil8, (uint)Width, (uint)Height);
         gl.BindRenderbuffer(GLEnum.Renderbuffer, 0);
 
         gl.BindFramebuffer(GLEnum.Framebuffer, Handle);
-        if (mrt != null)
-        {
-            mrt.FramebufferTexture2DMultisample((EXT)GLEnum.Framebuffer, (EXT)GLEnum.ColorAttachment0, (EXT)GLEnum.Texture2D, ColorBuffer, 0, Samples);
-        }
-        else
-        {
-            gl.FramebufferTexture2D(GLEnum.Framebuffer, GLEnum.ColorAttachment0, GLEnum.Texture2D, ColorBuffer, 0);
-        }
+
+        // TODO: 多重采样。
+        gl.FramebufferTexture2D(GLEnum.Framebuffer, GLEnum.ColorAttachment0, GLEnum.Texture2D, ColorBuffer, 0);
         gl.FramebufferRenderbuffer(GLEnum.Framebuffer, GLEnum.DepthStencilAttachment, GLEnum.Renderbuffer, DepthStencilBuffer);
         gl.BindFramebuffer(GLEnum.Framebuffer, 0);
     }

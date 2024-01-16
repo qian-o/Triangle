@@ -3,8 +3,8 @@ using Common.Contracts.Applications;
 using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
-using Silk.NET.OpenGLES;
-using Silk.NET.OpenGLES.Extensions.ImGui;
+using Silk.NET.OpenGL;
+using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
 using Triangle.Core;
 using Triangle.Core.Contracts;
@@ -32,7 +32,7 @@ public unsafe class RenderHost<TApplication> : TrObject where TApplication : IAp
     {
         WindowOptions windowOptions = WindowOptions.Default;
         windowOptions.Title = title;
-        windowOptions.API = new GraphicsAPI(ContextAPI.OpenGLES, ContextProfile.Core, ContextFlags.ForwardCompatible, new APIVersion(3, 2));
+        windowOptions.API = new GraphicsAPI(ContextAPI.OpenGL, ContextProfile.Core, ContextFlags.ForwardCompatible, new APIVersion(4, 6));
         windowOptions.Samples = 8;
         windowOptions.VSync = false;
         windowOptions.PreferredDepthBufferBits = 32;
@@ -60,7 +60,7 @@ public unsafe class RenderHost<TApplication> : TrObject where TApplication : IAp
 
     private void OnLoad()
     {
-        gl = _window.CreateOpenGLES();
+        gl = _window.CreateOpenGL();
         inputContext = _window.CreateInput();
         trContext = new TrContext(gl);
         imGuiController = new ImGuiController(gl, _window, inputContext, new ImGuiFontConfig("Resources/Fonts/MSYH.TTC", 14, (a) => a.Fonts.GetGlyphRangesChineseFull()));

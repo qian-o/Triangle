@@ -1,4 +1,4 @@
-﻿using Silk.NET.OpenGLES;
+﻿using Silk.NET.OpenGL;
 using Triangle.Render.Enums;
 
 namespace Triangle.Render.Helpers;

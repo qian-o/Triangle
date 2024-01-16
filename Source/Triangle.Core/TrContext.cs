@@ -1,30 +1,17 @@
-﻿using Silk.NET.OpenGLES;
-using Silk.NET.OpenGLES.Extensions.EXT;
+﻿using Silk.NET.OpenGL;
 using Triangle.Core.Contracts;
 
 namespace Triangle.Core;
 
-public class TrContext : TrObject
+public class TrContext(GL gL) : TrObject
 {
-    public TrContext(GL gL)
-    {
-        GL = gL;
-
-        if (GL.TryGetExtension(out ExtMultisampledRenderToTexture mrt))
-        {
-            MRT = mrt;
-        }
-    }
-
-    public GL GL { get; }
-
-    public ExtMultisampledRenderToTexture? MRT { get; }
+    public GL GL { get; } = gL;
 
     protected override void Destroy(bool disposing = false)
     {
         if (disposing)
         {
-            MRT?.Dispose();
+            // TODO: 清理扩展资源。
         }
     }
 }
