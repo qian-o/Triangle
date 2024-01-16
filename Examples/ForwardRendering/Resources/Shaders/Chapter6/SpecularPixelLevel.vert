@@ -1,10 +1,10 @@
-#version 320 es
+#version 460
 
-in vec3 In_Position;
-in vec3 In_Normal;
-in vec2 In_TexCoord;
+layout(location = 0) in vec3 In_Position;
+layout(location = 1) in vec3 In_Normal;
+layout(location = 2) in vec2 In_TexCoord;
 
-out VertexData
+layout(location = 0) out VertexData
 {
     vec3 WorldNormal;
     vec3 WorldPos;

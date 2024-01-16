@@ -50,6 +50,8 @@ public class TrScene : TrGraphics<TrContext>
 
     public bool IsClosed { get; private set; }
 
+    public int Samples { get; set; } = 4;
+
     public float CameraSpeed { get; set; } = 2.0f;
 
     public float CameraSensitivity { get; set; } = 0.1f;
@@ -121,7 +123,7 @@ public class TrScene : TrGraphics<TrContext>
 
     public void Begin()
     {
-        _frame.Update(Width, Height);
+        _frame.Update(Width, Height, Samples);
 
         _frame.Bind();
     }
@@ -157,7 +159,7 @@ public class TrScene : TrGraphics<TrContext>
                 FramebufferResize?.Invoke(new Vector2D<int>(Width, Height));
             }
 
-            ImGui.Image((nint)_frame.ColorBuffer, size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
+            ImGui.Image((nint)_frame.Texture, size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
 
             DrawContentInWindow?.Invoke();
 

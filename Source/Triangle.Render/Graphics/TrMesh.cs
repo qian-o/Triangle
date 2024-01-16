@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using Silk.NET.OpenGLES;
+using Silk.NET.OpenGL;
 using Triangle.Core;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Render.Structs;

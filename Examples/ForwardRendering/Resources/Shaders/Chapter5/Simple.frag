@@ -1,14 +1,12 @@
-#version 320 es
+#version 460
 
-precision highp float;
-
-in VertexData
+layout(location = 0) in VertexData
 {
     vec4 Color;
 }
 In;
 
-out vec4 Out_Color;
+layout(location = 0) out vec4 Out_Color;
 
 uniform vec4 Uni_Color;
 

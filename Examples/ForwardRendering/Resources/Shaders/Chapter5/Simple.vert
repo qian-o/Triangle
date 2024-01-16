@@ -1,9 +1,9 @@
-#version 320 es
+#version 460
 
-in vec3 In_Position;
-in vec3 In_Normal;
+layout(location = 0) in vec3 In_Position;
+layout(location = 1) in vec3 In_Normal;
 
-out VertexData
+layout(location = 0) out VertexData
 {
     vec4 Color;
 }

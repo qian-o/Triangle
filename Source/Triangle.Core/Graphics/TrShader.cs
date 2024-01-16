@@ -1,4 +1,4 @@
-﻿using Silk.NET.OpenGLES;
+﻿using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
 using Triangle.Core.Exceptions;

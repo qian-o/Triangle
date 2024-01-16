@@ -1,8 +1,6 @@
-#version 320 es
+#version 460
 
-precision highp float;
-
-in VertexData
+layout(location = 0) in VertexData
 {
     vec3 WorldNormal;
     vec3 WorldPos;
@@ -10,7 +8,7 @@ in VertexData
 }
 In;
 
-out vec4 Out_Color;
+layout(location = 0) out vec4 Out_Color;
 
 uniform sampler2D MainTex;
 uniform vec4 MainTexST;

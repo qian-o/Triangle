@@ -1,5 +1,4 @@
-﻿using Silk.NET.OpenGLES;
-using Silk.NET.OpenGLES.Extensions.EXT;
+﻿using Silk.NET.OpenGL;
 using Triangle.Core;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
@@ -18,10 +17,10 @@ public unsafe class TrTexture : TrGraphics<TrContext>
 
         Handle = gl.GenTexture();
 
-        gl.GetFloat((GLEnum)EXT.MaxTextureMaxAnisotropyExt, out float maxAnisotropy);
+        gl.GetFloat(GLEnum.MaxTextureMaxAnisotropy, out float maxAnisotropy);
 
         gl.BindTexture(GLEnum.Texture2D, Handle);
-        gl.TexParameter(GLEnum.Texture2D, (GLEnum)EXT.MaxTextureMaxAnisotropyExt, maxAnisotropy);
+        gl.TexParameter(GLEnum.Texture2D, GLEnum.MaxTextureMaxAnisotropy, maxAnisotropy);
         gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureMinFilter, (int)(IsGenerateMipmap ? GLEnum.LinearMipmapLinear : GLEnum.Linear));
         gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureMagFilter, (int)GLEnum.Linear);
         gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureWrapS, (int)textureWrap);

@@ -1,8 +1,8 @@
-#version 320 es
+#version 460
 
-in vec3 In_Position;
+layout(location = 0) in vec3 In_Position;
 
-out VertexData
+layout(location = 0) out VertexData
 {
     vec3 NearPos;
     vec3 FarPos;
