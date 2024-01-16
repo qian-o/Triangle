@@ -20,7 +20,7 @@ public class TrScene : TrGraphics<TrContext>
     private bool firstMove = true;
     private Vector2D<float> lastPos;
 
-    public TrScene(IInputContext input, TrContext context, string name, uint samples = 1) : base(context)
+    public TrScene(IInputContext input, TrContext context, string name) : base(context)
     {
         Name = name;
         Camera = new Camera
@@ -31,7 +31,7 @@ public class TrScene : TrGraphics<TrContext>
 
         _mouse = input.Mice[0];
         _keyboard = input.Keyboards[0];
-        _frame = new TrFrame(Context, samples);
+        _frame = new TrFrame(Context);
     }
 
     public string Name { get; }
@@ -49,6 +49,8 @@ public class TrScene : TrGraphics<TrContext>
     public bool IsFocused { get; private set; }
 
     public bool IsClosed { get; private set; }
+
+    public int Samples { get; set; } = 4;
 
     public float CameraSpeed { get; set; } = 2.0f;
 
@@ -121,7 +123,7 @@ public class TrScene : TrGraphics<TrContext>
 
     public void Begin()
     {
-        _frame.Update(Width, Height);
+        _frame.Update(Width, Height, Samples);
 
         _frame.Bind();
     }

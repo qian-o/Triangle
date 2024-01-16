@@ -5,10 +5,8 @@ namespace Triangle.Core.Graphics;
 
 public unsafe class TrFrame : TrGraphics<TrContext>
 {
-    public TrFrame(TrContext context, uint samples = 1) : base(context)
+    public TrFrame(TrContext context) : base(context)
     {
-        Samples = samples;
-
         GL gl = Context.GL;
 
         Handle = gl.GenFramebuffer();
@@ -28,7 +26,7 @@ public unsafe class TrFrame : TrGraphics<TrContext>
 
     public int Height { get; private set; }
 
-    public uint Samples { get; }
+    public int Samples { get; private set; }
 
     public uint Texture { get; }
 
@@ -50,15 +48,16 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         gl.DeleteRenderbuffer(DepthStencilBuffer);
     }
 
-    public void Update(int width, int height)
+    public void Update(int width, int height, int samples)
     {
-        if (Width == width && Height == height)
+        if (Width == width && Height == height && Samples == samples)
         {
             return;
         }
 
         Width = width;
         Height = height;
+        Samples = samples;
 
         if (Handle == 0)
         {
@@ -78,11 +77,11 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         // 多重采样缓冲区
         {
             gl.BindRenderbuffer(GLEnum.Renderbuffer, ColorBuffer);
-            gl.RenderbufferStorageMultisample(GLEnum.Renderbuffer, Samples, GLEnum.Rgb8, (uint)Width, (uint)Height);
+            gl.RenderbufferStorageMultisample(GLEnum.Renderbuffer, (uint)Samples, GLEnum.Rgb8, (uint)Width, (uint)Height);
             gl.BindRenderbuffer(GLEnum.Renderbuffer, 0);
 
             gl.BindRenderbuffer(GLEnum.Renderbuffer, DepthStencilBuffer);
-            gl.RenderbufferStorageMultisample(GLEnum.Renderbuffer, Samples, GLEnum.Depth32fStencil8, (uint)Width, (uint)Height);
+            gl.RenderbufferStorageMultisample(GLEnum.Renderbuffer, (uint)Samples, GLEnum.Depth32fStencil8, (uint)Width, (uint)Height);
             gl.BindRenderbuffer(GLEnum.Renderbuffer, 0);
 
             gl.BindFramebuffer(GLEnum.Framebuffer, Framebuffer);

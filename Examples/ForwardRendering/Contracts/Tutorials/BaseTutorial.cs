@@ -26,7 +26,7 @@ public abstract class BaseTutorial : ITutorial
     {
         Input = input;
         Context = context;
-        Scene = new TrScene(input, context, name, 8);
+        Scene = new TrScene(input, context, name);
 
         _grid = Context.CreateGrid();
         _gridMat = new(Context);
@@ -73,19 +73,21 @@ public abstract class BaseTutorial : ITutorial
     {
         if (ImGui.Begin("Properties"))
         {
+            ImGui.SeparatorText("Scene");
+
+            int samples = Scene.Samples;
+            ImGui.SliderInt("Samples", ref samples, 1, 16);
+            Scene.Samples = samples;
+
             ImGui.SeparatorText("Camera");
 
             float cameraSpeed = Scene.CameraSpeed;
-            if (ImGui.SliderFloat("Speed", ref cameraSpeed, 0.1f, 10.0f))
-            {
-                Scene.CameraSpeed = cameraSpeed;
-            }
+            ImGui.SliderFloat("Speed", ref cameraSpeed, 0.1f, 10.0f);
+            Scene.CameraSpeed = cameraSpeed;
 
             float cameraSensitivity = Scene.CameraSensitivity;
-            if (ImGui.SliderFloat("Sensitivity", ref cameraSensitivity, 0.1f, 1.0f))
-            {
-                Scene.CameraSensitivity = cameraSensitivity;
-            }
+            ImGui.SliderFloat("Sensitivity", ref cameraSensitivity, 0.1f, 1.0f);
+            Scene.CameraSensitivity = cameraSensitivity;
 
             _gridMat.AdjustImGuiProperties();
 
