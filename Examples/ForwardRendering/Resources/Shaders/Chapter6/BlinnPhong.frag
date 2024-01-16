@@ -1,15 +1,13 @@
-#version 320 es
+#version 460 core
 
-precision highp float;
-
-in VertexData
+layout(location = 0) in VertexData
 {
     vec3 WorldNormal;
     vec3 WorldPos;
 }
 In;
 
-out vec4 Out_Color;
+layout(location = 0) out vec4 Out_Color;
 
 layout(std140, binding = 1) uniform Vectors
 {
