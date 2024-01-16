@@ -26,7 +26,7 @@ public abstract class BaseTutorial : ITutorial
     {
         Input = input;
         Context = context;
-        Scene = new TrScene(input, context, name);
+        Scene = new TrScene(input, context, name, 8);
 
         _grid = Context.CreateGrid();
         _gridMat = new(Context);
