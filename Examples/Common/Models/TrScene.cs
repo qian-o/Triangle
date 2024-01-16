@@ -31,7 +31,7 @@ public class TrScene : TrGraphics<TrContext>
 
         _mouse = input.Mice[0];
         _keyboard = input.Keyboards[0];
-        _frame = new TrFrame(Context, samples: samples);
+        _frame = new TrFrame(Context, samples);
     }
 
     public string Name { get; }
@@ -157,7 +157,7 @@ public class TrScene : TrGraphics<TrContext>
                 FramebufferResize?.Invoke(new Vector2D<int>(Width, Height));
             }
 
-            ImGui.Image((nint)_frame.ColorBuffer, size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
+            ImGui.Image((nint)_frame.Texture, size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
 
             DrawContentInWindow?.Invoke();
 
