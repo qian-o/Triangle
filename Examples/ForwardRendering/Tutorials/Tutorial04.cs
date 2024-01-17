@@ -3,7 +3,7 @@ using System.Numerics;
 using Common.Models;
 using Common.Structs;
 using ForwardRendering.Contracts.Tutorials;
-using ForwardRendering.Materials.Chapter6;
+using ForwardRendering.Materials.Chapter7;
 using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
@@ -14,9 +14,9 @@ using Triangle.Render.Helpers;
 
 namespace ForwardRendering.Tutorials;
 
-[DisplayName("高光反射")]
-[Description("使用 Specular 相关材质渲染胶囊体。")]
-public class Tutorial03(IInputContext input, TrContext context, string name) : BaseTutorial(input, context, name)
+[DisplayName("2D 纹理")]
+[Description("使用 Texture 相关材质渲染胶囊体。")]
+public class Tutorial04(IInputContext input, TrContext context, string name) : BaseTutorial(input, context, name)
 {
     #region Meshes
     private TrMesh capsule = null!;
@@ -30,9 +30,7 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
     #endregion
 
     #region Materials
-    private SpecularVertexLevelMat specularVertexLevelMat = null!;
-    private SpecularPixelLevelMat specularPixelLevelMat = null!;
-    private BlinnPhongMat blinnPhongMat = null!;
+    private SingleTextureMat singleTextureMat = null!;
     #endregion
 
     #region Lights
@@ -44,9 +42,7 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
     {
         capsule = Context.AssimpParsing("Resources/Models/Capsule.glb".PathFormatter())[0];
 
-        specularVertexLevelMat = new(Context);
-        specularPixelLevelMat = new(Context);
-        blinnPhongMat = new(Context);
+        singleTextureMat = new(Context);
     }
 
     protected override void UpdateScene(double deltaSeconds)
@@ -59,21 +55,12 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
 
         TrSceneParameters sceneParameters = new(Scene.Camera, model, ambientLight, directionalLight);
 
-        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-3.0f, 0.0f, 0.0f));
-        specularVertexLevelMat.Draw(capsule, sceneParameters);
-
-        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
-        specularPixelLevelMat.Draw(capsule, sceneParameters);
-
-        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
-        blinnPhongMat.Draw(capsule, sceneParameters);
+        singleTextureMat.Draw(capsule, sceneParameters);
     }
 
     protected override void EditProperties()
     {
-        specularVertexLevelMat.AdjustImGuiProperties();
-        specularPixelLevelMat.AdjustImGuiProperties();
-        blinnPhongMat.AdjustImGuiProperties();
+        singleTextureMat.AdjustImGuiProperties();
 
         ImGui.SeparatorText("Transforms");
 
@@ -108,9 +95,7 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
 
     protected override void Destroy(bool disposing = false)
     {
-        blinnPhongMat.Dispose();
-        specularPixelLevelMat.Dispose();
-        specularVertexLevelMat.Dispose();
+        singleTextureMat.Dispose();
         capsule.Dispose();
     }
 }

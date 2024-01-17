@@ -1,11 +1,10 @@
 ﻿using Silk.NET.OpenGL;
-using Triangle.Core;
+using StbImageSharp;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
-using Triangle.Render.Enums;
-using Triangle.Render.Helpers;
+using Triangle.Core.Helpers;
 
-namespace Triangle.Render.Graphics;
+namespace Triangle.Core.Graphics;
 
 public unsafe class TrTexture : TrGraphics<TrContext>
 {
@@ -35,6 +34,16 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         GL gl = Context.GL;
 
         gl.DeleteTexture(Handle);
+    }
+
+    public void LoadImage(string file)
+    {
+        ImageResult image = ImageResult.FromMemory(File.ReadAllBytes(file), ColorComponents.RedGreenBlueAlpha);
+
+        fixed (byte* ptr = image.Data)
+        {
+            Write((uint)image.Width, (uint)image.Height, TrPixelFormat.RGBA8, ptr);
+        }
     }
 
     public void Write(uint width, uint height, TrPixelFormat pixelFormat, void* data)

@@ -49,3 +49,8 @@ vec3 WorldSpaceViewDirection(vec3 worldPos)
 {
     return Uni_Vectors.CameraPosition - worldPos;
 }
+
+vec2 TransformUV(vec2 uv, vec4 st)
+{
+    return uv * st.xy + st.zw;
+}

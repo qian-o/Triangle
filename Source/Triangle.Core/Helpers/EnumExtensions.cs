@@ -131,4 +131,16 @@ public static class EnumExtensions
             _ => throw new NotSupportedException("不支持的着色器类型。"),
         };
     }
+
+    public static (GLEnum Target, GLEnum Format) ToGL(this TrPixelFormat pixelFormat)
+    {
+        return pixelFormat switch
+        {
+            TrPixelFormat.R8 => (GLEnum.R8, GLEnum.Red),
+            TrPixelFormat.RG8 => (GLEnum.RG8, GLEnum.RG),
+            TrPixelFormat.RGB8 => (GLEnum.Rgb8, GLEnum.Rgb),
+            TrPixelFormat.RGBA8 => (GLEnum.Rgba8, GLEnum.Rgba),
+            _ => throw new NotSupportedException("不支持的像素格式。"),
+        };
+    }
 }
