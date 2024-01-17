@@ -12,14 +12,9 @@ public static unsafe class ShadercHelper
         Compiler* compiler = shaderc.CompilerInitialize();
         CompileOptions* options = shaderc.CompileOptionsInitialize();
         CompilationResult* result;
-        void* userData = (void*)Marshal.StringToHGlobalAnsi(folder);
 
         shaderc.CompileOptionsSetSourceLanguage(options, SourceLanguage.Glsl);
         shaderc.CompileOptionsSetAutoCombinedImageSampler(options, true);
-        shaderc.CompileOptionsSetIncludeCallbacks(options,
-                                                  PfnIncludeResolveFn.From(IncludeResolver),
-                                                  PfnIncludeResultReleaseFn.From(IncludeResultRelease),
-                                                  userData);
 
         foreach (string file in Directory.GetFiles(folder, "*.vert", SearchOption.AllDirectories))
         {
@@ -31,15 +26,21 @@ public static unsafe class ShadercHelper
             CompileShader(file, ShaderKind.FragmentShader);
         }
 
-        Marshal.FreeHGlobal((nint)userData);
-
         void CompileShader(string file, ShaderKind kind)
         {
-            string outputFolder = Path.GetDirectoryName(file) ?? folder;
+            string path = Path.GetDirectoryName(file) ?? folder;
             string name = Path.GetFileNameWithoutExtension(file);
             string source = File.ReadAllText(file);
 
+            void* userData = (void*)Marshal.StringToHGlobalAnsi(path);
+            shaderc.CompileOptionsSetIncludeCallbacks(options,
+                                                      PfnIncludeResolveFn.From(IncludeResolver),
+                                                      PfnIncludeResultReleaseFn.From(IncludeResultRelease),
+                                                      userData);
+
             result = shaderc.CompileIntoSpv(compiler, source, (uint)source.Length, kind, name, "main", options);
+
+            Marshal.FreeHGlobal((nint)userData);
 
             if (shaderc.ResultGetCompilationStatus(result) != CompilationStatus.Success)
             {
@@ -60,7 +61,7 @@ public static unsafe class ShadercHelper
 
                 ReadOnlySpan<byte> bytes = new(shaderc.ResultGetBytes(result), (int)shaderc.ResultGetLength(result));
 
-                using FileStream fileStream = File.Create(Path.Combine(outputFolder, $"{name}.{extension}.spv"));
+                using FileStream fileStream = File.Create(Path.Combine(path, $"{name}.{extension}.spv"));
                 fileStream.Write(bytes);
             }
         }
@@ -70,7 +71,7 @@ public static unsafe class ShadercHelper
     {
         IncludeResult* result = (IncludeResult*)Marshal.AllocHGlobal(sizeof(IncludeResult));
         string folder = Marshal.PtrToStringAnsi((nint)userData)!;
-        string include = Marshal.PtrToStringAnsi((nint)requestedResource)!;
+        string include = Marshal.PtrToStringAnsi((nint)requestedResource)!.PathFormatter();
         string file = Path.Combine(folder, include);
 
         string name = Path.GetFileNameWithoutExtension(file);

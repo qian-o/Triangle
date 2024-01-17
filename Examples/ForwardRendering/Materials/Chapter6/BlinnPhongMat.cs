@@ -8,6 +8,7 @@ using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
+using Triangle.Core.Helpers;
 using Triangle.Render.Graphics;
 
 namespace ForwardRendering.Materials.Chapter6;
@@ -41,8 +42,8 @@ public class BlinnPhongMat(TrContext context) : GlobalMat(context, "BlinnPhong")
     {
         uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter6/BlinnPhong.vert.spv");
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter6/BlinnPhong.frag.spv");
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter6/BlinnPhong.vert.spv".PathFormatter());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter6/BlinnPhong.frag.spv".PathFormatter());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);

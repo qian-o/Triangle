@@ -8,6 +8,7 @@ using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
+using Triangle.Core.Helpers;
 using Triangle.Render.Graphics;
 
 namespace ForwardRendering.Materials.Chapter5;
@@ -31,8 +32,8 @@ public class SimpleMat(TrContext context) : GlobalMat(context, "Simple")
     {
         uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter5/Simple.vert.spv");
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter5/Simple.frag.spv");
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter5/Simple.vert.spv".PathFormatter());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter5/Simple.frag.spv".PathFormatter());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);

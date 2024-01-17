@@ -67,8 +67,8 @@ public class DiffusePixelLevelMat(TrContext context) : TrMaterial<TrSceneParamet
 
     public override TrRenderPass CreateRenderPass()
     {
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter6/DiffusePixelLevel.vert.spv");
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter6/DiffusePixelLevel.frag.spv");
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter6/DiffusePixelLevel.vert.spv".PathFormatter());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter6/DiffusePixelLevel.frag.spv".PathFormatter());
 
         renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);

@@ -1,7 +1,7 @@
 #version 460
 
-#include "TrShaderUtilities.glsl"
-#include "TrVertex.glsl"
+#include "../TrShaderUtilities.glsl"
+#include "../TrVertex.glsl"
 
 layout(location = 0) out VertexData
 {

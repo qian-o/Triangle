@@ -1,6 +1,6 @@
 #version 460
 
-#include "TrShaderUtilities.glsl"
+#include "../TrShaderUtilities.glsl"
 
 layout(location = 0) in VertexData
 {

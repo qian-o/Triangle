@@ -8,7 +8,7 @@ internal sealed class Program
 {
     static void Main(string[] _)
     {
-        ShadercHelper.CompileSpirv("Resources/Shaders");
+        ShadercHelper.CompileSpirv("Resources/Shaders".PathFormatter());
 
         using RenderHost<TutorialApplication> renderHost = new("Forward Rendering");
         renderHost.Run();
