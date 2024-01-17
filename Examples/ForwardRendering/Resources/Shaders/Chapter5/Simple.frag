@@ -8,9 +8,13 @@ In;
 
 layout(location = 0) out vec4 Out_Color;
 
-uniform vec4 Uni_Color;
+layout(std140, binding = 1) uniform Parameters
+{
+    vec4 Color;
+}
+Uni_Parameters;
 
 void main()
 {
-    Out_Color = In.Color * Uni_Color;
+    Out_Color = In.Color * Uni_Parameters.Color;
 }

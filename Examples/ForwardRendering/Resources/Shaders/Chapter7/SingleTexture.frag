@@ -10,9 +10,6 @@ In;
 
 layout(location = 0) out vec4 Out_Color;
 
-uniform sampler2D MainTex;
-uniform vec4 MainTexST;
-
 layout(std140, binding = 1) uniform Vectors
 {
     vec3 CameraPosition;
@@ -41,6 +38,13 @@ layout(std140, binding = 4) uniform DirectionalLight
 }
 Uni_DirectionalLight;
 
+layout(binding = 5) uniform sampler2D MainTex;
+layout(binding = 6) uniform MainTexST
+{
+    vec4 ST;
+}
+Uni_MainTexST;
+
 float saturate(float value)
 {
     return clamp(value, 0.0, 1.0);
@@ -56,7 +60,7 @@ void main()
     vec3 worldNormal = normalize(In.WorldNormal);
     vec3 worldLightDir = normalize(Uni_DirectionalLight.Position);
 
-    vec3 albedo = texture(MainTex, transformUV(In.UV, MainTexST)).rgb * Uni_Material.Color.rgb;
+    vec3 albedo = texture(MainTex, transformUV(In.UV, Uni_MainTexST.ST)).rgb * Uni_Material.Color.rgb;
 
     vec3 ambient = albedo * Uni_AmbientLight.Color;
 

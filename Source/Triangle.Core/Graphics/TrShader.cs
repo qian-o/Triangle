@@ -6,16 +6,19 @@ using Triangle.Core.Helpers;
 
 namespace Triangle.Core.Graphics;
 
-public class TrShader : TrGraphics<TrContext>
+public unsafe class TrShader : TrGraphics<TrContext>
 {
-    public TrShader(TrContext context, TrShaderType shaderType, string source) : base(context)
+    public TrShader(TrContext context, TrShaderType shaderType, string path) : base(context)
     {
         GL gl = Context.GL;
 
         Handle = gl.CreateShader(shaderType.ToGL());
 
-        gl.ShaderSource(Handle, source);
-        gl.CompileShader(Handle);
+        byte[] bytes = File.ReadAllBytes(path);
+        uint size = (uint)bytes.Length;
+
+        gl.ShaderBinary(1, Handle, GLEnum.ShaderBinaryFormatSpirV, bytes[0], size);
+        gl.SpecializeShader(Handle, "main", 0, null, null);
 
         string error = gl.GetShaderInfoLog(Handle);
 

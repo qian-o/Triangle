@@ -85,8 +85,8 @@ public class SpecularPixelLevelMat(TrContext context) : TrMaterial<TrParameter>(
 
     public override TrRenderPass CreateRenderPass()
     {
-        using TrShader vert = new(Context, TrShaderType.Vertex, File.ReadAllText("Resources/Shaders/Chapter6/SpecularPixelLevel.vert"));
-        using TrShader frag = new(Context, TrShaderType.Fragment, File.ReadAllText("Resources/Shaders/Chapter6/SpecularPixelLevel.frag"));
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter6/SpecularPixelLevel.vert.spv");
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter6/SpecularPixelLevel.frag.spv");
 
         renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);
