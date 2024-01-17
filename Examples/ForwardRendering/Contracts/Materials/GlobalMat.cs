@@ -148,7 +148,7 @@ public abstract class GlobalMat : TrMaterial<TrSceneParameters>
         RenderPass.Dispose();
     }
 
-    protected abstract void DrawCore([NotNull] TrMesh mesh, [NotNull] TrSceneParameters parameter);
+    protected abstract void DrawCore([NotNull] TrMesh mesh, [NotNull] TrSceneParameters sceneParameters);
 
     /// <summary>
     /// 此处应该清理材质中用到的其他缓冲区资源。
