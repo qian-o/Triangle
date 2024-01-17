@@ -1,5 +1,9 @@
 #version 460
 
+#extension GL_GOOGLE_include_directive : require
+
+#include "../../TrUtils.glsl"
+
 layout(location = 0) in VertexData
 {
     vec4 Color;

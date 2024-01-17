@@ -1,36 +1,26 @@
 #version 460
 
+#extension GL_GOOGLE_include_directive : require
+
+#include "../../TrUtils.glsl"
+
 layout(location = 0) in VertexData
 {
-    vec3 Normal;
+    vec3 WorldNormal;
 }
 In;
 
 layout(location = 0) out vec4 Out_Color;
 
-layout(std140, binding = 1) uniform Material
+layout(std140, binding = UNIFORM_BUFFER_BINDING_START + 0) uniform Material
 {
     vec4 Diffuse;
 }
 Uni_Material;
 
-layout(std140, binding = 2) uniform AmbientLight
-{
-    vec3 Color;
-}
-Uni_AmbientLight;
-
-layout(std140, binding = 3) uniform DirectionalLight
-{
-    vec3 Position;
-    vec3 Direction;
-    vec3 Color;
-}
-Uni_DirectionalLight;
-
 void main()
 {
-    vec3 worldNormal = normalize(In.Normal);
+    vec3 worldNormal = normalize(In.WorldNormal);
     vec3 worldLightDir = normalize(Uni_DirectionalLight.Position);
 
     float halfLambert = dot(worldNormal, worldLightDir) * 0.5 + 0.5;

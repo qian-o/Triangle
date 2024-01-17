@@ -2,7 +2,7 @@
 
 #extension GL_GOOGLE_include_directive : require
 
-#include "TrShaderUtilities.glsl"
+#include "../TrUtils.glsl"
 
 layout(location = 0) in VertexData
 {
