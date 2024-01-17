@@ -1,5 +1,7 @@
 #version 460
 
+#extension GL_GOOGLE_include_directive : require
+
 #include "../TrShaderUtilities.glsl"
 
 layout(location = 0) in VertexData

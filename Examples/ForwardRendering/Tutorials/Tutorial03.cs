@@ -42,7 +42,7 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
 
     protected override void Loaded()
     {
-        capsule = Context.AssimpParsing("Resources/Models/Capsule.glb")[0];
+        capsule = Context.AssimpParsing("Resources/Models/Capsule.glb".PathFormatter())[0];
 
         specularVertexLevelMat = new(Context);
         specularPixelLevelMat = new(Context);

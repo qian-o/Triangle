@@ -42,7 +42,7 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
 
     protected override void Loaded()
     {
-        goldStar = Context.AssimpParsing("Resources/Models/Gold Star.glb")[0];
+        goldStar = Context.AssimpParsing("Resources/Models/Gold Star.glb".PathFormatter())[0];
 
         diffuseVertexLevelMat = new(Context);
         diffusePixelLevelMat = new(Context);

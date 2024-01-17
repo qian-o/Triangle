@@ -5,6 +5,7 @@ using ForwardRendering.Materials.Chapter5;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
+using Triangle.Core.Helpers;
 using Triangle.Render.Graphics;
 using Triangle.Render.Helpers;
 
@@ -30,7 +31,7 @@ public class Tutorial01(IInputContext input, TrContext context, string name) : B
 
     protected override void Loaded()
     {
-        sphere = Context.AssimpParsing("Resources/Models/Sphere.glb")[0];
+        sphere = Context.AssimpParsing("Resources/Models/Sphere.glb".PathFormatter())[0];
 
         simpleMat = new(Context);
     }
