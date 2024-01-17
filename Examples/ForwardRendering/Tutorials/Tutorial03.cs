@@ -37,7 +37,7 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
 
     #region Lights
     private TrAmbientLight ambientLight = new(new Vector3D<float>(0.21176471f, 0.22745098f, 0.25882354f));
-    private TrDirectionalLight directionalLight = new(new Vector3D<float>(0.0f, 0.0f, -1.0f), new Vector3D<float>(1.0f, 0.9569f, 0.8392f));
+    private TrDirectionalLight directionalLight = new(new Vector3D<float>(1.0f, 0.9569f, 0.8392f), new Vector3D<float>(0.0f, 0.0f, -1.0f));
     #endregion
 
     protected override void Loaded()
@@ -57,16 +57,16 @@ public class Tutorial03(IInputContext input, TrContext context, string name) : B
     {
         Matrix4X4<float> model = Matrix4X4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix4X4.CreateScale(scale) * Matrix4X4.CreateTranslation(translation);
 
-        TrParameter parameter = new(Scene.Camera, model, ambientLight, directionalLight);
+        TrSceneParameters sceneParameters = new(Scene.Camera, model, ambientLight, directionalLight);
 
-        parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-3.0f, 0.0f, 0.0f));
-        specularVertexLevelMat.Draw(capsule, parameter);
+        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-3.0f, 0.0f, 0.0f));
+        specularVertexLevelMat.Draw(capsule, sceneParameters);
 
-        parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
-        specularPixelLevelMat.Draw(capsule, parameter);
+        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
+        specularPixelLevelMat.Draw(capsule, sceneParameters);
 
-        parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
-        blinnPhongMat.Draw(capsule, parameter);
+        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
+        blinnPhongMat.Draw(capsule, sceneParameters);
     }
 
     protected override void EditProperties()

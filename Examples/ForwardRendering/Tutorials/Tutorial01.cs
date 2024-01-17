@@ -43,9 +43,9 @@ public class Tutorial01(IInputContext input, TrContext context, string name) : B
     {
         Matrix4X4<float> model = Matrix4X4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix4X4.CreateScale(scale) * Matrix4X4.CreateTranslation(translation);
 
-        TrParameter parameter = new(Scene.Camera, model);
+        TrSceneParameters sceneParameters = new(Scene.Camera, model);
 
-        simpleMat.Draw(sphere, parameter);
+        simpleMat.Draw(sphere, sceneParameters);
     }
 
     protected override void EditProperties()

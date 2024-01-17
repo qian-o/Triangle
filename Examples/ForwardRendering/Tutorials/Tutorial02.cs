@@ -37,7 +37,7 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
 
     #region Lights
     private TrAmbientLight ambientLight = new(new Vector3D<float>(0.21176471f, 0.22745098f, 0.25882354f));
-    private TrDirectionalLight directionalLight = new(new Vector3D<float>(0.0f, 0.0f, -1.0f), new Vector3D<float>(1.0f, 0.9569f, 0.8392f));
+    private TrDirectionalLight directionalLight = new(new Vector3D<float>(1.0f, 0.9569f, 0.8392f), new Vector3D<float>(0.0f, 0.0f, -1.0f));
     #endregion
 
     protected override void Loaded()
@@ -57,16 +57,16 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
     {
         Matrix4X4<float> model = Matrix4X4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix4X4.CreateScale(scale) * Matrix4X4.CreateTranslation(translation);
 
-        TrParameter parameter = new(Scene.Camera, model, ambientLight, directionalLight);
+        TrSceneParameters sceneParameters = new(Scene.Camera, model, ambientLight, directionalLight);
 
-        parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-2.0f, 0.0f, 0.0f));
-        diffuseVertexLevelMat.Draw(goldStar, parameter);
+        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-2.0f, 0.0f, 0.0f));
+        diffuseVertexLevelMat.Draw(goldStar, sceneParameters);
 
-        parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
-        diffusePixelLevelMat.Draw(goldStar, parameter);
+        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
+        diffusePixelLevelMat.Draw(goldStar, sceneParameters);
 
-        parameter.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
-        halfLambertMat.Draw(goldStar, parameter);
+        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
+        halfLambertMat.Draw(goldStar, sceneParameters);
     }
 
     protected override void EditProperties()

@@ -3,7 +3,7 @@ using Silk.NET.Maths;
 
 namespace Common.Models;
 
-public class TrParameter(Camera camera, Matrix4X4<float> model, TrAmbientLight ambientLight = default, TrDirectionalLight directionalLight = default)
+public class TrSceneParameters(Camera camera, Matrix4X4<float> model, TrAmbientLight ambientLight = default, TrDirectionalLight directionalLight = default)
 {
     public Camera Camera { get; set; } = camera;
 

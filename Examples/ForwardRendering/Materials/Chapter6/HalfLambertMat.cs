@@ -13,7 +13,7 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials.Chapter6;
 
-public class HalfLambertMat(TrContext context) : TrMaterial<TrParameter>(context, "HalfLambert")
+public class HalfLambertMat(TrContext context) : TrMaterial<TrSceneParameters>(context, "HalfLambert")
 {
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -81,7 +81,7 @@ public class HalfLambertMat(TrContext context) : TrMaterial<TrParameter>(context
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    public override void Draw([NotNull] TrMesh mesh, [NotNull] TrParameter parameter)
+    public override void Draw([NotNull] TrMesh mesh, [NotNull] TrSceneParameters parameter)
     {
         foreach (TrRenderPipeline renderPipeline in RenderPass!.RenderPipelines)
         {

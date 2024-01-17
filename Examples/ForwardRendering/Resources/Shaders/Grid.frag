@@ -1,5 +1,7 @@
 #version 460
 
+#include "TrUniform.glsl"
+
 layout(location = 0) in VertexData
 {
     vec3 NearPos;
@@ -9,14 +11,7 @@ In;
 
 layout(location = 0) out vec4 Out_Color;
 
-layout(std140, binding = 0) uniform Matrices
-{
-    mat4 View;
-    mat4 Projection;
-}
-Uni_Matrices;
-
-layout(std140, binding = 1) uniform Parameters
+layout(std140, binding = UNIFORM_BUFFER_BINDING_START + 0) uniform Parameters
 {
     float Near;
     float Far;
@@ -39,14 +34,14 @@ vec4 grid(vec3 fragPos3D, float scale, float fade)
 
 float computeDepth(vec3 pos)
 {
-    vec4 clip_space_pos = Uni_Matrices.Projection * Uni_Matrices.View * vec4(pos, 1.0);
+    vec4 clip_space_pos = Uni_Transforms.Projection * Uni_Transforms.View * vec4(pos, 1.0);
 
     return (clip_space_pos.z / clip_space_pos.w) * 0.5 + 0.5;
 }
 
 float computeLinearDepth(vec3 pos)
 {
-    vec4 clip_space_pos = Uni_Matrices.Projection * Uni_Matrices.View * vec4(pos, 1.0);
+    vec4 clip_space_pos = Uni_Transforms.Projection * Uni_Transforms.View * vec4(pos, 1.0);
     float clip_space_depth = clip_space_pos.z / clip_space_pos.w;
     float linearDepth =
         (2.0 * Uni_Parameters.Near * Uni_Parameters.Far) /

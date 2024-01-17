@@ -1,29 +1,18 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Common.Models;
+using ForwardRendering.Contracts.Materials;
 using ImGuiNET;
-using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
 using Triangle.Render.Graphics;
-using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials;
 
-public class GridMat(TrContext context) : TrMaterial<TrParameter>(context, "Grid")
+public class GridMat(TrContext context) : GlobalMat(context, "Grid")
 {
     #region Uniforms
-    [StructLayout(LayoutKind.Explicit)]
-    private struct UniMatrices
-    {
-        [FieldOffset(0)]
-        public Matrix4X4<float> View;
-
-        [FieldOffset(64)]
-        public Matrix4X4<float> Projection;
-    }
-
     [StructLayout(LayoutKind.Explicit)]
     private struct UniParameters
     {
@@ -47,8 +36,6 @@ public class GridMat(TrContext context) : TrMaterial<TrParameter>(context, "Grid
     }
     #endregion
 
-    private TrRenderPipeline renderPipeline = null!;
-    private TrBuffer<UniMatrices> uboMatrices = null!;
     private TrBuffer<UniParameters> uboParameters = null!;
 
     public float Distance { get; set; } = 6.0f;
@@ -57,19 +44,18 @@ public class GridMat(TrContext context) : TrMaterial<TrParameter>(context, "Grid
 
     public override TrRenderPass CreateRenderPass()
     {
+        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Grid.vert.spv");
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Grid.frag.spv");
 
-        renderPipeline = new(Context, [vert, frag]);
+        TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Geometry);
-
-        uboMatrices = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
-        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    public override void Draw([NotNull] TrMesh mesh, [NotNull] TrParameter parameter)
+    protected override void DrawCore([NotNull] TrMesh mesh, [NotNull] TrSceneParameters parameter)
     {
         double logDistance = Math.Log2(Distance);
         double upperDistance = Math.Pow(2.0, Math.Floor(logDistance) + 1);
@@ -80,35 +66,25 @@ public class GridMat(TrContext context) : TrMaterial<TrParameter>(context, "Grid
         float primaryScale = Convert.ToSingle(Math.Pow(2.0, level));
         float secondaryScale = Convert.ToSingle(Math.Pow(2.0, level + 1));
 
-        foreach (TrRenderPipeline renderPipeline in RenderPass!.RenderPipelines)
+        TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
+
+        renderPipeline.Bind();
+
+        uboParameters.SetData(new UniParameters()
         {
-            renderPipeline.Bind();
+            Near = parameter.Camera.Near,
+            Far = parameter.Camera.Far,
+            PrimaryScale = primaryScale,
+            SecondaryScale = secondaryScale,
+            GridIntensity = GridIntensity,
+            Fade = fade
+        });
 
-            mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Position"), 3, nameof(TrVertex.Position));
+        renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);
 
-            uboMatrices.SetData(new UniMatrices()
-            {
-                View = parameter.Camera.View,
-                Projection = parameter.Camera.Projection
-            });
+        mesh.Draw();
 
-            uboParameters.SetData(new UniParameters()
-            {
-                Near = parameter.Camera.Near,
-                Far = parameter.Camera.Far,
-                PrimaryScale = primaryScale,
-                SecondaryScale = secondaryScale,
-                GridIntensity = GridIntensity,
-                Fade = fade
-            });
-
-            renderPipeline.BindUniformBlock(0, uboMatrices);
-            renderPipeline.BindUniformBlock(1, uboParameters);
-
-            mesh.Draw();
-
-            renderPipeline.Unbind();
-        }
+        renderPipeline.Unbind();
     }
 
     protected override void AdjustImGuiPropertiesCore()
@@ -122,13 +98,8 @@ public class GridMat(TrContext context) : TrMaterial<TrParameter>(context, "Grid
         GridIntensity = gridIntensity;
     }
 
-    protected override void Destroy(bool disposing = false)
+    protected override void DestroyCore(bool disposing = false)
     {
         uboParameters.Dispose();
-        uboMatrices.Dispose();
-
-        RenderPass.Dispose();
-
-        renderPipeline.Dispose();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Silk.NET.Shaderc;
+﻿using System.Runtime.InteropServices;
+using Silk.NET.Shaderc;
 using Triangle.Core.Exceptions;
 
 namespace Triangle.Core.Helpers;
@@ -11,9 +12,14 @@ public static unsafe class ShadercHelper
         Compiler* compiler = shaderc.CompilerInitialize();
         CompileOptions* options = shaderc.CompileOptionsInitialize();
         CompilationResult* result;
+        void* userData = (void*)Marshal.StringToHGlobalAnsi(folder);
 
         shaderc.CompileOptionsSetSourceLanguage(options, SourceLanguage.Glsl);
         shaderc.CompileOptionsSetAutoCombinedImageSampler(options, true);
+        shaderc.CompileOptionsSetIncludeCallbacks(options,
+                                                  PfnIncludeResolveFn.From(IncludeResolver),
+                                                  PfnIncludeResultReleaseFn.From(IncludeResultRelease),
+                                                  userData);
 
         foreach (string file in Directory.GetFiles(folder, "*.vert", SearchOption.AllDirectories))
         {
@@ -24,6 +30,8 @@ public static unsafe class ShadercHelper
         {
             CompileShader(file, ShaderKind.FragmentShader);
         }
+
+        Marshal.FreeHGlobal((nint)userData);
 
         void CompileShader(string file, ShaderKind kind)
         {
@@ -56,5 +64,30 @@ public static unsafe class ShadercHelper
                 fileStream.Write(bytes);
             }
         }
+    }
+
+    private static unsafe IncludeResult* IncludeResolver(void* userData, byte* requestedResource, int type, byte* requestingResource, UIntPtr includePath)
+    {
+        IncludeResult* result = (IncludeResult*)Marshal.AllocHGlobal(sizeof(IncludeResult));
+        string folder = Marshal.PtrToStringAnsi((nint)userData)!;
+        string include = Marshal.PtrToStringAnsi((nint)requestedResource)!;
+        string file = Path.Combine(folder, include);
+
+        string name = Path.GetFileNameWithoutExtension(file);
+        string source = File.ReadAllText(file);
+
+        result->SourceName = (byte*)Marshal.StringToHGlobalAnsi(name);
+        result->SourceNameLength = (nuint)name.Length;
+        result->Content = (byte*)Marshal.StringToHGlobalAnsi(source);
+        result->ContentLength = (nuint)source.Length;
+
+        return result;
+    }
+
+    private static unsafe void IncludeResultRelease(void* userData, IncludeResult* includeResult)
+    {
+        Marshal.FreeHGlobal((nint)includeResult->Content);
+        Marshal.FreeHGlobal((nint)includeResult->SourceName);
+        Marshal.FreeHGlobal((nint)includeResult);
     }
 }

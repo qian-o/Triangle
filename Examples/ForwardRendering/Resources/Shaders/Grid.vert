@@ -1,6 +1,7 @@
 #version 460
 
-layout(location = 0) in vec3 In_Position;
+#include "TrUniform.glsl"
+#include "TrVertex.glsl"
 
 layout(location = 0) out VertexData
 {
@@ -8,13 +9,6 @@ layout(location = 0) out VertexData
     vec3 FarPos;
 }
 Out;
-
-layout(std140, binding = 0) uniform Matrices
-{
-    mat4 View;
-    mat4 Projection;
-}
-Uni_Matrices;
 
 vec3 UnprojectPoint(float x, float y, float z, mat4 viewInvMat, mat4 projInvMat)
 {
@@ -25,8 +19,8 @@ vec3 UnprojectPoint(float x, float y, float z, mat4 viewInvMat, mat4 projInvMat)
 
 void main()
 {
-    mat4 viewInvMat = inverse(Uni_Matrices.View);
-    mat4 projInvMat = inverse(Uni_Matrices.Projection);
+    mat4 viewInvMat = inverse(Uni_Transforms.View);
+    mat4 projInvMat = inverse(Uni_Transforms.Projection);
 
     Out.NearPos = UnprojectPoint(In_Position.x, In_Position.y, -1.0, viewInvMat, projInvMat).xyz;
     Out.FarPos = UnprojectPoint(In_Position.x, In_Position.y, 1.0, viewInvMat, projInvMat).xyz;

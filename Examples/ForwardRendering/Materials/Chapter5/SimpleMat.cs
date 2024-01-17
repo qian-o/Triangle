@@ -12,7 +12,7 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials.Chapter5;
 
-public class SimpleMat(TrContext context) : TrMaterial<TrParameter>(context, "Simple")
+public class SimpleMat(TrContext context) : TrMaterial<TrSceneParameters>(context, "Simple")
 {
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -56,7 +56,7 @@ public class SimpleMat(TrContext context) : TrMaterial<TrParameter>(context, "Si
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    public override void Draw([NotNull] TrMesh mesh, [NotNull] TrParameter parameter)
+    public override void Draw([NotNull] TrMesh mesh, [NotNull] TrSceneParameters parameter)
     {
         foreach (TrRenderPipeline renderPipeline in RenderPass!.RenderPipelines)
         {

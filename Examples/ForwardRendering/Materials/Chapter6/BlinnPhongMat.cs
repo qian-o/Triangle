@@ -13,7 +13,7 @@ using Triangle.Render.Structs;
 
 namespace ForwardRendering.Materials.Chapter6;
 
-public class BlinnPhongMat(TrContext context) : TrMaterial<TrParameter>(context, "BlinnPhong")
+public class BlinnPhongMat(TrContext context) : TrMaterial<TrSceneParameters>(context, "BlinnPhong")
 {
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -100,7 +100,7 @@ public class BlinnPhongMat(TrContext context) : TrMaterial<TrParameter>(context,
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    public override void Draw([NotNull] TrMesh mesh, [NotNull] TrParameter parameter)
+    public override void Draw([NotNull] TrMesh mesh, [NotNull] TrSceneParameters parameter)
     {
         foreach (TrRenderPipeline renderPipeline in RenderPass!.RenderPipelines)
         {
