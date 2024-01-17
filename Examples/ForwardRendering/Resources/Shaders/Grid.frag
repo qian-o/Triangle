@@ -1,6 +1,6 @@
 #version 460
 
-#include "TrUniform.glsl"
+#include "TrShaderUtilities.glsl"
 
 layout(location = 0) in VertexData
 {
@@ -32,13 +32,6 @@ vec4 grid(vec3 fragPos3D, float scale, float fade)
                 fade * (1.0 - min(line, 1.0)));
 }
 
-float computeDepth(vec3 pos)
-{
-    vec4 clip_space_pos = Uni_Transforms.Projection * Uni_Transforms.View * vec4(pos, 1.0);
-
-    return (clip_space_pos.z / clip_space_pos.w) * 0.5 + 0.5;
-}
-
 float computeLinearDepth(vec3 pos)
 {
     vec4 clip_space_pos = Uni_Transforms.Projection * Uni_Transforms.View * vec4(pos, 1.0);
@@ -55,7 +48,7 @@ void main()
     float ty = -In.NearPos.y / (In.FarPos.y - In.NearPos.y);
     vec3 fragPos3D = In.NearPos + ty * (In.FarPos - In.NearPos);
 
-    gl_FragDepth = computeDepth(fragPos3D);
+    gl_FragDepth = ComputeDepth(fragPos3D);
 
     float linearDepth = computeLinearDepth(fragPos3D);
     float fading = max(0.0, (0.5 - linearDepth));

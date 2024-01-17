@@ -32,3 +32,20 @@ layout(std140, binding = 3) uniform DirectionalLight
     vec3 Direction;
 }
 Uni_DirectionalLight;
+
+float ComputeDepth(vec3 pos)
+{
+    vec4 clip_space_pos = Uni_Transforms.Projection * Uni_Transforms.View * vec4(pos, 1.0);
+
+    return (clip_space_pos.z / clip_space_pos.w) * 0.5 + 0.5;
+}
+
+float Saturate(float value)
+{
+    return clamp(value, 0.0, 1.0);
+}
+
+vec3 WorldSpaceViewDirection(vec3 worldPos)
+{
+    return Uni_Vectors.CameraPosition - worldPos;
+}

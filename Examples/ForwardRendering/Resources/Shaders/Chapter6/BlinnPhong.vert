@@ -1,8 +1,7 @@
 #version 460
 
-layout(location = 0) in vec3 In_Position;
-layout(location = 1) in vec3 In_Normal;
-layout(location = 2) in vec2 In_TexCoord;
+#include "TrShaderUtilities.glsl"
+#include "TrVertex.glsl"
 
 layout(location = 0) out VertexData
 {
@@ -10,14 +9,6 @@ layout(location = 0) out VertexData
     vec3 WorldPos;
 }
 Out;
-
-layout(std140, binding = 0) uniform Transforms
-{
-    mat4 ObjectToWorld;
-    mat4 ObjectToClip;
-    mat4 WorldToObject;
-}
-Uni_Transforms;
 
 void main()
 {
