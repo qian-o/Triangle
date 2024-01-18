@@ -5,8 +5,8 @@ using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Triangle.Core;
-using Triangle.Render.Graphics;
-using Triangle.Render.Helpers;
+using Triangle.Core.Graphics;
+using Triangle.Core.Helpers;
 
 namespace Example01.Contracts.Tutorials;
 

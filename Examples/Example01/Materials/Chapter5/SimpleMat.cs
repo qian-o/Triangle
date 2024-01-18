@@ -9,7 +9,6 @@ using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
-using Triangle.Render.Graphics;
 
 namespace Example01.Materials.Chapter5;
 

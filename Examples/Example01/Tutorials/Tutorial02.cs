@@ -8,9 +8,8 @@ using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
+using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
-using Triangle.Render.Graphics;
-using Triangle.Render.Helpers;
 
 namespace Example01.Tutorials;
 

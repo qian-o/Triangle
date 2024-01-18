@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Triangle.Core", "Source\Triangle.Core\Triangle.Core.csproj", "{650B65F1-5031-472F-AD8E-78899416F3F3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Triangle.Render", "Source\Triangle.Render\Triangle.Render.csproj", "{75FE175C-F74C-4B19-B219-03B4512220A5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Examples\Common\Common.csproj", "{44B0DC32-0BAF-43D8-8C1D-01A9A2AB6D97}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example01", "Examples\Example01\Example01.csproj", "{2DA8B4CA-4AC4-4320-9CBF-B1FE7C3F0CCB}"
@@ -31,10 +29,6 @@ Global
 		{650B65F1-5031-472F-AD8E-78899416F3F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{650B65F1-5031-472F-AD8E-78899416F3F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{650B65F1-5031-472F-AD8E-78899416F3F3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75FE175C-F74C-4B19-B219-03B4512220A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75FE175C-F74C-4B19-B219-03B4512220A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75FE175C-F74C-4B19-B219-03B4512220A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75FE175C-F74C-4B19-B219-03B4512220A5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{44B0DC32-0BAF-43D8-8C1D-01A9A2AB6D97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{44B0DC32-0BAF-43D8-8C1D-01A9A2AB6D97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44B0DC32-0BAF-43D8-8C1D-01A9A2AB6D97}.Release|Any CPU.ActiveCfg = Release|Any CPU

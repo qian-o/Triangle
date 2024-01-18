@@ -1,7 +1,7 @@
 ﻿using Silk.NET.Assimp;
 using Silk.NET.Maths;
-using Triangle.Render.Graphics;
-using Triangle.Render.Structs;
+using Triangle.Core.Graphics;
+using Triangle.Core.Structs;
 
 namespace Triangle.Core.Helpers;
 
