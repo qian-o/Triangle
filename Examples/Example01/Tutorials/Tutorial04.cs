@@ -2,8 +2,8 @@
 using System.Numerics;
 using Common.Models;
 using Common.Structs;
-using ForwardRendering.Contracts.Tutorials;
-using ForwardRendering.Materials.Chapter6;
+using Example01.Contracts.Tutorials;
+using Example01.Materials.Chapter7;
 using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
@@ -12,14 +12,14 @@ using Triangle.Core.Helpers;
 using Triangle.Render.Graphics;
 using Triangle.Render.Helpers;
 
-namespace ForwardRendering.Tutorials;
+namespace Example01.Tutorials;
 
-[DisplayName("漫反射")]
-[Description("使用 Diffuse 相关材质渲染五角星。")]
-public class Tutorial02(IInputContext input, TrContext context, string name) : BaseTutorial(input, context, name)
+[DisplayName("2D 纹理")]
+[Description("使用 Texture 相关材质渲染胶囊体。")]
+public class Tutorial04(IInputContext input, TrContext context, string name) : BaseTutorial(input, context, name)
 {
     #region Meshes
-    private TrMesh goldStar = null!;
+    private TrMesh capsule = null!;
     #endregion
 
     #region Transforms
@@ -30,9 +30,7 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
     #endregion
 
     #region Materials
-    private DiffuseVertexLevelMat diffuseVertexLevelMat = null!;
-    private DiffusePixelLevelMat diffusePixelLevelMat = null!;
-    private HalfLambertMat halfLambertMat = null!;
+    private SingleTextureMat singleTextureMat = null!;
     #endregion
 
     #region Lights
@@ -42,11 +40,9 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
 
     protected override void Loaded()
     {
-        goldStar = Context.AssimpParsing("Resources/Models/Gold Star.glb".PathFormatter())[0];
+        capsule = Context.AssimpParsing("Resources/Models/Capsule.glb".PathFormatter())[0];
 
-        diffuseVertexLevelMat = new(Context);
-        diffusePixelLevelMat = new(Context);
-        halfLambertMat = new(Context);
+        singleTextureMat = new(Context);
     }
 
     protected override void UpdateScene(double deltaSeconds)
@@ -59,21 +55,12 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
 
         TrSceneParameters sceneParameters = new(Scene.Camera, model, ambientLight, directionalLight);
 
-        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-2.0f, 0.0f, 0.0f));
-        diffuseVertexLevelMat.Draw(goldStar, sceneParameters);
-
-        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
-        diffusePixelLevelMat.Draw(goldStar, sceneParameters);
-
-        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
-        halfLambertMat.Draw(goldStar, sceneParameters);
+        singleTextureMat.Draw(capsule, sceneParameters);
     }
 
     protected override void EditProperties()
     {
-        diffuseVertexLevelMat.AdjustImGuiProperties();
-        diffusePixelLevelMat.AdjustImGuiProperties();
-        halfLambertMat.AdjustImGuiProperties();
+        singleTextureMat.AdjustImGuiProperties();
 
         ImGui.SeparatorText("Transforms");
 
@@ -108,9 +95,7 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
 
     protected override void Destroy(bool disposing = false)
     {
-        halfLambertMat.Dispose();
-        diffusePixelLevelMat.Dispose();
-        diffuseVertexLevelMat.Dispose();
-        goldStar.Dispose();
+        singleTextureMat.Dispose();
+        capsule.Dispose();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Common.Models;
 
-namespace ForwardRendering.Contracts.Tutorials;
+namespace Example01.Contracts.Tutorials;
 
 public interface ITutorial : IDisposable
 {

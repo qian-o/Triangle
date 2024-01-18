@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Common.Models;
-using ForwardRendering.Contracts.Materials;
+using Example01.Contracts.Materials;
 using ImGuiNET;
 using Silk.NET.Maths;
 using Triangle.Core;
@@ -11,7 +11,7 @@ using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Render.Graphics;
 
-namespace ForwardRendering.Materials.Chapter6;
+namespace Example01.Materials.Chapter6;
 
 public class DiffuseVertexLevelMat(TrContext context) : GlobalMat(context, "DiffuseVertexLevel")
 {

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Common.Models;
-using ForwardRendering.Contracts.Materials;
+using Example01.Contracts.Materials;
 using ImGuiNET;
 using Triangle.Core;
 using Triangle.Core.Enums;
@@ -9,7 +9,7 @@ using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Render.Graphics;
 
-namespace ForwardRendering.Materials;
+namespace Example01.Materials;
 
 public class GridMat(TrContext context) : GlobalMat(context, "Grid")
 {

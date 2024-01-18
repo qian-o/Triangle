@@ -9,7 +9,7 @@ using Triangle.Core.Helpers;
 using Triangle.Render.Graphics;
 using Triangle.Render.Structs;
 
-namespace ForwardRendering.Contracts.Materials;
+namespace Example01.Contracts.Materials;
 
 public abstract class GlobalMat : TrMaterial<TrSceneParameters>
 {

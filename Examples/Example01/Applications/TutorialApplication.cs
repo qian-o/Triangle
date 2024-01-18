@@ -2,12 +2,12 @@
 using System.Reflection;
 using Common.Contracts.Applications;
 using Common.Models;
-using ForwardRendering.Contracts.Tutorials;
+using Example01.Contracts.Tutorials;
 using ImGuiNET;
 using Silk.NET.Maths;
 using Triangle.Core.Helpers;
 
-namespace ForwardRendering.Applications;
+namespace Example01.Applications;
 
 public class TutorialApplication : BaseApplication
 {

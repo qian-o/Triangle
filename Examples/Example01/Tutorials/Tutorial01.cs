@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Common.Models;
-using ForwardRendering.Contracts.Tutorials;
-using ForwardRendering.Materials.Chapter5;
+using Example01.Contracts.Tutorials;
+using Example01.Materials.Chapter5;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
@@ -9,7 +9,7 @@ using Triangle.Core.Helpers;
 using Triangle.Render.Graphics;
 using Triangle.Render.Helpers;
 
-namespace ForwardRendering.Tutorials;
+namespace Example01.Tutorials;
 
 [DisplayName("简单场景")]
 [Description("使用 SimpleMat 材质渲染一个球体并显示法线方向。")]

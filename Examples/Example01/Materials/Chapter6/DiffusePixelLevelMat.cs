@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Common.Models;
-using ForwardRendering.Contracts.Materials;
+using Example01.Contracts.Materials;
 using ImGuiNET;
 using Silk.NET.Maths;
 using Triangle.Core;
@@ -11,9 +11,9 @@ using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Render.Graphics;
 
-namespace ForwardRendering.Materials.Chapter6;
+namespace Example01.Materials.Chapter6;
 
-public class BlinnPhongMat(TrContext context) : GlobalMat(context, "BlinnPhong")
+public class DiffusePixelLevelMat(TrContext context) : GlobalMat(context, "DiffusePixelLevel")
 {
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -21,12 +21,6 @@ public class BlinnPhongMat(TrContext context) : GlobalMat(context, "BlinnPhong")
     {
         [FieldOffset(0)]
         public Vector4D<float> Diffuse;
-
-        [FieldOffset(16)]
-        public Vector4D<float> Specular;
-
-        [FieldOffset(32)]
-        public float Gloss;
     }
     #endregion
 
@@ -34,16 +28,12 @@ public class BlinnPhongMat(TrContext context) : GlobalMat(context, "BlinnPhong")
 
     public Vector4D<float> Diffuse { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
 
-    public Vector4D<float> Specular { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
-
-    public float Gloss { get; set; } = 20.0f;
-
     public override TrRenderPass CreateRenderPass()
     {
         uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter6/BlinnPhong/BlinnPhong.vert.spv".PathFormatter());
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter6/BlinnPhong/BlinnPhong.frag.spv".PathFormatter());
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter6/DiffusePixelLevel/DiffusePixelLevel.vert.spv".PathFormatter());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter6/DiffusePixelLevel/DiffusePixelLevel.frag.spv".PathFormatter());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);
@@ -59,9 +49,7 @@ public class BlinnPhongMat(TrContext context) : GlobalMat(context, "BlinnPhong")
 
         uboMaterial.SetData(new UniMaterial()
         {
-            Diffuse = Diffuse,
-            Specular = Specular,
-            Gloss = Gloss
+            Diffuse = Diffuse
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboMaterial);
@@ -76,14 +64,6 @@ public class BlinnPhongMat(TrContext context) : GlobalMat(context, "BlinnPhong")
         Vector4 diffuse = Diffuse.ToSystem();
         ImGui.ColorEdit4("Diffuse", ref diffuse);
         Diffuse = diffuse.ToGeneric();
-
-        Vector4 specular = Specular.ToSystem();
-        ImGui.ColorEdit4("Specular", ref specular);
-        Specular = specular.ToGeneric();
-
-        float gloss = Gloss;
-        ImGui.DragFloat("Gloss", ref gloss, 0.1f, 8.0f, 256f);
-        Gloss = gloss;
     }
 
     protected override void DestroyCore(bool disposing = false)

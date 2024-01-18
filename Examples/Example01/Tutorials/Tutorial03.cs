@@ -2,8 +2,8 @@
 using System.Numerics;
 using Common.Models;
 using Common.Structs;
-using ForwardRendering.Contracts.Tutorials;
-using ForwardRendering.Materials.Chapter6;
+using Example01.Contracts.Tutorials;
+using Example01.Materials.Chapter6;
 using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
@@ -12,7 +12,7 @@ using Triangle.Core.Helpers;
 using Triangle.Render.Graphics;
 using Triangle.Render.Helpers;
 
-namespace ForwardRendering.Tutorials;
+namespace Example01.Tutorials;
 
 [DisplayName("高光反射")]
 [Description("使用 Specular 相关材质渲染胶囊体。")]

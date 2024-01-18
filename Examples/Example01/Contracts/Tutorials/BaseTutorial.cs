@@ -1,5 +1,5 @@
 ﻿using Common.Models;
-using ForwardRendering.Materials;
+using Example01.Materials;
 using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
@@ -8,7 +8,7 @@ using Triangle.Core;
 using Triangle.Render.Graphics;
 using Triangle.Render.Helpers;
 
-namespace ForwardRendering.Contracts.Tutorials;
+namespace Example01.Contracts.Tutorials;
 
 public abstract class BaseTutorial : ITutorial
 {

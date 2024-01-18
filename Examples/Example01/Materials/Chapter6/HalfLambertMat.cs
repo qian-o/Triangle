@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Common.Models;
-using ForwardRendering.Contracts.Materials;
+using Example01.Contracts.Materials;
 using ImGuiNET;
 using Silk.NET.Maths;
 using Triangle.Core;
@@ -11,9 +11,9 @@ using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Render.Graphics;
 
-namespace ForwardRendering.Materials.Chapter6;
+namespace Example01.Materials.Chapter6;
 
-public class SpecularPixelLevelMat(TrContext context) : GlobalMat(context, "SpecularPixelLevel")
+public class HalfLambertMat(TrContext context) : GlobalMat(context, "HalfLambert")
 {
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -21,12 +21,6 @@ public class SpecularPixelLevelMat(TrContext context) : GlobalMat(context, "Spec
     {
         [FieldOffset(0)]
         public Vector4D<float> Diffuse;
-
-        [FieldOffset(16)]
-        public Vector4D<float> Specular;
-
-        [FieldOffset(32)]
-        public float Gloss;
     }
     #endregion
 
@@ -34,16 +28,12 @@ public class SpecularPixelLevelMat(TrContext context) : GlobalMat(context, "Spec
 
     public Vector4D<float> Diffuse { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
 
-    public Vector4D<float> Specular { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
-
-    public float Gloss { get; set; } = 20.0f;
-
     public override TrRenderPass CreateRenderPass()
     {
         uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter6/SpecularPixelLevel/SpecularPixelLevel.vert.spv".PathFormatter());
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter6/SpecularPixelLevel/SpecularPixelLevel.frag.spv".PathFormatter());
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter6/HalfLambert/HalfLambert.vert.spv".PathFormatter());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter6/HalfLambert/HalfLambert.frag.spv".PathFormatter());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);
@@ -59,9 +49,7 @@ public class SpecularPixelLevelMat(TrContext context) : GlobalMat(context, "Spec
 
         uboMaterial.SetData(new UniMaterial()
         {
-            Diffuse = Diffuse,
-            Specular = Specular,
-            Gloss = Gloss
+            Diffuse = Diffuse
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboMaterial);
