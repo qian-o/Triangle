@@ -56,16 +56,16 @@ public class Tutorial02(IInputContext input, TrContext context, string name) : B
     {
         Matrix4X4<float> model = Matrix4X4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix4X4.CreateScale(scale) * Matrix4X4.CreateTranslation(translation);
 
-        GlobalParameters sceneParameters = new(Scene.Camera, model, ambientLight, directionalLight);
+        GlobalParameters parameters = new(Scene.Camera, model, ambientLight, directionalLight);
 
-        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-2.0f, 0.0f, 0.0f));
-        diffuseVertexLevelMat.Draw(goldStar, sceneParameters);
+        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-2.0f, 0.0f, 0.0f));
+        diffuseVertexLevelMat.Draw(goldStar, parameters);
 
-        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
-        diffusePixelLevelMat.Draw(goldStar, sceneParameters);
+        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
+        diffusePixelLevelMat.Draw(goldStar, parameters);
 
-        sceneParameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
-        halfLambertMat.Draw(goldStar, sceneParameters);
+        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
+        halfLambertMat.Draw(goldStar, parameters);
     }
 
     protected override void EditProperties()
