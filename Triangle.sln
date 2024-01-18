@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Triangle.Core", "Source\Triangle.Core\Triangle.Core.csproj", "{650B65F1-5031-472F-AD8E-78899416F3F3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Triangle.App", "Source\Triangle.App\Triangle.App.csproj", "{98E3F2D8-CA2E-4E37-B04E-88A859CF68D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triangle.Render", "Source\Triangle.Render\Triangle.Render.csproj", "{3484E8C5-1090-4EFB-AB68-C91C9AF978EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,10 @@ Global
 		{650B65F1-5031-472F-AD8E-78899416F3F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{650B65F1-5031-472F-AD8E-78899416F3F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{650B65F1-5031-472F-AD8E-78899416F3F3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{98E3F2D8-CA2E-4E37-B04E-88A859CF68D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{98E3F2D8-CA2E-4E37-B04E-88A859CF68D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{98E3F2D8-CA2E-4E37-B04E-88A859CF68D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{98E3F2D8-CA2E-4E37-B04E-88A859CF68D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3484E8C5-1090-4EFB-AB68-C91C9AF978EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3484E8C5-1090-4EFB-AB68-C91C9AF978EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3484E8C5-1090-4EFB-AB68-C91C9AF978EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3484E8C5-1090-4EFB-AB68-C91C9AF978EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
