@@ -12,7 +12,7 @@ namespace Triangle.Render.Contracts.Materials;
 
 public abstract class GlobalMat : TrMaterial<GlobalParameters>
 {
-    public const uint UniformBufferBindingStart = 4;
+    public const uint UniformBufferBindingStart = 5;
 
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -41,13 +41,38 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
     private struct UniVectors
     {
         [FieldOffset(0)]
-        public Vector3D<float> CameraPosition;
+        public Vector2D<float> Resolution;
 
         [FieldOffset(16)]
-        public Vector3D<float> CameraUp;
+        public Vector3D<float> CameraPosition;
 
         [FieldOffset(32)]
+        public Vector3D<float> CameraUp;
+
+        [FieldOffset(48)]
         public Vector3D<float> CameraRight;
+
+        [FieldOffset(64)]
+        public Vector4D<float> Mouse;
+
+        [FieldOffset(80)]
+        public Vector4D<float> Date;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
+    private struct UniConstants
+    {
+        [FieldOffset(0)]
+        public float Time;
+
+        [FieldOffset(4)]
+        public float DeltaTime;
+
+        [FieldOffset(8)]
+        public float FrameRate;
+
+        [FieldOffset(12)]
+        public int Frame;
     }
 
     [StructLayout(LayoutKind.Explicit)]
@@ -73,6 +98,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
 
     private readonly TrBuffer<UniTransforms> _uboTransforms;
     private readonly TrBuffer<UniVectors> _uboVectors;
+    private readonly TrBuffer<UniConstants> _uboConstants;
     private readonly TrBuffer<UniAmbientLight> _uboAmbientLight;
     private readonly TrBuffer<UniDirectionalLight> _uboDirectionalLight;
 
@@ -80,6 +106,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
     {
         _uboTransforms = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
         _uboVectors = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        _uboConstants = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
         _uboAmbientLight = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
         _uboDirectionalLight = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
     }
@@ -105,9 +132,19 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
             });
             _uboVectors.SetData(new UniVectors()
             {
+                Resolution = parameters.SceneData.Resolution,
                 CameraPosition = parameters.Camera.Position,
                 CameraUp = parameters.Camera.Up,
-                CameraRight = parameters.Camera.Right
+                CameraRight = parameters.Camera.Right,
+                Mouse = parameters.SceneData.Mouse,
+                Date = parameters.SceneData.Date
+            });
+            _uboConstants.SetData(new UniConstants()
+            {
+                Time = parameters.SceneData.Time,
+                DeltaTime = parameters.SceneData.DeltaTime,
+                FrameRate = parameters.SceneData.FrameRate,
+                Frame = parameters.SceneData.Frame
             });
             _uboAmbientLight.SetData(new UniAmbientLight()
             {
@@ -122,8 +159,9 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
 
             renderPipeline.BindUniformBlock(0, _uboTransforms);
             renderPipeline.BindUniformBlock(1, _uboVectors);
-            renderPipeline.BindUniformBlock(2, _uboAmbientLight);
-            renderPipeline.BindUniformBlock(3, _uboDirectionalLight);
+            renderPipeline.BindUniformBlock(2, _uboConstants);
+            renderPipeline.BindUniformBlock(3, _uboAmbientLight);
+            renderPipeline.BindUniformBlock(4, _uboDirectionalLight);
 
             renderPipeline.Unbind();
         }
@@ -135,6 +173,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
     {
         _uboTransforms.Dispose();
         _uboVectors.Dispose();
+        _uboConstants.Dispose();
         _uboAmbientLight.Dispose();
         _uboDirectionalLight.Dispose();
 

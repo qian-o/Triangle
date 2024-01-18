@@ -3,6 +3,7 @@ using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core.Contracts.Graphics;
+using Triangle.Core.Structs;
 
 namespace Triangle.Core.Graphics;
 
@@ -53,6 +54,8 @@ public class TrScene : TrGraphics<TrContext>
     public float CameraSpeed { get; set; } = 2.0f;
 
     public float CameraSensitivity { get; set; } = 0.1f;
+
+    public TrSceneData SceneData { get; }
 
     public void Update(double deltaSeconds)
     {

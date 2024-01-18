@@ -1,4 +1,4 @@
-#define UNIFORM_BUFFER_BINDING_START 4
+#define UNIFORM_BUFFER_BINDING_START 5
 
 layout(std140, binding = 0) uniform Transforms
 {
@@ -13,19 +13,31 @@ Uni_Transforms;
 
 layout(std140, binding = 1) uniform Vectors
 {
+    vec2 Resolution;
     vec3 CameraPosition;
     vec3 CameraUp;
     vec3 CameraRight;
+    vec4 Mouse;
+    vec4 Date;
 }
 Uni_Vectors;
 
-layout(std140, binding = 2) uniform AmbientLight
+layout(std140, binding = 2) uniform Constants
+{
+    float Time;
+    float DeltaTime;
+    float FrameRate;
+    int Frame;
+}
+Uni_Constants;
+
+layout(std140, binding = 3) uniform AmbientLight
 {
     vec3 Color;
 }
 Uni_AmbientLight;
 
-layout(std140, binding = 3) uniform DirectionalLight
+layout(std140, binding = 4) uniform DirectionalLight
 {
     vec3 Color;
     vec3 Position;

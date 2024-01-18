@@ -43,7 +43,7 @@ public class Tutorial01(IInputContext input, TrContext context, string name) : B
     {
         Matrix4X4<float> model = Matrix4X4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix4X4.CreateScale(scale) * Matrix4X4.CreateTranslation(translation);
 
-        GlobalParameters parameters = new(Scene.Camera, model);
+        GlobalParameters parameters = new(Scene.Camera, model, Scene.SceneData);
 
         simpleMat.Draw(sphere, parameters);
     }
