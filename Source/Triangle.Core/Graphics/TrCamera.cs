@@ -1,9 +1,9 @@
 ﻿using Silk.NET.Maths;
 using Triangle.Core.Helpers;
 
-namespace Triangle.Render.Models;
+namespace Triangle.Core.Graphics;
 
-public class Camera
+public class TrCamera
 {
     private Vector3D<float> front = -Vector3D<float>.UnitZ;
     private Vector3D<float> up = Vector3D<float>.UnitY;

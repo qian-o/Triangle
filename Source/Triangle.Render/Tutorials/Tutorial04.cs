@@ -52,7 +52,7 @@ public class Tutorial04(IInputContext input, TrContext context, string name) : B
     {
         Matrix4X4<float> model = Matrix4X4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix4X4.CreateScale(scale) * Matrix4X4.CreateTranslation(translation);
 
-        TrSceneParameters sceneParameters = new(Scene.Camera, model, ambientLight, directionalLight);
+        GlobalParameters sceneParameters = new(Scene.Camera, model, ambientLight, directionalLight);
 
         singleTextureMat.Draw(capsule, sceneParameters);
     }

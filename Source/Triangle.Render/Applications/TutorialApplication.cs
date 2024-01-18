@@ -2,10 +2,10 @@
 using System.Reflection;
 using ImGuiNET;
 using Silk.NET.Maths;
+using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Render.Contracts.Applications;
 using Triangle.Render.Contracts.Tutorials;
-using Triangle.Render.Models;
 
 namespace Triangle.Render.Applications;
 

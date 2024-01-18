@@ -1,4 +1,4 @@
-﻿using Triangle.Render.Models;
+﻿using Triangle.Core.Graphics;
 
 namespace Triangle.Render.Contracts.Tutorials;
 

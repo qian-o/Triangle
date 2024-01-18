@@ -2,11 +2,9 @@
 using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
-using Triangle.Core;
 using Triangle.Core.Contracts.Graphics;
-using Triangle.Core.Graphics;
 
-namespace Triangle.Render.Models;
+namespace Triangle.Core.Graphics;
 
 public class TrScene : TrGraphics<TrContext>
 {
@@ -23,7 +21,7 @@ public class TrScene : TrGraphics<TrContext>
     public TrScene(IInputContext input, TrContext context, string name) : base(context)
     {
         Name = name;
-        Camera = new Camera
+        Camera = new TrCamera
         {
             Position = new Vector3D<float>(0.0f, 2.0f, 8.0f),
             Fov = 45.0f
@@ -38,7 +36,7 @@ public class TrScene : TrGraphics<TrContext>
 
     public string HostName => $"{Name} - Frame Id: {_frame.Handle}";
 
-    public Camera Camera { get; }
+    public TrCamera Camera { get; }
 
     public int Width { get; private set; }
 

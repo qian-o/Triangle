@@ -10,7 +10,7 @@ using Triangle.Render.Models;
 
 namespace Triangle.Render.Contracts.Materials;
 
-public abstract class GlobalMat : TrMaterial<TrSceneParameters>
+public abstract class GlobalMat : TrMaterial<GlobalParameters>
 {
     public const uint UniformBufferBindingStart = 4;
 
@@ -84,7 +84,7 @@ public abstract class GlobalMat : TrMaterial<TrSceneParameters>
         _uboDirectionalLight = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
     }
 
-    public override void Draw([NotNull] TrMesh mesh, [NotNull] TrSceneParameters parameter)
+    public override void Draw([NotNull] TrMesh mesh, [NotNull] GlobalParameters parameters)
     {
         foreach (TrRenderPipeline renderPipeline in RenderPass.RenderPipelines)
         {
@@ -96,28 +96,28 @@ public abstract class GlobalMat : TrMaterial<TrSceneParameters>
 
             _uboTransforms.SetData(new UniTransforms()
             {
-                Model = parameter.Model,
-                View = parameter.Camera.View,
-                Projection = parameter.Camera.Projection,
-                ObjectToWorld = parameter.Model,
-                ObjectToClip = parameter.Model * parameter.Camera.View * parameter.Camera.Projection,
-                WorldToObject = Matrix4X4.Transpose(parameter.Model.Invert())
+                Model = parameters.Model,
+                View = parameters.Camera.View,
+                Projection = parameters.Camera.Projection,
+                ObjectToWorld = parameters.Model,
+                ObjectToClip = parameters.Model * parameters.Camera.View * parameters.Camera.Projection,
+                WorldToObject = Matrix4X4.Transpose(parameters.Model.Invert())
             });
             _uboVectors.SetData(new UniVectors()
             {
-                CameraPosition = parameter.Camera.Position,
-                CameraUp = parameter.Camera.Up,
-                CameraRight = parameter.Camera.Right
+                CameraPosition = parameters.Camera.Position,
+                CameraUp = parameters.Camera.Up,
+                CameraRight = parameters.Camera.Right
             });
             _uboAmbientLight.SetData(new UniAmbientLight()
             {
-                Color = parameter.AmbientLight.Color
+                Color = parameters.AmbientLight.Color
             });
             _uboDirectionalLight.SetData(new UniDirectionalLight()
             {
-                Color = parameter.DirectionalLight.Color,
-                Position = -parameter.DirectionalLight.Direction,
-                Direction = parameter.DirectionalLight.Direction,
+                Color = parameters.DirectionalLight.Color,
+                Position = -parameters.DirectionalLight.Direction,
+                Direction = parameters.DirectionalLight.Direction,
             });
 
             renderPipeline.BindUniformBlock(0, _uboTransforms);
@@ -128,7 +128,7 @@ public abstract class GlobalMat : TrMaterial<TrSceneParameters>
             renderPipeline.Unbind();
         }
 
-        DrawCore(mesh, parameter);
+        DrawCore(mesh, parameters);
     }
 
     protected override void Destroy(bool disposing = false)
@@ -147,7 +147,7 @@ public abstract class GlobalMat : TrMaterial<TrSceneParameters>
         RenderPass.Dispose();
     }
 
-    protected abstract void DrawCore([NotNull] TrMesh mesh, [NotNull] TrSceneParameters sceneParameters);
+    protected abstract void DrawCore([NotNull] TrMesh mesh, [NotNull] GlobalParameters globalParameters);
 
     /// <summary>
     /// 此处应该清理材质中用到的其他缓冲区资源。

@@ -63,7 +63,7 @@ public abstract class BaseTutorial : ITutorial
 
         RenderScene(deltaSeconds);
 
-        TrSceneParameters sceneParameters = new(Scene.Camera, Matrix4X4<float>.Identity);
+        GlobalParameters sceneParameters = new(Scene.Camera, Matrix4X4<float>.Identity);
         _gridMat.Draw(_grid, sceneParameters);
 
         Scene.End();

@@ -55,7 +55,7 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore([NotNull] TrMesh mesh, [NotNull] TrSceneParameters sceneParameters)
+    protected override void DrawCore([NotNull] TrMesh mesh, [NotNull] GlobalParameters globalParameters)
     {
         double logDistance = Math.Log2(Distance);
         double upperDistance = Math.Pow(2.0, Math.Floor(logDistance) + 1);
@@ -72,8 +72,8 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
 
         uboParameters.SetData(new UniParameters()
         {
-            Near = sceneParameters.Camera.Near,
-            Far = sceneParameters.Camera.Far,
+            Near = globalParameters.Camera.Near,
+            Far = globalParameters.Camera.Far,
             PrimaryScale = primaryScale,
             SecondaryScale = secondaryScale,
             GridIntensity = GridIntensity,

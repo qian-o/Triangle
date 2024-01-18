@@ -59,7 +59,7 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore([NotNull] TrMesh mesh, [NotNull] TrSceneParameters sceneParameters)
+    protected override void DrawCore([NotNull] TrMesh mesh, [NotNull] GlobalParameters globalParameters)
     {
         TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
 
