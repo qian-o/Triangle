@@ -25,7 +25,7 @@ vec3 path(float t)
     return vec3(sin(t * 0.3 + cos(t * 0.2) * 0.5) * 4.0, cos(t * 0.2) * 3.0, t);
 }
 
-float hexagon(in vec2 p, in float r)
+float hexagon(vec2 p, float r)
 {
     const vec3 k = vec3(-0.866025404, 0.5, 0.577350269);
 

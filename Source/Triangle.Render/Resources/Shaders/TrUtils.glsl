@@ -1,4 +1,5 @@
 #define UNIFORM_BUFFER_BINDING_START 5
+#define ANTI_ALIASING 4
 
 layout(std140, binding = 0) uniform Transforms
 {
