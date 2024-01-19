@@ -47,6 +47,18 @@ public class TrScene : TrGraphics<TrContext>
 
     public bool IsFocused { get; private set; }
 
+    public Vector4D<float> Mouse { get; private set; }
+
+    public Vector4D<float> Date { get; private set; }
+
+    public float Time { get; private set; }
+
+    public float DeltaTime { get; private set; }
+
+    public float FrameRate { get; private set; }
+
+    public int Frame { get; private set; }
+
     public bool IsClosed { get; private set; }
 
     public int Samples { get; set; } = 4;
@@ -55,7 +67,7 @@ public class TrScene : TrGraphics<TrContext>
 
     public float CameraSensitivity { get; set; } = 0.1f;
 
-    public TrSceneData SceneData { get; }
+    public TrSceneData SceneData => new(new Vector2D<float>(Width, Height), Mouse, Date, Time, DeltaTime, FrameRate, Frame);
 
     public void Update(double deltaSeconds)
     {
@@ -144,8 +156,24 @@ public class TrScene : TrGraphics<TrContext>
         bool isOpen = true;
         if (ImGui.Begin(HostName, ref isOpen, ImGuiWindowFlags.NoSavedSettings))
         {
+            // 鼠标在窗口中的位置。
+            Vector2 pos = ImGui.GetMousePos() - ImGui.GetCursorScreenPos();
+            bool isLeftClicked = ImGui.IsMouseClicked(ImGuiMouseButton.Left);
+            bool isRightClicked = ImGui.IsMouseClicked(ImGuiMouseButton.Right);
+
+            // 日期。
+            DateTime now = DateTime.Now;
+            TimeSpan timeSinceMidnight = now - now.Date;
+            float seconds = Convert.ToSingle(timeSinceMidnight.TotalMilliseconds / 1000.0);
+
             IsHovered = ImGui.IsWindowHovered();
             IsFocused = ImGui.IsWindowFocused();
+            Mouse = new Vector4D<float>(pos.X, pos.Y, Convert.ToSingle(isLeftClicked), Convert.ToSingle(isRightClicked));
+            Date = new Vector4D<float>(now.Year, now.Month, now.Day, seconds);
+            Time = Convert.ToSingle(ImGui.GetTime());
+            DeltaTime = ImGui.GetIO().DeltaTime;
+            FrameRate = ImGui.GetIO().Framerate;
+            Frame = ImGui.GetFrameCount();
 
             Vector2 size = ImGui.GetContentRegionAvail();
 
