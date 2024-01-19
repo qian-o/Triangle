@@ -54,6 +54,10 @@ public class Tutorial05(IInputContext input, TrContext context, string name) : B
 
     protected override void Destroy(bool disposing = false)
     {
-
+        foreach (GlobalMat mat in mats)
+        {
+            mat.Dispose();
+        }
+        canvas.Dispose();
     }
 }

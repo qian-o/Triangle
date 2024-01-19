@@ -54,6 +54,11 @@ public abstract class BaseTutorial : ITutorial
 
     public void Render(double deltaSeconds)
     {
+        if (!Scene.IsVisible)
+        {
+            return;
+        }
+
         GL gl = Context.GL;
 
         Scene.Begin();

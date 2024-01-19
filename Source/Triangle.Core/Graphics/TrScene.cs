@@ -43,6 +43,8 @@ public class TrScene : TrGraphics<TrContext>
 
     public int Height { get; private set; }
 
+    public bool IsVisible { get; private set; }
+
     public bool IsHovered { get; private set; }
 
     public bool IsFocused { get; private set; }
@@ -154,7 +156,7 @@ public class TrScene : TrGraphics<TrContext>
         }
 
         bool isOpen = true;
-        if (ImGui.Begin(HostName, ref isOpen, ImGuiWindowFlags.NoSavedSettings))
+        if (IsVisible = ImGui.Begin(HostName, ref isOpen, ImGuiWindowFlags.NoSavedSettings))
         {
             // 鼠标在窗口中的位置。
             Vector2 pos = ImGui.GetMousePos() - ImGui.GetCursorScreenPos();
