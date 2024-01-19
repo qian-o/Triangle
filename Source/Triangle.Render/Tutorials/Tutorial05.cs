@@ -31,6 +31,7 @@ public class Tutorial05(IInputContext input, TrContext context, string name) : B
 
         mats =
         [
+            new BoxFrameDistance3DMat(Context),
             new FullSpectrumCyberMat(Context)
         ];
     }
