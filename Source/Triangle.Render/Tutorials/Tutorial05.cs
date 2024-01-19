@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel;
+using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
+using Triangle.Render.Contracts.Materials;
 using Triangle.Render.Contracts.Tutorials;
-using Triangle.Render.Materials.Chapter7;
 using Triangle.Render.Materials.Shadertoy;
 using Triangle.Render.Models;
 
@@ -20,14 +21,18 @@ public class Tutorial05(IInputContext input, TrContext context, string name) : B
     #endregion
 
     #region Materials
-    private FullSpectrumCyberMat fullSpectrumCyberMat = null!;
+    private int materialIndex;
+    private GlobalMat[] mats = null!;
     #endregion
 
     protected override void Loaded()
     {
         canvas = Context.CreateCanvas();
 
-        fullSpectrumCyberMat = new(Context);
+        mats =
+        [
+            new FullSpectrumCyberMat(Context)
+        ];
     }
 
     protected override void UpdateScene(double deltaSeconds)
@@ -38,12 +43,12 @@ public class Tutorial05(IInputContext input, TrContext context, string name) : B
     {
         GlobalParameters parameters = new(Scene.Camera, Matrix4X4<float>.Identity, Scene.SceneData);
 
-        fullSpectrumCyberMat.Draw(canvas, parameters);
+        mats[materialIndex].Draw(canvas, parameters);
     }
 
     protected override void EditProperties()
     {
-
+        ImGui.Combo("Material", ref materialIndex, mats.Select(item => item.Name).ToArray(), mats.Length);
     }
 
     protected override void Destroy(bool disposing = false)
