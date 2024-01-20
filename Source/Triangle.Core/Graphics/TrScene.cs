@@ -160,8 +160,8 @@ public class TrScene : TrGraphics<TrContext>
         {
             // 鼠标在窗口中的位置。
             Vector2 pos = ImGui.GetMousePos() - ImGui.GetCursorScreenPos();
-            bool isLeftClicked = ImGui.IsMouseClicked(ImGuiMouseButton.Left);
-            bool isRightClicked = ImGui.IsMouseClicked(ImGuiMouseButton.Right);
+            bool isLeftDown = ImGui.IsMouseDown(ImGuiMouseButton.Left);
+            bool isRightDown = ImGui.IsMouseDown(ImGuiMouseButton.Right);
 
             // 日期。
             DateTime now = DateTime.Now;
@@ -170,7 +170,8 @@ public class TrScene : TrGraphics<TrContext>
 
             IsHovered = ImGui.IsWindowHovered();
             IsFocused = ImGui.IsWindowFocused();
-            Mouse = new Vector4D<float>(pos.X, pos.Y, Convert.ToSingle(isLeftClicked), Convert.ToSingle(isRightClicked));
+            Mouse = IsFocused ? new Vector4D<float>(pos.X, pos.Y, Convert.ToSingle(isLeftDown), Convert.ToSingle(isRightDown)) : Vector4D<float>.Zero;
+
             Date = new Vector4D<float>(now.Year, now.Month, now.Day, seconds);
             Time = Convert.ToSingle(ImGui.GetTime());
             DeltaTime = ImGui.GetIO().DeltaTime;
