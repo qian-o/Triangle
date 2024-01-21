@@ -12,52 +12,52 @@ public static unsafe class TrMeshFactory
         TrVertex[] vertices =
         [
             // Front face
-            new(new(-size, -size, size), new(0.0f, 0.0f, 1.0f), new(0.0f, 0.0f)),
-            new(new(size, -size, size), new(0.0f, 0.0f, 1.0f), new(1.0f, 0.0f)),
-            new(new(size, size, size), new(0.0f, 0.0f, 1.0f), new(1.0f, 1.0f)),
-            new(new(size, size, size), new(0.0f, 0.0f, 1.0f), new(1.0f, 1.0f)),
-            new(new(-size, size, size), new(0.0f, 0.0f, 1.0f), new(0.0f, 1.0f)),
-            new(new(-size, -size, size), new(0.0f, 0.0f, 1.0f), new(0.0f, 0.0f)),
+            new(new(-size, -size, size), new(0.0f, 0.0f, 1.0f), texCoord: new(0.0f, 0.0f)),
+            new(new(size, -size, size), new(0.0f, 0.0f, 1.0f), texCoord: new(1.0f, 0.0f)),
+            new(new(size, size, size), new(0.0f, 0.0f, 1.0f), texCoord: new(1.0f, 1.0f)),
+            new(new(size, size, size), new(0.0f, 0.0f, 1.0f), texCoord: new(1.0f, 1.0f)),
+            new(new(-size, size, size), new(0.0f, 0.0f, 1.0f), texCoord: new(0.0f, 1.0f)),
+            new(new(-size, -size, size), new(0.0f, 0.0f, 1.0f), texCoord: new(0.0f, 0.0f)),
 
             // Back face
-            new(new(-size, -size, -size), new(0.0f, 0.0f, -1.0f), new(1.0f, 0.0f)),
-            new(new(-size, size, -size), new(0.0f, 0.0f, -1.0f), new(1.0f, 1.0f)),
-            new(new(size, size, -size), new(0.0f, 0.0f, -1.0f), new(0.0f, 1.0f)),
-            new(new(size, size, -size), new(0.0f, 0.0f, -1.0f), new(0.0f, 1.0f)),
-            new(new(size, -size, -size), new(0.0f, 0.0f, -1.0f), new(0.0f, 0.0f)),
-            new(new(-size, -size, -size), new(0.0f, 0.0f, -1.0f), new(1.0f, 0.0f)),
+            new(new(-size, -size, -size), new(0.0f, 0.0f, -1.0f), texCoord: new(1.0f, 0.0f)),
+            new(new(-size, size, -size), new(0.0f, 0.0f, -1.0f), texCoord: new(1.0f, 1.0f)),
+            new(new(size, size, -size), new(0.0f, 0.0f, -1.0f), texCoord: new(0.0f, 1.0f)),
+            new(new(size, size, -size), new(0.0f, 0.0f, -1.0f), texCoord: new(0.0f, 1.0f)),
+            new(new(size, -size, -size), new(0.0f, 0.0f, -1.0f), texCoord: new(0.0f, 0.0f)),
+            new(new(-size, -size, -size), new(0.0f, 0.0f, -1.0f), texCoord: new(1.0f, 0.0f)),
 
             // Top face
-            new(new(-size, size, -size), new(0.0f, 1.0f, 0.0f), new(0.0f, 1.0f)),
-            new(new(-size, size, size), new(0.0f, 1.0f, 0.0f), new(0.0f, 0.0f)),
-            new(new(size, size, size), new(0.0f, 1.0f, 0.0f), new(1.0f, 0.0f)),
-            new(new(size, size, size), new(0.0f, 1.0f, 0.0f), new(1.0f, 0.0f)),
-            new(new(size, size, -size), new(0.0f, 1.0f, 0.0f), new(1.0f, 1.0f)),
-            new(new(-size, size, -size), new(0.0f, 1.0f, 0.0f), new(0.0f, 1.0f)),
+            new(new(-size, size, -size), new(0.0f, 1.0f, 0.0f), texCoord: new(0.0f, 1.0f)),
+            new(new(-size, size, size), new(0.0f, 1.0f, 0.0f), texCoord: new(0.0f, 0.0f)),
+            new(new(size, size, size), new(0.0f, 1.0f, 0.0f), texCoord: new(1.0f, 0.0f)),
+            new(new(size, size, size), new(0.0f, 1.0f, 0.0f), texCoord: new(1.0f, 0.0f)),
+            new(new(size, size, -size), new(0.0f, 1.0f, 0.0f), texCoord: new(1.0f, 1.0f)),
+            new(new(-size, size, -size), new(0.0f, 1.0f, 0.0f), texCoord: new(0.0f, 1.0f)),
 
             // Bottom face
-            new(new(-size, -size, -size), new(0.0f, -1.0f, 0.0f), new(0.0f, 0.0f)),
-            new(new(size, -size, -size), new(0.0f, -1.0f, 0.0f), new(1.0f, 0.0f)),
-            new(new(size, -size, size), new(0.0f, -1.0f, 0.0f), new(1.0f, 1.0f)),
-            new(new(size, -size, size), new(0.0f, -1.0f, 0.0f), new(1.0f, 1.0f)),
-            new(new(-size, -size, size), new(0.0f, -1.0f, 0.0f), new(0.0f, 1.0f)),
-            new(new(-size, -size, -size), new(0.0f, -1.0f, 0.0f), new(0.0f, 0.0f)),
+            new(new(-size, -size, -size), new(0.0f, -1.0f, 0.0f), texCoord: new(0.0f, 0.0f)),
+            new(new(size, -size, -size), new(0.0f, -1.0f, 0.0f), texCoord: new(1.0f, 0.0f)),
+            new(new(size, -size, size), new(0.0f, -1.0f, 0.0f), texCoord: new(1.0f, 1.0f)),
+            new(new(size, -size, size), new(0.0f, -1.0f, 0.0f), texCoord: new(1.0f, 1.0f)),
+            new(new(-size, -size, size), new(0.0f, -1.0f, 0.0f), texCoord: new(0.0f, 1.0f)),
+            new(new(-size, -size, -size), new(0.0f, -1.0f, 0.0f), texCoord: new(0.0f, 0.0f)),
 
             // Right face
-            new(new(size, -size, -size), new(1.0f, 0.0f, 0.0f), new(1.0f, 0.0f)),
-            new(new(size, size, -size), new(1.0f, 0.0f, 0.0f), new(1.0f, 1.0f)),
-            new(new(size, size, size), new(1.0f, 0.0f, 0.0f), new(0.0f, 1.0f)),
-            new(new(size, size, size), new(1.0f, 0.0f, 0.0f), new(0.0f, 1.0f)),
-            new(new(size, -size, size), new(1.0f, 0.0f, 0.0f), new(0.0f, 0.0f)),
-            new(new(size, -size, -size), new(1.0f, 0.0f, 0.0f), new(1.0f, 0.0f)),
+            new(new(size, -size, -size), new(1.0f, 0.0f, 0.0f), texCoord: new(1.0f, 0.0f)),
+            new(new(size, size, -size), new(1.0f, 0.0f, 0.0f), texCoord: new(1.0f, 1.0f)),
+            new(new(size, size, size), new(1.0f, 0.0f, 0.0f), texCoord: new(0.0f, 1.0f)),
+            new(new(size, size, size), new(1.0f, 0.0f, 0.0f), texCoord: new(0.0f, 1.0f)),
+            new(new(size, -size, size), new(1.0f, 0.0f, 0.0f), texCoord: new(0.0f, 0.0f)),
+            new(new(size, -size, -size), new(1.0f, 0.0f, 0.0f), texCoord: new(1.0f, 0.0f)),
 
             // Left face
-            new(new(-size, -size, -size), new(-1.0f, 0.0f, 0.0f), new(0.0f, 0.0f)),
-            new(new(-size, -size, size), new(-1.0f, 0.0f, 0.0f), new(1.0f, 0.0f)),
-            new(new(-size, size, size), new(-1.0f, 0.0f, 0.0f), new(1.0f, 1.0f)),
-            new(new(-size, size, size), new(-1.0f, 0.0f, 0.0f), new(1.0f, 1.0f)),
-            new(new(-size, size, -size), new(-1.0f, 0.0f, 0.0f), new(0.0f, 1.0f)),
-            new(new(-size, -size, -size), new(-1.0f, 0.0f, 0.0f), new(0.0f, 0.0f))
+            new(new(-size, -size, -size), new(-1.0f, 0.0f, 0.0f), texCoord: new(0.0f, 0.0f)),
+            new(new(-size, -size, size), new(-1.0f, 0.0f, 0.0f), texCoord: new(1.0f, 0.0f)),
+            new(new(-size, size, size), new(-1.0f, 0.0f, 0.0f), texCoord: new(1.0f, 1.0f)),
+            new(new(-size, size, size), new(-1.0f, 0.0f, 0.0f), texCoord: new(1.0f, 1.0f)),
+            new(new(-size, size, -size), new(-1.0f, 0.0f, 0.0f), texCoord: new(0.0f, 1.0f)),
+            new(new(-size, -size, -size), new(-1.0f, 0.0f, 0.0f), texCoord: new(0.0f, 0.0f))
         ];
 
         return new(context, vertices, vertices.Select((a, b) => (uint)b).ToArray());
@@ -67,12 +67,12 @@ public static unsafe class TrMeshFactory
     {
         TrVertex[] vertices =
         [
-            new(new(-1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(0.0f, 0.0f)),
-            new(new(-1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(1.0f, 0.0f)),
-            new(new(1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(1.0f, 1.0f)),
-            new(new(1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(1.0f, 1.0f)),
-            new(new(1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(0.0f, 1.0f)),
-            new(new(-1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(0.0f, 0.0f))
+            new(new(-1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(0.0f, 0.0f)),
+            new(new(-1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(1.0f, 0.0f)),
+            new(new(1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(1.0f, 1.0f)),
+            new(new(1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(1.0f, 1.0f)),
+            new(new(1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(0.0f, 1.0f)),
+            new(new(-1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(0.0f, 0.0f))
         ];
 
         return new(context, vertices, vertices.Select((a, b) => (uint)b).ToArray());
@@ -82,12 +82,12 @@ public static unsafe class TrMeshFactory
     {
         TrVertex[] vertices =
         [
-            new(new(-1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(0.0f, 0.0f)),
-            new(new(-1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(1.0f, 0.0f)),
-            new(new(1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(1.0f, 1.0f)),
-            new(new(1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(1.0f, 1.0f)),
-            new(new(1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(0.0f, 1.0f)),
-            new(new(-1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(0.0f, 0.0f))
+            new(new(-1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(0.0f, 0.0f)),
+            new(new(-1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(1.0f, 0.0f)),
+            new(new(1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(1.0f, 1.0f)),
+            new(new(1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(1.0f, 1.0f)),
+            new(new(1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(0.0f, 1.0f)),
+            new(new(-1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(0.0f, 0.0f))
         ];
 
         return new(context, vertices, vertices.Select((a, b) => (uint)b).ToArray());
@@ -127,12 +127,19 @@ public static unsafe class TrMeshFactory
             {
                 vertices[i].Position = (*&mesh->MVertices[i]).ToGeneric();
                 vertices[i].Normal = (*&mesh->MNormals[i]).ToGeneric();
+                vertices[i].Tangent = (*&mesh->MTangents[i]).ToGeneric();
+                vertices[i].Bitangent = (*&mesh->MBitangents[i]).ToGeneric();
+
+                if (mesh->MColors[0] != null)
+                {
+                    vertices[i].Color = (*&mesh->MColors[0][i]).ToGeneric();
+                }
 
                 if (mesh->MTextureCoords[0] != null)
                 {
-                    Vector3D<float> vector3D = (*&mesh->MTextureCoords[0][i]).ToGeneric();
+                    Vector3D<float> texCoord = (*&mesh->MTextureCoords[0][i]).ToGeneric();
 
-                    vertices[i].TexCoord = new Vector2D<float>(vector3D.X, vector3D.Y);
+                    vertices[i].TexCoord = new Vector2D<float>(texCoord.X, texCoord.Y);
                 }
             }
 

@@ -119,6 +119,9 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
 
             mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Position"), 3, nameof(TrVertex.Position));
             mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Normal"), 3, nameof(TrVertex.Normal));
+            mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Tangent"), 3, nameof(TrVertex.Tangent));
+            mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Bitangent"), 3, nameof(TrVertex.Bitangent));
+            mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Color"), 4, nameof(TrVertex.Color));
             mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_TexCoord"), 2, nameof(TrVertex.TexCoord));
 
             _uboTransforms.SetData(new UniTransforms()
