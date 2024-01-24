@@ -1,10 +1,10 @@
 ﻿namespace Triangle.Core.Contracts;
 
-public abstract class TrObject : IDisposable
+public abstract class Disposable : IDisposable
 {
     private bool disposedValue;
 
-    ~TrObject()
+    ~Disposable()
     {
         Dispose(disposing: false);
     }

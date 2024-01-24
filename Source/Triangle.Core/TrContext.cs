@@ -3,7 +3,7 @@ using Triangle.Core.Contracts;
 
 namespace Triangle.Core;
 
-public class TrContext(GL gL) : TrObject
+public class TrContext(GL gL) : Disposable
 {
     public GL GL { get; } = gL;
 

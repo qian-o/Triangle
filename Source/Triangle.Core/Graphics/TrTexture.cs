@@ -27,6 +27,10 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         gl.BindTexture(GLEnum.Texture2D, 0);
     }
 
+    public uint Width { get; private set; }
+
+    public uint Height { get; private set; }
+
     public bool IsGenerateMipmap { get; } = true;
 
     protected override void Destroy(bool disposing = false)
@@ -55,6 +59,9 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         gl.BindTexture(GLEnum.Texture2D, Handle);
         gl.TexImage2D(GLEnum.Texture2D, 0, (int)Target, width, height, 0, Format, GLEnum.UnsignedByte, data);
         gl.BindTexture(GLEnum.Texture2D, 0);
+
+        Width = width;
+        Height = height;
 
         if (IsGenerateMipmap)
         {

@@ -7,14 +7,18 @@ using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
 using Triangle.Core;
 using Triangle.Core.Contracts;
+using Triangle.Core.Helpers;
 using Triangle.Render.Contracts.Applications;
 
 namespace Triangle.Render.Models;
 
-public unsafe class RenderHost<TApplication> : TrObject where TApplication : IApplication, new()
+public unsafe class RenderHost<TApplication> : Disposable where TApplication : IApplication, new()
 {
     private readonly IWindow _window;
     private readonly IApplication _application;
+    private readonly HashSet<string> _persistentMenuItems;
+    private readonly Dictionary<string, bool> _persistentMenuStates;
+    private readonly Dictionary<string, Action> _persistentMenuActions;
 
     #region Contexts
     private GL gl = null!;
@@ -47,6 +51,10 @@ public unsafe class RenderHost<TApplication> : TrObject where TApplication : IAp
         _window.Closing += OnClosing;
 
         _application = new TApplication();
+
+        _persistentMenuItems = [];
+        _persistentMenuStates = [];
+        _persistentMenuActions = [];
     }
 
     protected override void Destroy(bool disposing = false)
@@ -66,6 +74,8 @@ public unsafe class RenderHost<TApplication> : TrObject where TApplication : IAp
         imGuiController = new ImGuiController(gl, _window, inputContext, new ImGuiFontConfig("Resources/Fonts/MSYH.TTC", 14, (a) => a.Fonts.GetGlyphRangesChineseFull()));
 
         renderer = Marshal.PtrToStringAnsi((nint)gl.GetString(GLEnum.Renderer))!;
+
+        TrTextureManager.InitializeImages(trContext, "Resources/Textures".PathFormatter());
 
         _application.Initialize(_window, inputContext, trContext);
     }
@@ -91,6 +101,7 @@ public unsafe class RenderHost<TApplication> : TrObject where TApplication : IAp
             ImGui.StyleColorsLight();
             ImGui.GetStyle().FrameRounding = 6.0f;
             ImGui.GetStyle().FrameBorderSize = 1.0f;
+            ImGui.GetStyle().WindowMenuButtonPosition = ImGuiDir.None;
 
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
@@ -118,6 +129,8 @@ public unsafe class RenderHost<TApplication> : TrObject where TApplication : IAp
         {
             if (ImGui.BeginMenu("Settings"))
             {
+                PersistentMenuItem("Style Editor", ImGui.ShowStyleEditor);
+
                 if (ImGui.MenuItem("Save Layout"))
                 {
                     ImGui.SaveIniSettingsToDisk($"{_application.GetType().Name}.ini");
@@ -126,8 +139,17 @@ public unsafe class RenderHost<TApplication> : TrObject where TApplication : IAp
                 ImGui.EndMenu();
             }
 
+            if (ImGui.BeginMenu("Tools"))
+            {
+                PersistentMenuItem("Texture Manager", TrTextureManager.Manager);
+
+                ImGui.EndMenu();
+            }
+
             ImGui.EndMainMenuBar();
         }
+
+        ExecutePersistentMenu();
 
         imGuiController.Render();
     }
@@ -143,4 +165,27 @@ public unsafe class RenderHost<TApplication> : TrObject where TApplication : IAp
     }
 
     public void Run() => _window.Run();
+
+    private void PersistentMenuItem(string label, Action action)
+    {
+        _persistentMenuItems.Add(label);
+        _persistentMenuStates.TryAdd(label, false);
+        _persistentMenuActions.TryAdd(label, action);
+
+        if (ImGui.MenuItem(label))
+        {
+            _persistentMenuStates[label] = true;
+        }
+    }
+
+    private void ExecutePersistentMenu()
+    {
+        foreach (string label in _persistentMenuItems)
+        {
+            if (_persistentMenuStates[label])
+            {
+                _persistentMenuStates[label] = ImGuiHelper.ShowDialog(label, _persistentMenuActions[label]);
+            }
+        }
+    }
 }

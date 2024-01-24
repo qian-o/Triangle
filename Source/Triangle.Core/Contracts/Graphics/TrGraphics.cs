@@ -1,6 +1,6 @@
 ﻿namespace Triangle.Core.Contracts.Graphics;
 
-public abstract class TrGraphics<TContext> : TrObject where TContext : TrObject
+public abstract class TrGraphics<TContext> : Disposable where TContext : Disposable
 {
     protected TrGraphics(TContext context)
     {
