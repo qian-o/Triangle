@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel;
+using System.Numerics;
 using System.Reflection;
 using ImGuiNET;
 using Silk.NET.Maths;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
+using Triangle.Core.Widgets;
+using Triangle.Core.Widgets.Layouts;
 using Triangle.Render.Contracts.Applications;
 using Triangle.Render.Contracts.Tutorials;
 
@@ -12,7 +15,7 @@ namespace Triangle.Render.Applications;
 public class TutorialApplication : BaseApplication
 {
     private readonly List<ITutorial> _tutorials = [];
-    private readonly List<(string DisplayName, string Description, Type Type)> _allTutorials = [];
+    private readonly WrapPanel _allTutorials = new();
 
     private ITutorial? _lastFocusedTutorial;
 
@@ -26,7 +29,11 @@ public class TutorialApplication : BaseApplication
             string displayName = type.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? type.Name;
             string description = type.GetCustomAttribute<DescriptionAttribute>()?.Description ?? "";
 
-            _allTutorials.Add((displayName, description, type));
+            _allTutorials.Add(new Control(64.0f, 46.0f)
+            {
+                Margin = new Thickness(2.0f),
+                Tag = (type, displayName, description)
+            });
         }
     }
 
@@ -50,16 +57,33 @@ public class TutorialApplication : BaseApplication
     {
         if (ImGui.Begin("Tutorials"))
         {
-            foreach ((string DisplayName, string Description, Type Type) in _allTutorials)
+            Vector2 windowSize = ImGui.GetWindowSize();
+            Vector2 contentSize = ImGui.GetContentRegionAvail();
+
+            Vector2 leftTop = ImGui.GetCursorPos();
+            Vector2 rightBottom = windowSize - (leftTop + contentSize);
+            Thickness windowPadding = new(leftTop.X, leftTop.Y, rightBottom.X, rightBottom.Y);
+
+            _allTutorials.Width = contentSize.X;
+            _allTutorials.Height = contentSize.Y;
+            _allTutorials.Measure(windowSize.ToGeneric(), windowPadding);
+
+            foreach (Control control in _allTutorials.Children)
             {
-                ImGuiHelper.Button(DisplayName, () =>
+                control.Render((r) =>
                 {
-                    _tutorials.Add((ITutorial)Activator.CreateInstance(Type, Input, Context, DisplayName)!);
+                    (Type type, string displayName, string description) = (ValueTuple<Type, string, string>)control.Tag!;
 
-                }, height: 40.0f);
-                ImGuiHelper.ShowHelpMarker(Description);
+                    ImGui.SetCursorPos(r.Position.ToSystem());
 
-                ImGui.SameLine();
+                    ImGuiHelper.Button(displayName, () =>
+                    {
+                        _tutorials.Add((ITutorial)Activator.CreateInstance(type, Input, Context, displayName)!);
+
+                    }, r.Size.X, r.Size.Y);
+
+                    ImGuiHelper.ShowHelpMarker(description);
+                });
             }
 
             ImGui.End();
