@@ -40,14 +40,12 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
 
     public float Gloss { get; set; } = 20.0f;
 
-    public TrTexture MainTex { get; } = new TrTexture(context);
+    public TrTexture? MainTex { get; set; }
 
     public Vector4D<float> MainTexST { get; set; } = new(1.0f, 1.0f, 0.0f, 0.0f);
 
     public override TrRenderPass CreateRenderPass()
     {
-        MainTex.LoadImage("Resources/Textures/Chapter7/Brick_Diffuse.JPG".PathFormatter());
-
         uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter7/SingleTexture/SingleTexture.vert.spv".PathFormatter());
@@ -93,6 +91,10 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
         ImGui.DragFloat("Gloss", ref gloss, 0.1f, 8.0f, 256.0f);
         Gloss = gloss;
 
+        TrTexture? mainTex = MainTex;
+        TrTextureManager.TextureSelection(ref mainTex);
+        MainTex = mainTex;
+
         Vector4 mainTexST = MainTexST.ToSystem();
         ImGui.DragFloat4("MainTexST", ref mainTexST, 0.1f, 0.0f, 100.0f);
         MainTexST = mainTexST.ToGeneric();
@@ -100,7 +102,6 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
 
     protected override void DestroyCore(bool disposing = false)
     {
-        MainTex.Dispose();
         uboMaterial.Dispose();
     }
 }

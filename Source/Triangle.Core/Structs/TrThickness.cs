@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Triangle.Core.Widgets;
+namespace Triangle.Core.Structs;
 
-public struct Thickness : IEquatable<Thickness>
+public struct TrThickness : IEquatable<TrThickness>
 {
     public float Left;
 
@@ -12,7 +12,7 @@ public struct Thickness : IEquatable<Thickness>
 
     public float Bottom;
 
-    public Thickness(float uniformLength)
+    public TrThickness(float uniformLength)
     {
         Left = uniformLength;
         Top = uniformLength;
@@ -20,7 +20,7 @@ public struct Thickness : IEquatable<Thickness>
         Bottom = uniformLength;
     }
 
-    public Thickness(float left, float top, float right, float bottom)
+    public TrThickness(float left, float top, float right, float bottom)
     {
         Left = left;
         Top = top;
@@ -28,14 +28,14 @@ public struct Thickness : IEquatable<Thickness>
         Bottom = bottom;
     }
 
-    public readonly bool Equals(Thickness other)
+    public readonly bool Equals(TrThickness other)
     {
         return Left.Equals(other.Left) && Top.Equals(other.Top) && Right.Equals(other.Right) && Bottom.Equals(other.Bottom);
     }
 
     public override readonly bool Equals([NotNullWhen(true)] object? obj)
     {
-        return obj is Thickness other && Equals(other);
+        return obj is TrThickness other && Equals(other);
     }
 
     public override readonly int GetHashCode()
@@ -43,12 +43,12 @@ public struct Thickness : IEquatable<Thickness>
         return HashCode.Combine(Left, Top, Right, Bottom);
     }
 
-    public static bool operator ==(Thickness left, Thickness right)
+    public static bool operator ==(TrThickness left, TrThickness right)
     {
         return left.Equals(right);
     }
 
-    public static bool operator !=(Thickness left, Thickness right)
+    public static bool operator !=(TrThickness left, TrThickness right)
     {
         return !(left == right);
     }

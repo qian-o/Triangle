@@ -1,8 +1,9 @@
 ﻿using Silk.NET.Maths;
+using Triangle.Core.Structs;
 
 namespace Triangle.Core.Widgets;
 
-public class Control
+public class TrControl
 {
     public struct RenderData
     {
@@ -13,11 +14,11 @@ public class Control
         public object? Tag;
     }
 
-    public Control()
+    public TrControl()
     {
     }
 
-    public Control(float width, float height)
+    public TrControl(float width, float height)
     {
         Width = width;
         Height = height;
@@ -27,7 +28,7 @@ public class Control
 
     public float Height { get; set; } = float.NaN;
 
-    public Thickness Margin { get; set; }
+    public TrThickness Margin { get; set; }
 
     public object? Tag { get; set; }
 

@@ -301,12 +301,15 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
         gl.BindBufferBase(GLEnum.UniformBuffer, bindingPoint, ubo.Handle);
     }
 
-    public void BindUniformBlock(uint bindingPoint, TrTexture texture)
+    public void BindUniformBlock(uint bindingPoint, TrTexture? texture)
     {
-        GL gl = Context.GL;
+        if (texture != null)
+        {
+            GL gl = Context.GL;
 
-        gl.ActiveTexture(GLEnum.Texture0 + (int)bindingPoint);
-        gl.BindTexture(GLEnum.Texture2D, texture.Handle);
+            gl.ActiveTexture(GLEnum.Texture0 + (int)bindingPoint);
+            gl.BindTexture(GLEnum.Texture2D, texture.Handle);
+        }
     }
 
     public void Bind()

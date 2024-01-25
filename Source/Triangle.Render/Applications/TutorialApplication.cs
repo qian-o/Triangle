@@ -5,6 +5,7 @@ using ImGuiNET;
 using Silk.NET.Maths;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
+using Triangle.Core.Structs;
 using Triangle.Core.Widgets;
 using Triangle.Core.Widgets.Layouts;
 using Triangle.Render.Contracts.Applications;
@@ -15,7 +16,7 @@ namespace Triangle.Render.Applications;
 public class TutorialApplication : BaseApplication
 {
     private readonly List<ITutorial> _tutorials = [];
-    private readonly WrapPanel _allTutorials = new();
+    private readonly TrWrapPanel _allTutorials = new();
 
     private ITutorial? _lastFocusedTutorial;
 
@@ -29,9 +30,9 @@ public class TutorialApplication : BaseApplication
             string displayName = type.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? type.Name;
             string description = type.GetCustomAttribute<DescriptionAttribute>()?.Description ?? "";
 
-            _allTutorials.Add(new Control(64.0f, 46.0f)
+            _allTutorials.Add(new TrControl(64.0f, 46.0f)
             {
-                Margin = new Thickness(2.0f),
+                Margin = new TrThickness(2.0f),
                 Tag = (type, displayName, description)
             });
         }
@@ -62,13 +63,13 @@ public class TutorialApplication : BaseApplication
 
             Vector2 leftTop = ImGui.GetCursorPos();
             Vector2 rightBottom = windowSize - (leftTop + contentSize);
-            Thickness windowPadding = new(leftTop.X, leftTop.Y, rightBottom.X, rightBottom.Y);
+            TrThickness windowPadding = new(leftTop.X, leftTop.Y, rightBottom.X, rightBottom.Y);
 
             _allTutorials.Width = contentSize.X;
             _allTutorials.Height = contentSize.Y;
             _allTutorials.Measure(windowSize.ToGeneric(), windowPadding);
 
-            foreach (Control control in _allTutorials.Children)
+            foreach (TrControl control in _allTutorials.Children)
             {
                 control.Render((r) =>
                 {
@@ -76,11 +77,9 @@ public class TutorialApplication : BaseApplication
 
                     ImGui.SetCursorPos(r.Position.ToSystem());
 
-                    ImGuiHelper.Button(displayName, () =>
-                    {
-                        _tutorials.Add((ITutorial)Activator.CreateInstance(type, Input, Context, displayName)!);
-
-                    }, r.Size.X, r.Size.Y);
+                    ImGuiHelper.Button(displayName,
+                                       () => { _tutorials.Add((ITutorial)Activator.CreateInstance(type, Input, Context, displayName)!); },
+                                       r.Size);
 
                     ImGuiHelper.ShowHelpMarker(description);
                 });

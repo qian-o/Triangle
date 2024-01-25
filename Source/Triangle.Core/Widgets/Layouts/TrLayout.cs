@@ -1,21 +1,22 @@
 ﻿using System.Collections.ObjectModel;
 using Silk.NET.Maths;
+using Triangle.Core.Structs;
 
 namespace Triangle.Core.Widgets.Layouts;
 
-public abstract class Layout
+public abstract class TrLayout
 {
-    private readonly List<Control> _children = [];
+    private readonly List<TrControl> _children = [];
 
     private Vector2D<float> lastSize;
     private Vector2D<float> lastFrameSize;
-    private Thickness lastFramePadding;
+    private TrThickness lastFramePadding;
 
-    protected Layout()
+    protected TrLayout()
     {
     }
 
-    protected Layout(float width, float height)
+    protected TrLayout(float width, float height)
     {
         Width = width;
         Height = height;
@@ -25,14 +26,14 @@ public abstract class Layout
 
     public float Height { get; set; } = float.NaN;
 
-    public ReadOnlyCollection<Control> Children => _children.AsReadOnly();
+    public ReadOnlyCollection<TrControl> Children => _children.AsReadOnly();
 
-    public void Add(Control element)
+    public void Add(TrControl element)
     {
         _children.Add(element);
     }
 
-    public void Remove(Control element)
+    public void Remove(TrControl element)
     {
         _children.Remove(element);
     }
@@ -44,10 +45,10 @@ public abstract class Layout
 
     public void Measure()
     {
-        MeasureCore(new Vector2D<float>(Width, Height), new Thickness());
+        MeasureCore(new Vector2D<float>(Width, Height), new TrThickness());
     }
 
-    public void Measure(Vector2D<float> frameSize, Thickness framePadding)
+    public void Measure(Vector2D<float> frameSize, TrThickness framePadding)
     {
         if (CheckLayout(frameSize, framePadding))
         {
@@ -55,9 +56,9 @@ public abstract class Layout
         }
     }
 
-    protected abstract void MeasureCore(Vector2D<float> frameSize, Thickness framePadding);
+    protected abstract void MeasureCore(Vector2D<float> frameSize, TrThickness framePadding);
 
-    protected bool CheckLayout(Vector2D<float> frameSize, Thickness framePadding)
+    protected bool CheckLayout(Vector2D<float> frameSize, TrThickness framePadding)
     {
         if (lastSize != new Vector2D<float>(Width, Height) || lastFrameSize != frameSize || lastFramePadding != framePadding)
         {

@@ -2,6 +2,8 @@
 using ImGuiNET;
 using Silk.NET.Maths;
 using Triangle.Core.Graphics;
+using Triangle.Core.Models;
+using Triangle.Core.Structs;
 using Triangle.Core.Widgets;
 using Triangle.Core.Widgets.Layouts;
 
@@ -10,7 +12,9 @@ namespace Triangle.Core.Helpers;
 public static class TrTextureManager
 {
     private static readonly Dictionary<string, TrTexture> _textures;
-    private static readonly Dictionary<string, WrapPanel> _treeNodes;
+    private static readonly Dictionary<string, TrWrapPanel> _treeNodes;
+
+    private static TrTexture? currentTexture;
 
     static TrTextureManager()
     {
@@ -26,18 +30,21 @@ public static class TrTextureManager
         LoadTextures(context, folder, "png");
         LoadTextures(context, folder, "jpg");
         LoadTextures(context, folder, "jpeg");
+        LoadTextures(context, folder, "psd");
+        LoadTextures(context, folder, "tga");
 
-        foreach (IGrouping<string, KeyValuePair<string, TrTexture>> gorup in _textures.OrderByDescending(item => item.Key)
-                                                                                      .GroupBy(item => Path.DirectorySeparatorChar + Path.GetDirectoryName(item.Key)))
+        IOrderedEnumerable<KeyValuePair<string, TrTexture>> sortedDirectories = _textures.OrderBy(item => item.Key, new DirectoryComparer());
+
+        foreach (IGrouping<string, KeyValuePair<string, TrTexture>> gorup in sortedDirectories.GroupBy(item => Path.DirectorySeparatorChar + Path.GetDirectoryName(item.Key)))
         {
-            WrapPanel wrapPanel = new();
+            TrWrapPanel wrapPanel = new();
             foreach (KeyValuePair<string, TrTexture> pair in gorup)
             {
                 string name = Path.GetFileName(pair.Key);
 
-                wrapPanel.Add(new Control(64.0f, 46.0f)
+                wrapPanel.Add(new TrControl(64.0f, 46.0f)
                 {
-                    Margin = new Thickness(2.0f),
+                    Margin = new TrThickness(2.0f),
                     Tag = (pair.Key, pair.Value)
                 });
             }
@@ -52,7 +59,7 @@ public static class TrTextureManager
             foreach (string file in files)
             {
                 TrTexture texture = new(context);
-                texture.LoadImage(file);
+                texture.WriteImage(file);
 
                 _textures.Add(file, texture);
             }
@@ -77,7 +84,7 @@ public static class TrTextureManager
 
     public static void Manager()
     {
-        foreach (KeyValuePair<string, WrapPanel> treeNode in _treeNodes)
+        foreach (KeyValuePair<string, TrWrapPanel> treeNode in _treeNodes)
         {
             if (ImGui.TreeNode(treeNode.Key))
             {
@@ -86,13 +93,13 @@ public static class TrTextureManager
 
                 Vector2 leftTop = ImGui.GetCursorPos();
                 Vector2 rightBottom = windowSize - (leftTop + contentSize);
-                Thickness windowPadding = new(leftTop.X, leftTop.Y, rightBottom.X, rightBottom.Y);
+                TrThickness windowPadding = new(leftTop.X, leftTop.Y, rightBottom.X, rightBottom.Y);
 
                 treeNode.Value.Width = contentSize.X;
                 treeNode.Value.Height = contentSize.Y;
                 treeNode.Value.Measure(windowSize.ToGeneric(), windowPadding);
 
-                foreach (Control control in treeNode.Value.Children)
+                foreach (TrControl control in treeNode.Value.Children)
                 {
                     control.Render((r) =>
                     {
@@ -100,12 +107,10 @@ public static class TrTextureManager
 
                         ImGui.SetCursorPos(r.Position.ToSystem());
 
-                        ImGuiHelper.ImageButton(texture, () =>
-                        {
-
-                            // TODO: Preview image and edit properties.
-
-                        }, r.Size.X, r.Size.Y);
+                        ImGuiHelper.ImageButtonSelected(texture,
+                                                        () => { currentTexture = texture; },
+                                                        texture == currentTexture,
+                                                        r.Size);
 
                         ImGuiHelper.ShowHelpMarker(path);
                     });
@@ -113,6 +118,41 @@ public static class TrTextureManager
 
                 ImGui.TreePop();
             }
+        }
+
+        if (currentTexture != null)
+        {
+            ImGui.Begin("Texture Properties");
+
+            currentTexture.AdjustImGuiProperties();
+
+            ImGui.End();
+        }
+    }
+
+    public static void TextureSelection(ref TrTexture? texture)
+    {
+        string file = string.Empty;
+
+        if (texture != null)
+        {
+            TrTexture temp = texture;
+            file = _textures.FirstOrDefault(item => item.Value == temp).Key;
+        }
+
+        if (ImGui.BeginCombo("Texture Selection", file))
+        {
+            foreach (KeyValuePair<string, TrTexture> item in _textures)
+            {
+                if (ImGui.Selectable(item.Key, item.Key == file))
+                {
+                    texture = item.Value;
+                }
+
+                ImGuiHelper.ShowHelpMarker(item.Value, new Vector2D<float>(64.0f, 64.0f));
+            }
+
+            ImGui.EndCombo();
         }
     }
 }

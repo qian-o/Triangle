@@ -132,6 +132,32 @@ public static class EnumExtensions
         };
     }
 
+    public static GLEnum ToGL(this TrTextureWrap textureWrap)
+    {
+        return textureWrap switch
+        {
+            TrTextureWrap.Repeat => GLEnum.Repeat,
+            TrTextureWrap.MirroredRepeat => GLEnum.MirroredRepeat,
+            TrTextureWrap.ClampToEdge => GLEnum.ClampToEdge,
+            TrTextureWrap.ClampToBorder => GLEnum.ClampToBorder,
+            _ => throw new NotSupportedException("不支持的纹理包裹。"),
+        };
+    }
+
+    public static GLEnum ToGL(this TrTextureFilter textureFilter)
+    {
+        return textureFilter switch
+        {
+            TrTextureFilter.Nearest => GLEnum.Nearest,
+            TrTextureFilter.Linear => GLEnum.Linear,
+            TrTextureFilter.NearestMipmapNearest => GLEnum.NearestMipmapNearest,
+            TrTextureFilter.LinearMipmapNearest => GLEnum.LinearMipmapNearest,
+            TrTextureFilter.NearestMipmapLinear => GLEnum.NearestMipmapLinear,
+            TrTextureFilter.LinearMipmapLinear => GLEnum.LinearMipmapLinear,
+            _ => throw new NotSupportedException("不支持的纹理过滤。"),
+        };
+    }
+
     public static (GLEnum Target, GLEnum Format) ToGL(this TrPixelFormat pixelFormat)
     {
         return pixelFormat switch

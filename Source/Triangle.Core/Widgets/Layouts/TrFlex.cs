@@ -12,7 +12,7 @@ using System.Collections;
 
 namespace Triangle.Core.Widgets.Layouts;
 
-public class Flex
+public class TrFlex
 {
     public enum AlignContent
     {
@@ -265,7 +265,7 @@ public class Flex
         public float Bottom { get; set; } = float.NaN;
 
         /// <summary>This property defines the direction and main-axis of child items. If set to Column (or ColumnReverse), the main-axis will be the y-axis and items will be stacked vertically. If set to Row (or RowReverse), the main-axis will be the x-axis and items will be stacked horizontally.</summary>
-        /// <value>Any value part of the<see cref="Flex.Direction" /> enumeration.</value>
+        /// <value>Any value part of the<see cref="TrFlex.Direction" /> enumeration.</value>
         /// <remarks>The default value for this property is Column.</remarks>
         public Direction Direction { get; set; } = Direction.Column;
 
@@ -282,7 +282,7 @@ public class Flex
         public bool IsVisible { get; set; } = true;
 
         /// <summary>This property defines how the layout engine will distribute space between and around child items along the main-axis.</summary>
-        /// <value>Any value part of the<see cref="Flex.Align" /> enumeration, with the exception of Stretch and Auto.</value>
+        /// <value>Any value part of the<see cref="TrFlex.Align" /> enumeration, with the exception of Stretch and Auto.</value>
         /// <remarks>The default value for this property is Start.</remarks>
         public Justify JustifyContent { get; set; } = Justify.Start;
 
@@ -345,7 +345,7 @@ public class Flex
         public float PaddingTop { get; set; }
 
         /// <summary>This property defines whether the item should be positioned by the flexbox rules of the layout engine(Relative) or have an absolute fixed position (Absolute). If this property is set to Absolute, the<see cref="Left" />, <see cref="Right" />, <see cref="Top" /> and <see cref="Bottom" /> properties will then be used to determine the item's fixed position in its container.</summary>
-        /// <value>Any value part of the<see cref="Flex.Position" /> enumeration.</value>
+        /// <value>Any value part of the<see cref="TrFlex.Position" /> enumeration.</value>
         /// <remarks>The default value for this property is Relative</remarks>
         public Position Position { get; set; } = Position.Relative;
 
@@ -370,7 +370,7 @@ public class Flex
         public float Width { get; set; } = float.NaN;
 
         /// <summary>This property defines whether child items should be laid out in a single line(NoWrap) or multiple lines(Wrap or WrapReverse). If this property is set to Wrap or WrapReverse, <see cref="AlignContent" /> can then be used to specify how the lines should be distributed.</summary>
-        /// <value>Any value part of the<see cref="Flex.Wrap" /> enumeration.</value>
+        /// <value>Any value part of the<see cref="TrFlex.Wrap" /> enumeration.</value>
         /// <remarks>The default value for this property is NoWrap.</remarks>
         public Wrap Wrap { get; set; } = Wrap.NoWrap;
 

@@ -1,20 +1,21 @@
 ﻿using Silk.NET.Maths;
+using Triangle.Core.Structs;
 
 namespace Triangle.Core.Widgets.Layouts;
 
-public class WrapPanel : Layout
+public class TrWrapPanel : TrLayout
 {
-    public WrapPanel()
+    public TrWrapPanel()
     {
     }
 
-    public WrapPanel(float width, float height) : base(width, height)
+    public TrWrapPanel(float width, float height) : base(width, height)
     {
     }
 
-    protected override void MeasureCore(Vector2D<float> frameSize, Thickness framePadding)
+    protected override void MeasureCore(Vector2D<float> frameSize, TrThickness framePadding)
     {
-        Flex.Item frame = new(frameSize.X, frameSize.Y)
+        TrFlex.Item frame = new(frameSize.X, frameSize.Y)
         {
             PaddingLeft = framePadding.Left,
             PaddingTop = framePadding.Top,
@@ -22,16 +23,16 @@ public class WrapPanel : Layout
             PaddingBottom = framePadding.Bottom
         };
 
-        Flex.Item content = new(Width, Height)
+        TrFlex.Item content = new(Width, Height)
         {
-            Direction = Flex.Direction.Row,
-            Wrap = Flex.Wrap.Wrap,
-            AlignContent = Flex.AlignContent.Start
+            Direction = TrFlex.Direction.Row,
+            Wrap = TrFlex.Wrap.Wrap,
+            AlignContent = TrFlex.AlignContent.Start
         };
 
-        foreach (Control control in Children)
+        foreach (TrControl control in Children)
         {
-            Flex.Item item = new(control.Width, control.Height)
+            TrFlex.Item item = new(control.Width, control.Height)
             {
                 MarginLeft = control.Margin.Left,
                 MarginTop = control.Margin.Top,
@@ -46,7 +47,7 @@ public class WrapPanel : Layout
         frame.Layout();
 
         int index = 0;
-        foreach (Flex.Item item in content)
+        foreach (TrFlex.Item item in content)
         {
             Children[index].Frame = new Vector4D<float>(content.Frame[0] + item.Frame[0], content.Frame[1] + item.Frame[1], item.Frame[2], item.Frame[3]);
 
