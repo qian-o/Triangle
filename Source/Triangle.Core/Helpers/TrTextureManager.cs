@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Collections.ObjectModel;
+using System.Numerics;
 using ImGuiNET;
 using Silk.NET.Maths;
 using Triangle.Core.Graphics;
@@ -22,10 +23,13 @@ public static class TrTextureManager
         _treeNodes = [];
     }
 
+    public static ReadOnlyDictionary<string, TrTexture> Textures => new(_textures);
+
     public static void InitializeImages(TrContext context, string folder)
     {
         CleanResources();
 
+        Dictionary<string, TrTexture> temp = [];
         LoadTextures(context, folder, "bmp");
         LoadTextures(context, folder, "png");
         LoadTextures(context, folder, "jpg");
@@ -33,9 +37,14 @@ public static class TrTextureManager
         LoadTextures(context, folder, "psd");
         LoadTextures(context, folder, "tga");
 
-        IOrderedEnumerable<KeyValuePair<string, TrTexture>> sortedDirectories = _textures.OrderBy(item => item.Key, new DirectoryComparer());
+        Dictionary<string, TrTexture> sortedFiles = temp.OrderBy(item => item.Key, new FilePathComparer()).ToDictionary();
 
-        foreach (IGrouping<string, KeyValuePair<string, TrTexture>> gorup in sortedDirectories.GroupBy(item => Path.DirectorySeparatorChar + Path.GetDirectoryName(item.Key)))
+        foreach (KeyValuePair<string, TrTexture> file in sortedFiles)
+        {
+            _textures.Add(file.Key, file.Value);
+        }
+
+        foreach (IGrouping<string, KeyValuePair<string, TrTexture>> gorup in _textures.GroupBy(item => Path.DirectorySeparatorChar + Path.GetDirectoryName(item.Key)))
         {
             TrWrapPanel wrapPanel = new();
             foreach (KeyValuePair<string, TrTexture> pair in gorup)
@@ -52,7 +61,7 @@ public static class TrTextureManager
             _treeNodes.Add(gorup.Key, wrapPanel);
         }
 
-        static void LoadTextures(TrContext context, string folder, string extension)
+        void LoadTextures(TrContext context, string folder, string extension)
         {
             string[] files = Directory.GetFiles(folder, $"*.{extension}", SearchOption.AllDirectories);
 
@@ -61,7 +70,7 @@ public static class TrTextureManager
                 TrTexture texture = new(context);
                 texture.WriteImage(file);
 
-                _textures.Add(file, texture);
+                temp.Add(file, texture);
             }
         }
     }
@@ -75,11 +84,6 @@ public static class TrTextureManager
 
         _textures.Clear();
         _treeNodes.Clear();
-    }
-
-    public static TrTexture GetTexture(string file)
-    {
-        return _textures[file];
     }
 
     public static void Manager()

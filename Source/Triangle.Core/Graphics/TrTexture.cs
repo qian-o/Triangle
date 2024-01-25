@@ -10,6 +10,8 @@ namespace Triangle.Core.Graphics;
 
 public unsafe class TrTexture : TrGraphics<TrContext>
 {
+    public const int MaxLevel = 16;
+
     public TrTexture(TrContext context) : base(context)
     {
         GL gl = Context.GL;
@@ -118,12 +120,9 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureMagFilter, (int)TextureMagFilter.ToGL());
         gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureWrapS, (int)TextureWrap.ToGL());
         gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureWrapT, (int)TextureWrap.ToGL());
+        gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureMaxLevel, IsGenerateMipmap ? MaxLevel : 0);
+        gl.GenerateMipmap(GLEnum.Texture2D);
 
         gl.BindTexture(GLEnum.Texture2D, 0);
-
-        if (IsGenerateMipmap)
-        {
-            gl.GenerateTextureMipmap(Handle);
-        }
     }
 }
