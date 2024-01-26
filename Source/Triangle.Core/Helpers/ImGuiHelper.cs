@@ -177,64 +177,18 @@ public static class ImGuiHelper
 
         Vector2D<float> area = ImGui.GetContentRegionAvail().ToGeneric();
 
-        Vector4D<float> content = new(0.0f, 0.0f, size.X, size.Y);
-        Alignment(horizontalAlignment, area, ref content);
-        Alignment(verticalAlignment, area, ref content);
-
-        if (content.Z < 0.0f || content.W < 0.0f)
+        // 如果区域比图片小，等比例缩放图片。
+        if (area.X < size.X || area.Y < size.Y)
         {
-            return;
+            float ratio = Math.Min(area.X / size.X, area.Y / size.Y);
+
+            size.X *= ratio;
+            size.Y *= ratio;
         }
 
-        ImGui.SetCursorPos(ImGui.GetCursorPos() + new Vector2D<float>(content.X, content.Y).ToSystem());
-        ImGui.Image((nint)texture.Handle, new Vector2D<float>(content.Z, content.W).ToSystem());
-    }
+        Vector2D<float> offset = new(horizontalAlignment.Alignment(area, size), verticalAlignment.Alignment(area, size));
 
-    private static void Alignment(TrHorizontalAlignment horizontalAlignment, Vector2D<float> area, ref Vector4D<float> content)
-    {
-        if (area.X < content.W)
-        {
-            content.Z = area.X;
-        }
-
-        switch (horizontalAlignment)
-        {
-            case TrHorizontalAlignment.Left:
-                content.X = 0.0f;
-                break;
-            case TrHorizontalAlignment.Center:
-                content.X = (area.X - content.Z) / 2.0f;
-                break;
-            case TrHorizontalAlignment.Right:
-                content.X = area.X - content.X;
-                break;
-            case TrHorizontalAlignment.Stretch:
-                content.X = 0.0f;
-                break;
-        }
-    }
-
-    private static void Alignment(TrVerticalAlignment verticalAlignment, Vector2D<float> area, ref Vector4D<float> content)
-    {
-        if (area.Y < content.W)
-        {
-            content.W = area.Y;
-        }
-
-        switch (verticalAlignment)
-        {
-            case TrVerticalAlignment.Top:
-                content.Y = 0.0f;
-                break;
-            case TrVerticalAlignment.Center:
-                content.Y = (area.Y - content.W) / 2.0f;
-                break;
-            case TrVerticalAlignment.Bottom:
-                content.Y = area.Y - content.W;
-                break;
-            case TrVerticalAlignment.Stretch:
-                content.Y = 0.0f;
-                break;
-        }
+        ImGui.SetCursorPos(ImGui.GetCursorPos() + offset.ToSystem());
+        ImGui.Image((nint)texture.Handle, size.ToSystem());
     }
 }

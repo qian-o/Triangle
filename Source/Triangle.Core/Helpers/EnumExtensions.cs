@@ -1,4 +1,5 @@
-﻿using Silk.NET.OpenGL;
+﻿using Silk.NET.Maths;
+using Silk.NET.OpenGL;
 using Triangle.Core.Enums;
 
 namespace Triangle.Core.Helpers;
@@ -17,7 +18,7 @@ public static class EnumExtensions
             TrDepthFunction.NotEqual => GLEnum.Notequal,
             TrDepthFunction.GreaterOrEqual => GLEnum.Gequal,
             TrDepthFunction.Always => GLEnum.Always,
-            _ => throw new NotSupportedException("不支持的深度函数。"),
+            _ => throw new NotSupportedException("不支持的深度函数。")
         };
     }
 
@@ -33,7 +34,7 @@ public static class EnumExtensions
             TrStencilFunction.NotEqual => GLEnum.Notequal,
             TrStencilFunction.GreaterOrEqual => GLEnum.Gequal,
             TrStencilFunction.Always => GLEnum.Always,
-            _ => throw new NotSupportedException("不支持的模板函数。"),
+            _ => throw new NotSupportedException("不支持的模板函数。")
         };
     }
 
@@ -44,7 +45,7 @@ public static class EnumExtensions
             TrTriangleFace.Front => GLEnum.Front,
             TrTriangleFace.Back => GLEnum.Back,
             TrTriangleFace.FrontAndBack => GLEnum.FrontAndBack,
-            _ => throw new NotSupportedException("不支持的三角形面。"),
+            _ => throw new NotSupportedException("不支持的三角形面。")
         };
     }
 
@@ -54,7 +55,7 @@ public static class EnumExtensions
         {
             TrFrontFaceDirection.CounterClockwise => GLEnum.Ccw,
             TrFrontFaceDirection.Clockwise => GLEnum.CW,
-            _ => throw new NotSupportedException("不支持的正面方向。"),
+            _ => throw new NotSupportedException("不支持的正面方向。")
         };
     }
 
@@ -77,7 +78,7 @@ public static class EnumExtensions
             TrBlendFactor.ConstantAlpha => GLEnum.ConstantAlpha,
             TrBlendFactor.OneMinusConstantAlpha => GLEnum.OneMinusConstantAlpha,
             TrBlendFactor.SrcAlphaSaturate => GLEnum.SrcAlphaSaturate,
-            _ => throw new NotSupportedException("不支持的混合因子。"),
+            _ => throw new NotSupportedException("不支持的混合因子。")
         };
     }
 
@@ -90,7 +91,7 @@ public static class EnumExtensions
             TrBlendEquation.ReverseSubtract => GLEnum.FuncReverseSubtract,
             TrBlendEquation.Min => GLEnum.Min,
             TrBlendEquation.Max => GLEnum.Max,
-            _ => throw new NotSupportedException("不支持的混合方程。"),
+            _ => throw new NotSupportedException("不支持的混合方程。")
         };
     }
 
@@ -105,7 +106,7 @@ public static class EnumExtensions
             TrBufferTarget.UniformBuffer => GLEnum.UniformBuffer,
             TrBufferTarget.TextureBuffer => GLEnum.TextureBuffer,
             TrBufferTarget.Framebuffer => GLEnum.Framebuffer,
-            _ => throw new NotSupportedException("不支持的缓冲区目标。"),
+            _ => throw new NotSupportedException("不支持的缓冲区目标。")
         };
     }
 
@@ -116,7 +117,7 @@ public static class EnumExtensions
             TrBufferUsage.Static => GLEnum.StaticDraw,
             TrBufferUsage.Dynamic => GLEnum.DynamicDraw,
             TrBufferUsage.Stream => GLEnum.StreamDraw,
-            _ => throw new NotSupportedException("不支持的缓冲区用法。"),
+            _ => throw new NotSupportedException("不支持的缓冲区用法。")
         };
     }
 
@@ -128,7 +129,7 @@ public static class EnumExtensions
             TrShaderType.Geometry => GLEnum.GeometryShader,
             TrShaderType.Fragment => GLEnum.FragmentShader,
             TrShaderType.Compute => GLEnum.ComputeShader,
-            _ => throw new NotSupportedException("不支持的着色器类型。"),
+            _ => throw new NotSupportedException("不支持的着色器类型。")
         };
     }
 
@@ -140,7 +141,7 @@ public static class EnumExtensions
             TrTextureWrap.MirroredRepeat => GLEnum.MirroredRepeat,
             TrTextureWrap.ClampToEdge => GLEnum.ClampToEdge,
             TrTextureWrap.ClampToBorder => GLEnum.ClampToBorder,
-            _ => throw new NotSupportedException("不支持的纹理包裹。"),
+            _ => throw new NotSupportedException("不支持的纹理包裹。")
         };
     }
 
@@ -154,7 +155,7 @@ public static class EnumExtensions
             TrTextureFilter.LinearMipmapNearest => GLEnum.LinearMipmapNearest,
             TrTextureFilter.NearestMipmapLinear => GLEnum.NearestMipmapLinear,
             TrTextureFilter.LinearMipmapLinear => GLEnum.LinearMipmapLinear,
-            _ => throw new NotSupportedException("不支持的纹理过滤。"),
+            _ => throw new NotSupportedException("不支持的纹理过滤。")
         };
     }
 
@@ -166,7 +167,31 @@ public static class EnumExtensions
             TrPixelFormat.RG8 => (GLEnum.RG8, GLEnum.RG),
             TrPixelFormat.RGB8 => (GLEnum.Rgb8, GLEnum.Rgb),
             TrPixelFormat.RGBA8 => (GLEnum.Rgba8, GLEnum.Rgba),
-            _ => throw new NotSupportedException("不支持的像素格式。"),
+            _ => throw new NotSupportedException("不支持的像素格式。")
+        };
+    }
+
+    public static float Alignment(this TrHorizontalAlignment alignment, Vector2D<float> area, Vector2D<float> size)
+    {
+        return alignment switch
+        {
+            TrHorizontalAlignment.Left => 0.0f,
+            TrHorizontalAlignment.Center => (area.X - size.X) / 2.0f,
+            TrHorizontalAlignment.Right => area.X - size.X,
+            TrHorizontalAlignment.Stretch => 0.0f,
+            _ => throw new NotSupportedException("不支持的水平对齐。")
+        };
+    }
+
+    public static float Alignment(this TrVerticalAlignment alignment, Vector2D<float> area, Vector2D<float> size)
+    {
+        return alignment switch
+        {
+            TrVerticalAlignment.Top => 0.0f,
+            TrVerticalAlignment.Center => (area.Y - size.Y) / 2.0f,
+            TrVerticalAlignment.Bottom => area.Y - size.Y,
+            TrVerticalAlignment.Stretch => 0.0f,
+            _ => throw new NotSupportedException("不支持的垂直对齐。")
         };
     }
 }

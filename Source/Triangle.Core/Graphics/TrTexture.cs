@@ -1,5 +1,4 @@
 ﻿using ImGuiNET;
-using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using StbImageSharp;
 using Triangle.Core.Contracts.Graphics;
@@ -102,7 +101,7 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         ImGui.Checkbox("Generate Mipmap", ref isGenerateMipmap);
         IsGenerateMipmap = isGenerateMipmap;
 
-        ImGuiHelper.Image(this, new Vector2D<float>(256.0f, 256.0f));
+        ImGuiHelper.Image(this);
 
         UpdateParameters();
 
