@@ -26,9 +26,6 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
 
         [FieldOffset(32)]
         public float Gloss;
-
-        [FieldOffset(48)]
-        public Vector4D<float> MainTexST;
     }
     #endregion
 
@@ -39,10 +36,6 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
     public Vector4D<float> Specular { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
 
     public float Gloss { get; set; } = 20.0f;
-
-    public TrTexture? MainTex { get; set; }
-
-    public Vector4D<float> MainTexST { get; set; } = new(1.0f, 1.0f, 0.0f, 0.0f);
 
     public override TrRenderPass CreateRenderPass()
     {
@@ -67,12 +60,10 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
         {
             Color = Color,
             Specular = Specular,
-            Gloss = Gloss,
-            MainTexST = MainTexST
+            Gloss = Gloss
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboMaterial);
-        renderPipeline.BindUniformBlock(0, MainTex);
 
         mesh.Draw();
     }
@@ -91,13 +82,7 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
         ImGui.DragFloat("Gloss", ref gloss, 0.1f, 8.0f, 256.0f);
         Gloss = gloss;
 
-        TrTexture? mainTex = MainTex;
-        TrTextureManager.TextureSelection(ref mainTex);
-        MainTex = mainTex;
-
-        Vector4 mainTexST = MainTexST.ToSystem();
-        ImGui.DragFloat4("MainTexST", ref mainTexST, 0.1f, 0.0f, 100.0f);
-        MainTexST = mainTexST.ToGeneric();
+        AdjustChannel(0);
     }
 
     protected override void DestroyCore(bool disposing = false)

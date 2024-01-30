@@ -134,7 +134,7 @@ public static class TrTextureManager
         }
     }
 
-    public static void TextureSelection(ref TrTexture? texture)
+    public static void TextureSelection(string label, ref TrTexture? texture)
     {
         string file = string.Empty;
 
@@ -144,7 +144,7 @@ public static class TrTextureManager
             file = _textures.FirstOrDefault(item => item.Value == temp).Key;
         }
 
-        if (ImGui.BeginCombo("Texture Selection", file))
+        if (ImGui.BeginCombo(label, file))
         {
             foreach (KeyValuePair<string, TrTexture> item in _textures)
             {

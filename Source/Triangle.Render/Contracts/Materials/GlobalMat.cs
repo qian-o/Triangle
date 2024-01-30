@@ -1,5 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using ImGuiNET;
 using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Enums;
@@ -12,7 +15,8 @@ namespace Triangle.Render.Contracts.Materials;
 
 public abstract class GlobalMat : TrMaterial<GlobalParameters>
 {
-    public const uint UniformBufferBindingStart = 5;
+    public const uint UniformBufferBindingStart = 6;
+    public const uint UniformSampler2dBindingStart = 4;
 
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -94,6 +98,22 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
         [FieldOffset(32)]
         public Vector3D<float> Direction;
     }
+
+    [StructLayout(LayoutKind.Explicit)]
+    private struct UniTexScaleOffset
+    {
+        [FieldOffset(0)]
+        public Vector4D<float> Channel0ST;
+
+        [FieldOffset(16)]
+        public Vector4D<float> Channel1ST;
+
+        [FieldOffset(32)]
+        public Vector4D<float> Channel2ST;
+
+        [FieldOffset(48)]
+        public Vector4D<float> Channel3ST;
+    }
     #endregion
 
     private readonly TrBuffer<UniTransforms> _uboTransforms;
@@ -101,6 +121,8 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
     private readonly TrBuffer<UniConstants> _uboConstants;
     private readonly TrBuffer<UniAmbientLight> _uboAmbientLight;
     private readonly TrBuffer<UniDirectionalLight> _uboDirectionalLight;
+    private readonly TrBuffer<UniTexScaleOffset> _uboTexScaleOffset;
+    private readonly Dictionary<int, (PropertyInfo Channel, PropertyInfo ChannelST)> _channelCache;
 
     protected GlobalMat([NotNull] TrContext context, [NotNull] string name) : base(context, name)
     {
@@ -109,7 +131,26 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
         _uboConstants = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
         _uboAmbientLight = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
         _uboDirectionalLight = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        _uboTexScaleOffset = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+
+        _channelCache = [];
     }
+
+    public TrTexture? Channel0 { get; set; }
+
+    public TrTexture? Channel1 { get; set; }
+
+    public TrTexture? Channel2 { get; set; }
+
+    public TrTexture? Channel3 { get; set; }
+
+    public Vector4D<float> Channel0ST { get; set; } = new(1.0f, 1.0f, 0.0f, 0.0f);
+
+    public Vector4D<float> Channel1ST { get; set; } = new(1.0f, 1.0f, 0.0f, 0.0f);
+
+    public Vector4D<float> Channel2ST { get; set; } = new(1.0f, 1.0f, 0.0f, 0.0f);
+
+    public Vector4D<float> Channel3ST { get; set; } = new(1.0f, 1.0f, 0.0f, 0.0f);
 
     public override void Draw([NotNull] TrMesh mesh, [NotNull] GlobalParameters parameters)
     {
@@ -159,17 +200,55 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
                 Position = -parameters.DirectionalLight.Direction,
                 Direction = parameters.DirectionalLight.Direction,
             });
+            _uboTexScaleOffset.SetData(new UniTexScaleOffset()
+            {
+                Channel0ST = Channel0ST,
+                Channel1ST = Channel1ST,
+                Channel2ST = Channel2ST,
+                Channel3ST = Channel3ST
+            });
 
             renderPipeline.BindUniformBlock(0, _uboTransforms);
             renderPipeline.BindUniformBlock(1, _uboVectors);
             renderPipeline.BindUniformBlock(2, _uboConstants);
             renderPipeline.BindUniformBlock(3, _uboAmbientLight);
             renderPipeline.BindUniformBlock(4, _uboDirectionalLight);
+            renderPipeline.BindUniformBlock(5, _uboTexScaleOffset);
+
+            renderPipeline.BindUniformBlock(0, Channel0);
+            renderPipeline.BindUniformBlock(1, Channel1);
+            renderPipeline.BindUniformBlock(2, Channel2);
+            renderPipeline.BindUniformBlock(3, Channel3);
 
             renderPipeline.Unbind();
         }
 
         DrawCore(mesh, parameters);
+    }
+
+    public void AdjustChannel(int index)
+    {
+        if (!_channelCache.TryGetValue(index, out (PropertyInfo Channel, PropertyInfo ChannelST) cache))
+        {
+            Type type = GetType();
+
+            if (type.GetProperty($"Channel{index}") is PropertyInfo tex && type.GetProperty($"Channel{index}ST") is PropertyInfo st)
+            {
+                _channelCache.Add(index, cache = (tex, st));
+            }
+            else
+            {
+                throw new InvalidOperationException($"Channel{index} or Channel{index}ST not found.");
+            }
+        }
+
+        TrTexture? channel = (TrTexture?)cache.Channel.GetValue(this);
+        TrTextureManager.TextureSelection(cache.Channel.Name, ref channel);
+        cache.Channel.SetValue(this, channel);
+
+        Vector4 channelST = ((Vector4D<float>)cache.ChannelST.GetValue(this)!).ToSystem();
+        ImGui.DragFloat4(cache.ChannelST.Name, ref channelST, 0.01f, 0.0f, 100.0f);
+        cache.ChannelST.SetValue(this, channelST.ToGeneric());
     }
 
     protected override void Destroy(bool disposing = false)

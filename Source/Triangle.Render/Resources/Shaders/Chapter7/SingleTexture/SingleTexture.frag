@@ -19,18 +19,15 @@ layout(std140, binding = UNIFORM_BUFFER_BINDING_START + 0) uniform Material
     vec4 Color;
     vec4 Specular;
     float Gloss;
-    vec4 MainTexST;
 }
 Uni_Material;
-
-layout(binding = 0) uniform sampler2D MainTex;
 
 void main()
 {
     vec3 worldNormal = normalize(In.WorldNormal);
     vec3 worldLightDir = normalize(Uni_DirectionalLight.Position);
 
-    vec3 albedo = texture(MainTex, TransformUV(In.UV, Uni_Material.MainTexST)).rgb * Uni_Material.Color.rgb;
+    vec3 albedo = texture(Channel0, TransformUV(In.UV, Uni_TexScaleOffset.Channel0ST)).rgb * Uni_Material.Color.rgb;
 
     vec3 ambient = albedo * Uni_AmbientLight.Color;
 

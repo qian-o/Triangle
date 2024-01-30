@@ -1,4 +1,5 @@
-#define UNIFORM_BUFFER_BINDING_START 5
+#define UNIFORM_BUFFER_BINDING_START 6
+#define UNIFORM_SAMPLER_2D_BINDING_START 4
 #define ANTI_ALIASING 4
 
 layout(std140, binding = 0) uniform Transforms
@@ -45,6 +46,20 @@ layout(std140, binding = 4) uniform DirectionalLight
     vec3 Direction;
 }
 Uni_DirectionalLight;
+
+layout(std140, binding = 5) uniform TexScaleOffset
+{
+    vec4 Channel0ST;
+    vec4 Channel1ST;
+    vec4 Channel2ST;
+    vec4 Channel3ST;
+}
+Uni_TexScaleOffset;
+
+layout(binding = 0) uniform sampler2D Channel0;
+layout(binding = 1) uniform sampler2D Channel1;
+layout(binding = 2) uniform sampler2D Channel2;
+layout(binding = 3) uniform sampler2D Channel3;
 
 float ComputeDepth(vec3 pos)
 {
