@@ -24,9 +24,12 @@ public abstract class TrMaterial<TParameters> : TrGraphics<TrContext>
     {
         ImGui.PushID(GetHashCode());
 
-        ImGui.SeparatorText($"{Name} Material");
+        if (ImGui.TreeNode($"{Name} Material"))
+        {
+            AdjustImGuiPropertiesCore();
 
-        AdjustImGuiPropertiesCore();
+            ImGui.TreePop();
+        }
 
         ImGui.PopID();
     }

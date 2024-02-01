@@ -225,7 +225,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
         DrawCore(mesh, parameters);
     }
 
-    public void AdjustChannel(int index)
+    public void AdjustChannel(string label, int index)
     {
         if (!_channelCache.TryGetValue(index, out (PropertyInfo Channel, PropertyInfo ChannelST) cache))
         {
@@ -241,13 +241,12 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
             }
         }
 
-        string name = $"Channel {index}";
         TrTexture? channel = (TrTexture?)cache.Channel.GetValue(this);
         Vector4D<float> channelST = (Vector4D<float>)cache.ChannelST.GetValue(this)!;
 
-        ImGui.PushID(name);
+        ImGui.PushID(label);
 
-        ImGui.Text(name);
+        ImGui.Text(label);
 
         ImGui.BeginGroup();
         {
@@ -266,7 +265,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
         ImGui.SameLine();
 
         float imageSize = ImGui.GetItemRectSize().Y;
-        TrTextureManager.TextureSelection(name, new Vector2D<float>(imageSize), ref channel);
+        TrTextureManager.TextureSelection(label, new Vector2D<float>(imageSize), ref channel);
 
         ImGui.PopID();
 

@@ -75,6 +75,8 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
         ImGui.ColorEdit4("Color", ref color);
         Color = color.ToGeneric();
 
+        AdjustChannel("Texture", 0);
+
         Vector4 specular = Specular.ToSystem();
         ImGui.ColorEdit4("Specular", ref specular);
         Specular = specular.ToGeneric();
@@ -82,8 +84,6 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
         float gloss = Gloss;
         ImGui.DragFloat("Gloss", ref gloss, 0.1f, 8.0f, 256.0f);
         Gloss = gloss;
-
-        AdjustChannel(0);
     }
 
     protected override void DestroyCore(bool disposing = false)

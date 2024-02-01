@@ -30,7 +30,7 @@ void main()
     vec3 lightDir = normalize(Uni_DirectionalLight.Position);
     vec3 viewDir = normalize(WorldSpaceViewDir(worldPos));
 
-    vec3 bump = texture(Channel1, In.UV.zw).xyz;
+    vec3 bump = UnpackNormal(texture(Channel1, In.UV.zw));
     bump.xy *= Uni_Material.BumpScale;
     bump.z = sqrt(1.0 - Saturate(dot(bump.xy, bump.xy)));
     bump = normalize(vec3(dot(In.TtoW0.xyz, bump), dot(In.TtoW1.xyz, bump), dot(In.TtoW2.xyz, bump)));
@@ -39,11 +39,11 @@ void main()
 
     vec3 ambient = Uni_AmbientLight.Color * albedo;
 
-    vec3 diffuse = Uni_DirectionalLight.Color * albedo * Saturate(dot(lightDir, bump));
+    vec3 diffent = Uni_DirectionalLight.Color * albedo * Saturate(dot(lightDir, bump));
 
     vec3 halfDir = normalize(lightDir + viewDir);
-    vec3 specular =
+    vec3 specent =
         Uni_DirectionalLight.Color * Uni_Material.Specular.rgb * pow(Saturate(dot(halfDir, bump)), Uni_Material.Gloss);
 
-    Out_Color = vec4(ambient + diffuse + specular, 1.0);
+    Out_Color = vec4(ambient + diffent + specent, 1.0);
 }

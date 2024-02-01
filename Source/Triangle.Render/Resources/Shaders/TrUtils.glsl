@@ -97,3 +97,8 @@ vec2 TransformUV(vec2 uv, vec4 st)
 {
     return uv * st.xy + st.zw;
 }
+
+vec3 UnpackNormal(vec4 packednormal)
+{
+    return normalize(packednormal.xyz * 2.0 - 1.0);
+}

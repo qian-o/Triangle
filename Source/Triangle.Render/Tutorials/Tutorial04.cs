@@ -30,6 +30,7 @@ public class Tutorial04(IInputContext input, TrContext context, string name) : B
 
     #region Materials
     private SingleTextureMat singleTextureMat = null!;
+    private NormalMapWorldSpaceMat normalMapWorldSpaceMat = null!;
     #endregion
 
     #region Lights
@@ -42,6 +43,7 @@ public class Tutorial04(IInputContext input, TrContext context, string name) : B
         capsule = Context.AssimpParsing("Resources/Models/Capsule.glb".PathFormatter())[0];
 
         singleTextureMat = new(Context);
+        normalMapWorldSpaceMat = new(Context);
     }
 
     protected override void UpdateScene(double deltaSeconds)
@@ -54,12 +56,17 @@ public class Tutorial04(IInputContext input, TrContext context, string name) : B
 
         GlobalParameters parameters = new(Scene.Camera, model, Scene.SceneData, ambientLight, directionalLight);
 
+        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-3.0f, 0.0f, 0.0f));
         singleTextureMat.Draw(capsule, parameters);
+
+        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
+        normalMapWorldSpaceMat.Draw(capsule, parameters);
     }
 
     protected override void EditProperties()
     {
         singleTextureMat.AdjustImGuiProperties();
+        normalMapWorldSpaceMat.AdjustImGuiProperties();
 
         ImGui.SeparatorText("Transforms");
 
