@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Structs;
@@ -8,7 +7,7 @@ namespace Triangle.Core.Graphics;
 
 public unsafe class TrMesh : TrGraphics<TrContext>
 {
-    public TrMesh(TrContext context, [NotNull] TrVertex[] vertices, [NotNull] uint[] indices) : base(context)
+    public TrMesh(TrContext context, TrVertex[] vertices, uint[] indices) : base(context)
     {
         GL gl = Context.GL;
 

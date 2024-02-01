@@ -30,7 +30,7 @@ void main()
 
     vec3 reflectDir = normalize(reflect(-worldLightDir, worldNormal));
 
-    vec3 viewDir = normalize(WorldSpaceViewDirection(In.WorldPos));
+    vec3 viewDir = normalize(WorldSpaceViewDir(In.WorldPos));
 
     vec3 halfDir = normalize(worldLightDir + viewDir);
 

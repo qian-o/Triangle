@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Silk.NET.Input;
+﻿using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.Windowing;
 using Triangle.Core;
@@ -21,7 +20,7 @@ public abstract class BaseApplication : IApplication
 
     public TrContext Context { get; private set; } = null!;
 
-    public void Initialize([NotNull] IWindow window, [NotNull] IInputContext input, [NotNull] TrContext context)
+    public void Initialize(IWindow window, IInputContext input, TrContext context)
     {
         Window = window;
         Input = input;

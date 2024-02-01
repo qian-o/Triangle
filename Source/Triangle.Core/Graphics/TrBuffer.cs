@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Silk.NET.OpenGL;
+﻿using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
 using Triangle.Core.Exceptions;
@@ -37,7 +36,7 @@ public unsafe class TrBuffer<TDataType> : TrGraphics<TrContext> where TDataType 
         gl.DeleteBuffer(Handle);
     }
 
-    public void SetData([NotNull] TDataType[] data, uint offset = 0)
+    public void SetData(TDataType[] data, uint offset = 0)
     {
         if (data.Length != Length)
         {

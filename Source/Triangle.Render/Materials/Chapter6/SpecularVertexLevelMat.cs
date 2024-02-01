@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Runtime.InteropServices;
 using ImGuiNET;
 using Silk.NET.Maths;
@@ -50,7 +49,7 @@ public class SpecularVertexLevelMat(TrContext context) : GlobalMat(context, "Spe
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore([NotNull] TrMesh mesh, [NotNull] GlobalParameters globalParameters)
+    protected override void DrawCore(TrMesh mesh, GlobalParameters globalParameters)
     {
         TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
 

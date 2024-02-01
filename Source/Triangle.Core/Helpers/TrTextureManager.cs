@@ -86,6 +86,16 @@ public static class TrTextureManager
         _treeNodes.Clear();
     }
 
+    public static TrTexture Texture(string path)
+    {
+        if (!_textures.TryGetValue(path, out TrTexture? texture))
+        {
+            throw new ArgumentException($"Texture {path} not found");
+        }
+
+        return texture;
+    }
+
     public static void Manager()
     {
         foreach (KeyValuePair<string, TrWrapPanel> treeNode in _treeNodes)

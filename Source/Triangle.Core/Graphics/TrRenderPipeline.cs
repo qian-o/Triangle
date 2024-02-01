@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
+﻿using System.Reflection;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
@@ -11,7 +10,7 @@ namespace Triangle.Core.Graphics;
 
 public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 {
-    public TrRenderPipeline(TrContext context, [NotNull] IList<TrShader> shaders) : base(context)
+    public TrRenderPipeline(TrContext context, IList<TrShader> shaders) : base(context)
     {
         GL gl = Context.GL;
 

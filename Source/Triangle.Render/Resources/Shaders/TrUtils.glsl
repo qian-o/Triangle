@@ -73,7 +73,22 @@ float Saturate(float value)
     return clamp(value, 0.0, 1.0);
 }
 
-vec3 WorldSpaceViewDirection(vec3 worldPos)
+vec4 ObjectToClipPos(vec3 pos)
+{
+    return Uni_Transforms.ObjectToClip * vec4(pos, 1.0);
+}
+
+vec3 ObjectToWorldNormal(vec3 normal)
+{
+    return normalize((Uni_Transforms.ObjectToWorld * vec4(normal, 0.0)).xyz);
+}
+
+vec3 ObjectToWorldDir(vec3 dir)
+{
+    return normalize((Uni_Transforms.ObjectToWorld * vec4(dir, 0.0)).xyz);
+}
+
+vec3 WorldSpaceViewDir(vec3 worldPos)
 {
     return Uni_Vectors.CameraPosition - worldPos;
 }

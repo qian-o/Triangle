@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Runtime.InteropServices;
 using ImGuiNET;
 using Silk.NET.Maths;
@@ -41,6 +40,8 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
     {
         uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
+        Channel0 = TrTextureManager.Texture("Resources/Textures/Chapter07/Brick_Diffuse.JPG".PathFormatter());
+
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter7/SingleTexture/SingleTexture.vert.spv".PathFormatter());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter7/SingleTexture/SingleTexture.frag.spv".PathFormatter());
 
@@ -50,7 +51,7 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore([NotNull] TrMesh mesh, [NotNull] GlobalParameters globalParameters)
+    protected override void DrawCore(TrMesh mesh, GlobalParameters globalParameters)
     {
         TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
 

@@ -28,7 +28,7 @@ void main()
 
     vec3 reflectDir = normalize(reflect(-worldLightDir, worldNormal));
 
-    vec3 viewDir = normalize(WorldSpaceViewDirection(vec3(Uni_Transforms.ObjectToWorld * vec4(In_Position, 1.0))));
+    vec3 viewDir = normalize(WorldSpaceViewDir(vec3(Uni_Transforms.ObjectToWorld * vec4(In_Position, 1.0))));
 
     vec3 specular = Uni_DirectionalLight.Color * Uni_Material.Specular.rgb *
                     pow(Saturate(dot(reflectDir, viewDir)), Uni_Material.Gloss);

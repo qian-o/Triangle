@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using ImGuiNET;
 using Triangle.Core;
 using Triangle.Core.Enums;
@@ -55,7 +54,7 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore([NotNull] TrMesh mesh, [NotNull] GlobalParameters globalParameters)
+    protected override void DrawCore(TrMesh mesh, GlobalParameters globalParameters)
     {
         double logDistance = Math.Log2(Distance);
         double upperDistance = Math.Pow(2.0, Math.Floor(logDistance) + 1);

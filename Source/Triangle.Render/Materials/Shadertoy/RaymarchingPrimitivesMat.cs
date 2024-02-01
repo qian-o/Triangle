@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Triangle.Core;
+﻿using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
@@ -20,7 +19,7 @@ public class RaymarchingPrimitivesMat(TrContext context) : GlobalMat(context, "R
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore([NotNull] TrMesh mesh, [NotNull] GlobalParameters globalParameters)
+    protected override void DrawCore(TrMesh mesh, GlobalParameters globalParameters)
     {
         TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
 

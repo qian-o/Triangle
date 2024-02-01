@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using ImGuiNET;
@@ -124,7 +123,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
     private readonly TrBuffer<UniTexScaleOffset> _uboTexScaleOffset;
     private readonly Dictionary<int, (PropertyInfo Channel, PropertyInfo ChannelST)> _channelCache;
 
-    protected GlobalMat([NotNull] TrContext context, [NotNull] string name) : base(context, name)
+    protected GlobalMat(TrContext context, string name) : base(context, name)
     {
         _uboTransforms = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
         _uboVectors = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
@@ -152,7 +151,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
 
     public Vector4D<float> Channel3ST { get; set; } = new(1.0f, 1.0f, 0.0f, 0.0f);
 
-    public override void Draw([NotNull] TrMesh mesh, [NotNull] GlobalParameters parameters)
+    public override void Draw(TrMesh mesh, GlobalParameters parameters)
     {
         foreach (TrRenderPipeline renderPipeline in RenderPass.RenderPipelines)
         {
@@ -282,6 +281,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
         _uboConstants.Dispose();
         _uboAmbientLight.Dispose();
         _uboDirectionalLight.Dispose();
+        _uboTexScaleOffset.Dispose();
 
         DestroyCore(disposing);
 
@@ -292,7 +292,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
         RenderPass.Dispose();
     }
 
-    protected abstract void DrawCore([NotNull] TrMesh mesh, [NotNull] GlobalParameters globalParameters);
+    protected abstract void DrawCore(TrMesh mesh, GlobalParameters globalParameters);
 
     /// <summary>
     /// 此处应该清理材质中用到的其他缓冲区资源。

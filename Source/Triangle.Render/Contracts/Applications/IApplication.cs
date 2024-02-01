@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Silk.NET.Input;
+﻿using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.Windowing;
 using Triangle.Core;
@@ -8,7 +7,7 @@ namespace Triangle.Render.Contracts.Applications;
 
 public interface IApplication : IDisposable
 {
-    void Initialize([NotNull] IWindow window, [NotNull] IInputContext input, [NotNull] TrContext context);
+    void Initialize(IWindow window, IInputContext input, TrContext context);
 
     void Update(double deltaSeconds);
 
