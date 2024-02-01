@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using ImGuiNET;
 using Silk.NET.Input;
-using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
@@ -43,14 +42,19 @@ public class Tutorial05(IInputContext input, TrContext context, string name) : B
 
     protected override void RenderScene(double deltaSeconds)
     {
-        GlobalParameters parameters = new(Scene.Camera, Matrix4X4<float>.Identity, Scene.SceneData);
+        GlobalParameters parameters = GetParameters();
 
         mats[materialIndex].Draw(canvas, parameters);
     }
 
     protected override void EditProperties()
     {
-        ImGui.Combo("Material", ref materialIndex, mats.Select(item => item.Name).ToArray(), mats.Length);
+        if (ImGui.TreeNode("Material"))
+        {
+            ImGui.Combo("##Material", ref materialIndex, mats.Select(item => item.Name).ToArray(), mats.Length);
+
+            ImGui.TreePop();
+        }
     }
 
     protected override void Destroy(bool disposing = false)

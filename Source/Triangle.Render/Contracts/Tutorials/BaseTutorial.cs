@@ -5,6 +5,7 @@ using Silk.NET.OpenGL;
 using Triangle.Core;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
+using Triangle.Core.Models;
 using Triangle.Render.Materials;
 using Triangle.Render.Models;
 
@@ -27,6 +28,8 @@ public abstract class BaseTutorial : ITutorial
         Input = input;
         Context = context;
         Scene = new TrScene(input, context, name);
+        TransformController = new();
+        LightingController = new();
 
         _grid = Context.CreateGrid();
         _gridMat = new(Context);
@@ -44,6 +47,10 @@ public abstract class BaseTutorial : ITutorial
     public TrContext Context { get; }
 
     public TrScene Scene { get; }
+
+    public TransformController TransformController { get; }
+
+    public LightingController LightingController { get; }
 
     public void Update(double deltaSeconds)
     {
@@ -78,23 +85,32 @@ public abstract class BaseTutorial : ITutorial
     {
         if (ImGui.Begin("Properties"))
         {
-            ImGui.SeparatorText("Scene");
+            if (ImGui.TreeNode("Scene"))
+            {
+                int samples = Scene.Samples;
+                ImGui.SliderInt("Samples", ref samples, 1, 16);
+                Scene.Samples = samples;
 
-            int samples = Scene.Samples;
-            ImGui.SliderInt("Samples", ref samples, 1, 16);
-            Scene.Samples = samples;
+                ImGui.TreePop();
+            }
 
-            ImGui.SeparatorText("Camera");
+            if (ImGui.TreeNode("Camera"))
+            {
+                float cameraSpeed = Scene.CameraSpeed;
+                ImGui.SliderFloat("Speed", ref cameraSpeed, 0.1f, 10.0f);
+                Scene.CameraSpeed = cameraSpeed;
 
-            float cameraSpeed = Scene.CameraSpeed;
-            ImGui.SliderFloat("Speed", ref cameraSpeed, 0.1f, 10.0f);
-            Scene.CameraSpeed = cameraSpeed;
+                float cameraSensitivity = Scene.CameraSensitivity;
+                ImGui.SliderFloat("Sensitivity", ref cameraSensitivity, 0.1f, 1.0f);
+                Scene.CameraSensitivity = cameraSensitivity;
 
-            float cameraSensitivity = Scene.CameraSensitivity;
-            ImGui.SliderFloat("Sensitivity", ref cameraSensitivity, 0.1f, 1.0f);
-            Scene.CameraSensitivity = cameraSensitivity;
+                ImGui.TreePop();
+            }
 
             _gridMat.AdjustImGuiProperties();
+
+            TransformController.Controller();
+            LightingController.Controller();
 
             EditProperties();
         }
@@ -107,6 +123,15 @@ public abstract class BaseTutorial : ITutorial
     protected abstract void RenderScene(double deltaSeconds);
 
     protected abstract void EditProperties();
+
+    protected GlobalParameters GetParameters(string transformName = "")
+    {
+        return new(Scene.Camera,
+                   string.IsNullOrEmpty(transformName) ? Matrix4X4<float>.Identity : TransformController[transformName],
+                   Scene.SceneData,
+                   LightingController.AmbientLight,
+                   LightingController.DirectionalLight);
+    }
 
     protected abstract void Destroy(bool disposing = false);
 

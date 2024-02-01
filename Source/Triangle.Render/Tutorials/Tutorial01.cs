@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using Silk.NET.Input;
-using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
+using Triangle.Core.Models;
 using Triangle.Render.Contracts.Tutorials;
 using Triangle.Render.Materials.Chapter5;
 using Triangle.Render.Models;
@@ -22,17 +22,13 @@ public class Tutorial01(IInputContext input, TrContext context, string name) : B
     private SimpleMat simpleMat = null!;
     #endregion
 
-    #region Transform
-    private Vector3D<float> translation = new(0.0f, 0.0f, 0.0f);
-    private Vector3D<float> rotation = new(0.0f, 0.0f, 0.0f);
-    private Vector3D<float> scale = new(1.0f, 1.0f, 1.0f);
-    #endregion
-
     protected override void Loaded()
     {
         sphere = Context.AssimpParsing("Resources/Models/Sphere.glb".PathFormatter())[0];
 
         simpleMat = new(Context);
+
+        TransformController.Add("Sphere");
     }
 
     protected override void UpdateScene(double deltaSeconds)
@@ -41,9 +37,7 @@ public class Tutorial01(IInputContext input, TrContext context, string name) : B
 
     protected override void RenderScene(double deltaSeconds)
     {
-        Matrix4X4<float> model = Matrix4X4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix4X4.CreateScale(scale) * Matrix4X4.CreateTranslation(translation);
-
-        GlobalParameters parameters = new(Scene.Camera, model, Scene.SceneData);
+        GlobalParameters parameters = GetParameters("Sphere");
 
         simpleMat.Draw(sphere, parameters);
     }

@@ -245,28 +245,28 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
         Vector4D<float> channelST = (Vector4D<float>)cache.ChannelST.GetValue(this)!;
 
         ImGui.PushID(label);
-
-        ImGui.Text(label);
-
-        ImGui.BeginGroup();
         {
-            ImGui.Text("Tiling");
-            Vector2 s = new(channelST.X, channelST.Y);
-            ImGui.DragFloat2("##Tiling", ref s, 0.01f);
+            ImGui.Text(label);
 
-            ImGui.Text("Offset");
-            Vector2 t = new(channelST.Z, channelST.W);
-            ImGui.DragFloat2("##Offset", ref t, 0.01f);
+            ImGui.BeginGroup();
+            {
+                ImGui.Text("Tiling");
+                Vector2 s = new(channelST.X, channelST.Y);
+                ImGui.DragFloat2("##Tiling", ref s, 0.01f);
 
-            channelST = new(s.X, s.Y, t.X, t.Y);
+                ImGui.Text("Offset");
+                Vector2 t = new(channelST.Z, channelST.W);
+                ImGui.DragFloat2("##Offset", ref t, 0.01f);
+
+                channelST = new(s.X, s.Y, t.X, t.Y);
+            }
+            ImGui.EndGroup();
+
+            ImGui.SameLine();
+
+            float imageSize = ImGui.GetItemRectSize().Y;
+            TrTextureManager.TextureSelection(label, new Vector2D<float>(imageSize), ref channel);
         }
-        ImGui.EndGroup();
-
-        ImGui.SameLine();
-
-        float imageSize = ImGui.GetItemRectSize().Y;
-        TrTextureManager.TextureSelection(label, new Vector2D<float>(imageSize), ref channel);
-
         ImGui.PopID();
 
         cache.Channel.SetValue(this, channel);
