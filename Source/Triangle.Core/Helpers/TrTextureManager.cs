@@ -134,21 +134,16 @@ public static class TrTextureManager
         }
     }
 
-    public static void TextureSelection(string label, ref TrTexture? texture)
+    public static void TextureSelection(string label, Vector2D<float> size, ref TrTexture? texture)
     {
-        string file = string.Empty;
+        ImGuiHelper.ImageButton(label, texture, () => ImGui.OpenPopup(label), size);
 
-        if (texture != null)
-        {
-            TrTexture temp = texture;
-            file = _textures.FirstOrDefault(item => item.Value == temp).Key;
-        }
-
-        if (ImGui.BeginCombo(label, file))
+        ImGui.SetNextWindowSizeConstraints(new Vector2(100.0f, 200.0f), new Vector2(300.0f, 200.0f));
+        if (ImGui.BeginPopup(label, ImGuiWindowFlags.AlwaysAutoResize))
         {
             foreach (KeyValuePair<string, TrTexture> item in _textures)
             {
-                if (ImGui.Selectable(item.Key, item.Key == file))
+                if (ImGui.Selectable(item.Key, item.Value == texture))
                 {
                     texture = item.Value;
                 }
@@ -156,7 +151,7 @@ public static class TrTextureManager
                 ImGuiHelper.ShowHelpMarker(item.Value, new Vector2D<float>(64.0f, 64.0f));
             }
 
-            ImGui.EndCombo();
+            ImGui.EndPopup();
         }
     }
 }

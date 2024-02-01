@@ -47,21 +47,28 @@ public static class ImGuiHelper
         ImGui.PopStyleColor(2);
     }
 
-    public static void ImageButton(TrTexture texture, Action action)
+    public static void ImageButton(string label, TrTexture? texture, Action action)
     {
-        ImageButton(texture, action, Vector2D<float>.Zero);
+        ImageButton(label, texture, action, Vector2D<float>.Zero);
     }
 
-    public static void ImageButton(TrTexture texture, Action action, Vector2D<float> size)
+    public static void ImageButton(string label, TrTexture? texture, Action action, Vector2D<float> size)
     {
-        if (size.X == 0.0f)
-        {
-            size.X = texture.Width;
-        }
+        nint handle = 0;
 
-        if (size.Y == 0.0f)
+        if (texture != null)
         {
-            size.Y = texture.Height;
+            if (size.X == 0.0f)
+            {
+                size.X = texture.Width;
+            }
+
+            if (size.Y == 0.0f)
+            {
+                size.Y = texture.Height;
+            }
+
+            handle = (nint)texture.Handle;
         }
 
         Vector2 padding = ImGui.GetStyle().FramePadding;
@@ -69,7 +76,7 @@ public static class ImGuiHelper
         size.X -= padding.X * 2.0f;
         size.Y -= padding.Y * 2.0f;
 
-        if (ImGui.ImageButton($"{texture.Handle} {size}", (nint)texture.Handle, size.ToSystem()))
+        if (ImGui.ImageButton(label, handle, size.ToSystem()))
         {
             action();
         }

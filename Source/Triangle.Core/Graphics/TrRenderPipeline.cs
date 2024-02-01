@@ -303,13 +303,10 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 
     public void BindUniformBlock(uint bindingPoint, TrTexture? texture)
     {
-        if (texture != null)
-        {
-            GL gl = Context.GL;
+        GL gl = Context.GL;
 
-            gl.ActiveTexture(GLEnum.Texture0 + (int)bindingPoint);
-            gl.BindTexture(GLEnum.Texture2D, texture.Handle);
-        }
+        gl.ActiveTexture(GLEnum.Texture0 + (int)bindingPoint);
+        gl.BindTexture(GLEnum.Texture2D, texture != null ? texture.Handle : 0);
     }
 
     public void Bind()

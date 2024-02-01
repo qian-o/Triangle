@@ -242,13 +242,37 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
             }
         }
 
+        string name = $"Channel {index}";
         TrTexture? channel = (TrTexture?)cache.Channel.GetValue(this);
-        TrTextureManager.TextureSelection(cache.Channel.Name, ref channel);
-        cache.Channel.SetValue(this, channel);
+        Vector4D<float> channelST = (Vector4D<float>)cache.ChannelST.GetValue(this)!;
 
-        Vector4 channelST = ((Vector4D<float>)cache.ChannelST.GetValue(this)!).ToSystem();
-        ImGui.DragFloat4(cache.ChannelST.Name, ref channelST, 0.01f, 0.0f, 100.0f);
-        cache.ChannelST.SetValue(this, channelST.ToGeneric());
+        ImGui.PushID(name);
+
+        ImGui.Text(name);
+
+        ImGui.BeginGroup();
+        {
+            ImGui.Text("Tiling");
+            Vector2 s = new(channelST.X, channelST.Y);
+            ImGui.DragFloat2("##Tiling", ref s, 0.01f);
+
+            ImGui.Text("Offset");
+            Vector2 t = new(channelST.Z, channelST.W);
+            ImGui.DragFloat2("##Offset", ref t, 0.01f);
+
+            channelST = new(s.X, s.Y, t.X, t.Y);
+        }
+        ImGui.EndGroup();
+
+        ImGui.SameLine();
+
+        float imageSize = ImGui.GetItemRectSize().Y;
+        TrTextureManager.TextureSelection(name, new Vector2D<float>(imageSize), ref channel);
+
+        ImGui.PopID();
+
+        cache.Channel.SetValue(this, channel);
+        cache.ChannelST.SetValue(this, channelST);
     }
 
     protected override void Destroy(bool disposing = false)
