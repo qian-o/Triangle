@@ -13,7 +13,7 @@ namespace Triangle.Render.Tutorials;
 
 [DisplayName("Shadertoy")]
 [Description("从 Shadertoy 上移植的着色器。")]
-public class Tutorial05(IInputContext input, TrContext context, string name) : BaseTutorial(input, context, name)
+public class Tutorial05(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     #region Meshes
     private TrMesh canvas = null!;

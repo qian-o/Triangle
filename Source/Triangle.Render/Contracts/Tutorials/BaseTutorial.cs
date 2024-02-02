@@ -1,4 +1,6 @@
-﻿using ImGuiNET;
+﻿using System.ComponentModel;
+using System.Reflection;
+using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -23,11 +25,11 @@ public abstract class BaseTutorial : ITutorial
 
     private bool disposedValue;
 
-    protected BaseTutorial(IInputContext input, TrContext context, string name)
+    protected BaseTutorial(IInputContext input, TrContext context)
     {
         Input = input;
         Context = context;
-        Scene = new TrScene(input, context, name);
+        Scene = new TrScene(input, context, GetType().GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? GetType().Name);
         TransformController = new();
         LightingController = new();
 

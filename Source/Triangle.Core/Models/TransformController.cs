@@ -31,6 +31,11 @@ public class TransformController
         _cache.Clear();
     }
 
+    public void SetTransform(string name, Vector3D<float> translation, Vector3D<float> rotationDegree, Vector3D<float> scale)
+    {
+        _cache[name] = (translation, rotationDegree.DegreeToRadian(), scale);
+    }
+
     public void Controller()
     {
         if (ImGui.TreeNode("Transform"))

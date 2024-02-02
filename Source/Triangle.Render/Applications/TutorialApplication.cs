@@ -78,7 +78,7 @@ public class TutorialApplication : BaseApplication
                     ImGui.SetCursorPos(r.Position.ToSystem());
 
                     ImGuiHelper.Button(displayName,
-                                       () => { _tutorials.Add((ITutorial)Activator.CreateInstance(type, Input, Context, displayName)!); },
+                                       () => { _tutorials.Add((ITutorial)Activator.CreateInstance(type, Input, Context)!); },
                                        r.Size);
 
                     ImGuiHelper.ShowHelpMarker(description);

@@ -1,5 +1,6 @@
 ﻿using Silk.NET.Assimp;
 using Silk.NET.Maths;
+using Triangle.Core.Exceptions;
 using Triangle.Core.Graphics;
 using Triangle.Core.Structs;
 
@@ -95,8 +96,21 @@ public static unsafe class TrMeshFactory
 
     public static TrMesh[] AssimpParsing(this TrContext context, string file)
     {
+        const PostProcessSteps steps = PostProcessSteps.CalculateTangentSpace
+                                       | PostProcessSteps.Triangulate
+                                       | PostProcessSteps.GenerateNormals
+                                       | PostProcessSteps.GenerateSmoothNormals
+                                       | PostProcessSteps.GenerateUVCoords
+                                       | PostProcessSteps.FlipUVs
+                                       | PostProcessSteps.PreTransformVertices;
+
         using Assimp importer = Assimp.GetApi();
-        Scene* scene = importer.ImportFile(file, (uint)(PostProcessSteps.Triangulate | PostProcessSteps.GenerateNormals | PostProcessSteps.CalculateTangentSpace | PostProcessSteps.FlipUVs | PostProcessSteps.PreTransformVertices));
+        Scene* scene = importer.ImportFile(file, (uint)steps);
+
+        if (scene == null)
+        {
+            throw new TrException($"Assimp parsing failed. Error: {importer.GetErrorStringS()}");
+        }
 
         List<TrMesh> meshes = [];
 

@@ -12,7 +12,7 @@ namespace Triangle.Render.Tutorials;
 
 [DisplayName("高光反射")]
 [Description("使用 Specular 相关材质渲染胶囊体。")]
-public class Tutorial03(IInputContext input, TrContext context, string name) : BaseTutorial(input, context, name)
+public class Tutorial03(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     #region Meshes
     private TrMesh capsule = null!;

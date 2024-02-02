@@ -152,3 +152,8 @@ vec3 UnpackNormal(vec4 packednormal)
 {
     return normalize(packednormal.xyz * 2.0 - 1.0);
 }
+
+vec4 SampleTexture(sampler2D tex, vec2 uv)
+{
+    return texture(tex, uv);
+}
