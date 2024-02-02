@@ -21,6 +21,7 @@ public class Tutorial04(IInputContext input, TrContext context, string name) : B
     #region Materials
     private SingleTextureMat singleTextureMat = null!;
     private NormalMapWorldSpaceMat normalMapWorldSpaceMat = null!;
+    private NormalMapTangentSpaceMat normalMapTangentSpaceMat = null!;
     #endregion
 
     protected override void Loaded()
@@ -29,6 +30,7 @@ public class Tutorial04(IInputContext input, TrContext context, string name) : B
 
         singleTextureMat = new(Context);
         normalMapWorldSpaceMat = new(Context);
+        normalMapTangentSpaceMat = new(Context);
 
         TransformController.Add("Capsule");
     }
@@ -46,18 +48,23 @@ public class Tutorial04(IInputContext input, TrContext context, string name) : B
 
         parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
         normalMapWorldSpaceMat.Draw(capsule, parameters);
+
+        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
+        normalMapTangentSpaceMat.Draw(capsule, parameters);
     }
 
     protected override void EditProperties()
     {
         singleTextureMat.AdjustImGuiProperties();
         normalMapWorldSpaceMat.AdjustImGuiProperties();
+        normalMapTangentSpaceMat.AdjustImGuiProperties();
     }
 
     protected override void Destroy(bool disposing = false)
     {
         singleTextureMat.Dispose();
         normalMapWorldSpaceMat.Dispose();
+        normalMapTangentSpaceMat.Dispose();
         capsule.Dispose();
     }
 }

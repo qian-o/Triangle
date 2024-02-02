@@ -27,7 +27,7 @@ Uni_Material;
 void main()
 {
     vec3 worldPos = vec3(In.TtoW0.w, In.TtoW1.w, In.TtoW2.w);
-    vec3 lightDir = normalize(Uni_DirectionalLight.Position);
+    vec3 lightDir = normalize(WorldSpaceDirectionalLightDir());
     vec3 viewDir = normalize(WorldSpaceViewDir(worldPos));
 
     vec3 bump = UnpackNormal(texture(Channel1, In.UV.zw));
