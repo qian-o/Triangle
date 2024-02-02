@@ -24,8 +24,8 @@ void main()
     mat4 viewInvMat = inverse(Uni_Transforms.View);
     mat4 projInvMat = inverse(Uni_Transforms.Projection);
 
-    Out.NearPos = UnprojectPoint(In_Position.x, In_Position.y, -1.0, viewInvMat, projInvMat).xyz;
-    Out.FarPos = UnprojectPoint(In_Position.x, In_Position.y, 1.0, viewInvMat, projInvMat).xyz;
+    Out.NearPos = UnprojectPoint(In_Position.x, In_Position.y, -1.0, viewInvMat, projInvMat);
+    Out.FarPos = UnprojectPoint(In_Position.x, In_Position.y, 1.0, viewInvMat, projInvMat);
 
     gl_Position = vec4(In_Position, 1.0);
 }

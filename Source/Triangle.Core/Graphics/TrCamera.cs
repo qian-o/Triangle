@@ -55,7 +55,7 @@ public class TrCamera
         }
     }
 
-    public float Near { get; set; } = 0.1f;
+    public float Near { get; set; } = 0.3f;
 
     public float Far { get; set; } = 1000.0f;
 

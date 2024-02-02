@@ -31,6 +31,9 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
         public float GridIntensity;
 
         [FieldOffset(20)]
+        public float AxisIntensity;
+
+        [FieldOffset(24)]
         public float Fade;
     }
     #endregion
@@ -38,8 +41,6 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
     private TrBuffer<UniParameters> uboParameters = null!;
 
     public float Distance { get; set; } = 6.0f;
-
-    public float GridIntensity { get; set; } = 1.0f;
 
     public override TrRenderPass CreateRenderPass()
     {
@@ -64,6 +65,7 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
         double level = -Math.Floor(logDistance);
         float primaryScale = Convert.ToSingle(Math.Pow(2.0, level));
         float secondaryScale = Convert.ToSingle(Math.Pow(2.0, level + 1));
+        float axisIntensity = 0.3f / primaryScale;
 
         TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
 
@@ -72,10 +74,11 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
         uboParameters.SetData(new UniParameters()
         {
             Near = globalParameters.Camera.Near,
-            Far = globalParameters.Camera.Far,
+            Far = globalParameters.Camera.Far * 0.2f,
             PrimaryScale = primaryScale,
             SecondaryScale = secondaryScale,
-            GridIntensity = GridIntensity,
+            GridIntensity = 0.2f,
+            AxisIntensity = axisIntensity,
             Fade = fade
         });
 
@@ -91,10 +94,6 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
         float distance = Distance;
         ImGui.SliderFloat("Distance", ref distance, 0.0f, 10.0f);
         Distance = distance;
-
-        float gridIntensity = GridIntensity;
-        ImGui.SliderFloat("Grid Intensity", ref gridIntensity, 0.0f, 1.0f);
-        GridIntensity = gridIntensity;
     }
 
     protected override void DestroyCore(bool disposing = false)

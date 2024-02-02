@@ -20,6 +20,7 @@ layout(std140, binding = UNIFORM_BUFFER_BINDING_START + 0) uniform Parameters
     float PrimaryScale;
     float SecondaryScale;
     float GridIntensity;
+    float AxisIntensity;
     float Fade;
 }
 Uni_Parameters;
@@ -30,8 +31,26 @@ vec4 grid(vec3 fragPos3D, float scale, float fade)
     vec2 derivative = fwidth(coord);
     vec2 grid = abs(fract(coord - 0.5) - 0.5) / derivative;
     float line = min(grid.x, grid.y);
-    return vec4(Uni_Parameters.GridIntensity, Uni_Parameters.GridIntensity, Uni_Parameters.GridIntensity,
-                fade * (1.0 - min(line, 1.0)));
+
+    vec4 color = vec4(Uni_Parameters.GridIntensity, Uni_Parameters.GridIntensity, Uni_Parameters.GridIntensity,
+                      fade * (1.0 - min(line, 1.0)));
+
+    float minimumz = min(derivative.y, 1.0);
+    float minimumx = min(derivative.x, 1.0);
+
+    // z - axis
+    if (fragPos3D.x > -Uni_Parameters.AxisIntensity * minimumx && fragPos3D.x < Uni_Parameters.AxisIntensity * minimumx)
+    {
+        color.b = 1.0;
+    }
+
+    // x - axis
+    if (fragPos3D.z > -Uni_Parameters.AxisIntensity * minimumz && fragPos3D.z < Uni_Parameters.AxisIntensity * minimumz)
+    {
+        color.r = 1.0;
+    }
+
+    return color;
 }
 
 float computeLinearDepth(vec3 pos)
