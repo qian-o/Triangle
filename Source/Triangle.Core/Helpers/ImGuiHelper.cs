@@ -165,25 +165,20 @@ public static class ImGuiHelper
         }
     }
 
-    public static void Image(TrTexture texture)
+    public static void Image(TrTexture? texture)
     {
-        Image(texture, Vector2D<float>.Zero);
-    }
-
-    public static void Image(TrTexture texture, Vector2D<float> size, TrHorizontalAlignment horizontalAlignment = TrHorizontalAlignment.Center, TrVerticalAlignment verticalAlignment = TrVerticalAlignment.Center)
-    {
-        if (size.X == 0.0f)
+        Vector2D<float> size = Vector2D<float>.Zero;
+        if (texture != null)
         {
             size.X = texture.Width;
-        }
-
-        if (size.Y == 0.0f)
-        {
             size.Y = texture.Height;
         }
 
-        Vector2D<float> area = ImGui.GetContentRegionAvail().ToGeneric();
+        Image(texture, ImGui.GetContentRegionAvail().ToGeneric(), size);
+    }
 
+    public static void Image(TrTexture? texture, Vector2D<float> area, Vector2D<float> size, TrHorizontalAlignment horizontalAlignment = TrHorizontalAlignment.Center, TrVerticalAlignment verticalAlignment = TrVerticalAlignment.Center)
+    {
         // 如果区域比图片小，等比例缩放图片。
         if (area.X < size.X || area.Y < size.Y)
         {
@@ -196,6 +191,6 @@ public static class ImGuiHelper
         Vector2D<float> offset = new(horizontalAlignment.Alignment(area, size), verticalAlignment.Alignment(area, size));
 
         ImGui.SetCursorPos(ImGui.GetCursorPos() + offset.ToSystem());
-        ImGui.Image((nint)texture.Handle, size.ToSystem());
+        ImGui.Image(texture != null ? (nint)texture.Handle : 0, size.ToSystem());
     }
 }

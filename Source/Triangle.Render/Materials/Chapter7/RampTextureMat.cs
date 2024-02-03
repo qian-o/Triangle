@@ -82,7 +82,7 @@ public class RampTextureMat(TrContext context) : GlobalMat(context, "RampTexture
         Specular = specular.ToGeneric();
 
         float gloss = Gloss;
-        ImGui.DragFloat("Gloss", ref gloss, 0.1f, 8.0f, 256.0f);
+        ImGui.SliderFloat("Gloss", ref gloss, 8.0f, 256.0f);
         Gloss = gloss;
     }
 

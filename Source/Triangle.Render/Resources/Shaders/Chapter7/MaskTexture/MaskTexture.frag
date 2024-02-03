@@ -18,6 +18,7 @@ layout(std140, binding = UNIFORM_BUFFER_BINDING_START + 0) uniform Material
 {
     vec4 Color;
     float BumpScale;
+    float SpecularScale;
     vec4 Specular;
     float Gloss;
 }
@@ -40,8 +41,11 @@ void main()
     vec3 diffent = Uni_DirectionalLight.Color * albedo * Saturate(dot(tangentLightDir, tangentNormal));
 
     vec3 halfDir = normalize(tangentLightDir + tangentViewDir);
+
+    float specularMask = SampleTexture(Channel2, In.UV).r * Uni_Material.SpecularScale;
+
     vec3 specent = Uni_DirectionalLight.Color * Uni_Material.Specular.rgb *
-                   pow(Saturate(dot(halfDir, tangentNormal)), Uni_Material.Gloss);
+                   pow(Saturate(dot(halfDir, tangentNormal)), Uni_Material.Gloss) * specularMask;
 
     Out_Color = vec4(ambient + diffent + specent, 1.0);
 }

@@ -22,6 +22,7 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
     private SingleTextureMat singleTextureMat = null!;
     private NormalMapWorldSpaceMat normalMapWorldSpaceMat = null!;
     private NormalMapTangentSpaceMat normalMapTangentSpaceMat = null!;
+    private MaskTextureMat maskTextureMat = null!;
     #endregion
 
     protected override void Loaded()
@@ -31,6 +32,7 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
         singleTextureMat = new(Context);
         normalMapWorldSpaceMat = new(Context);
         normalMapTangentSpaceMat = new(Context);
+        maskTextureMat = new(Context);
 
         TransformController.Add("Capsule");
     }
@@ -43,7 +45,7 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
     {
         GlobalParameters parameters = GetParameters("Capsule");
 
-        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-3.0f, 0.0f, 0.0f));
+        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-4.5f, 0.0f, 0.0f));
         singleTextureMat.Draw(capsule, parameters);
 
         parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
@@ -51,6 +53,9 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
 
         parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
         normalMapTangentSpaceMat.Draw(capsule, parameters);
+
+        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
+        maskTextureMat.Draw(capsule, parameters);
     }
 
     protected override void EditProperties()
@@ -58,6 +63,7 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
         singleTextureMat.AdjustImGuiProperties();
         normalMapWorldSpaceMat.AdjustImGuiProperties();
         normalMapTangentSpaceMat.AdjustImGuiProperties();
+        maskTextureMat.AdjustImGuiProperties();
     }
 
     protected override void Destroy(bool disposing = false)
@@ -65,6 +71,7 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
         singleTextureMat.Dispose();
         normalMapWorldSpaceMat.Dispose();
         normalMapTangentSpaceMat.Dispose();
+        maskTextureMat.Dispose();
         capsule.Dispose();
     }
 }

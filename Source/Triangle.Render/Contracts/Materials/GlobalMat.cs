@@ -246,26 +246,51 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
 
         ImGui.PushID(label);
         {
-            ImGui.Text(label);
-
-            ImGui.BeginGroup();
+            ImGui.Dummy(new Vector2(0.0f, 2.0f));
             {
-                ImGui.Text("Tiling");
-                Vector2 s = new(channelST.X, channelST.Y);
-                ImGui.DragFloat2("##Tiling", ref s, 0.01f);
+                ImGui.Text(label);
 
-                ImGui.Text("Offset");
-                Vector2 t = new(channelST.Z, channelST.W);
-                ImGui.DragFloat2("##Offset", ref t, 0.01f);
+                // 标题的高度，后续绘制纹理按钮时需要向上偏移对齐。
+                float textHeight = ImGui.GetItemRectSize().Y;
 
-                channelST = new(s.X, s.Y, t.X, t.Y);
+                ImGui.Indent();
+                {
+                    float width = ImGui.GetContentRegionAvail().X;
+
+                    ImGui.BeginGroup();
+                    {
+                        ImGui.PushItemWidth(width * 0.6f);
+
+                        ImGui.Text("Tiling");
+                        Vector2 s = new(channelST.X, channelST.Y);
+                        ImGui.DragFloat2("##Tiling", ref s, 0.01f);
+
+                        ImGui.Text("Offset");
+                        Vector2 t = new(channelST.Z, channelST.W);
+                        ImGui.DragFloat2("##Offset", ref t, 0.01f);
+
+                        channelST = new(s.X, s.Y, t.X, t.Y);
+
+                        ImGui.PopItemWidth();
+                    }
+                    ImGui.EndGroup();
+
+                    // 纹理 ST 参数调整区域的尺寸。
+                    Vector2 stSize = ImGui.GetItemRectSize();
+
+                    ImGui.SameLine();
+
+                    width = ImGui.GetContentRegionAvail().X;
+
+                    Vector2 imageSize = new(textHeight + stSize.Y);
+                    Vector2 imageOffset = new(width - imageSize.X, -textHeight);
+
+                    ImGui.SetCursorPos(ImGui.GetCursorPos() + imageOffset);
+                    TrTextureManager.TextureSelection(label, imageSize.ToGeneric(), ref channel);
+                }
+                ImGui.Unindent();
             }
-            ImGui.EndGroup();
-
-            ImGui.SameLine();
-
-            float imageSize = ImGui.GetItemRectSize().Y;
-            TrTextureManager.TextureSelection(label, new Vector2D<float>(imageSize), ref channel);
+            ImGui.Dummy(new Vector2(0.0f, 2.0f));
         }
         ImGui.PopID();
 

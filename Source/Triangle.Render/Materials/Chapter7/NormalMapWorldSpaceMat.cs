@@ -87,7 +87,7 @@ public class NormalMapWorldSpaceMat(TrContext context) : GlobalMat(context, "Nor
         AdjustChannel("Normal Map", 1);
 
         float bumpScale = BumpScale;
-        ImGui.DragFloat("Normal Scale", ref bumpScale, 0.01f, 0.0f, 10.0f);
+        ImGui.DragFloat("Normal Scale", ref bumpScale, 0.01f);
         BumpScale = bumpScale;
 
         Vector4 specular = Specular.ToSystem();
@@ -95,7 +95,7 @@ public class NormalMapWorldSpaceMat(TrContext context) : GlobalMat(context, "Nor
         Specular = specular.ToGeneric();
 
         float gloss = Gloss;
-        ImGui.DragFloat("Gloss", ref gloss, 0.1f, 8.0f, 256.0f);
+        ImGui.SliderFloat("Gloss", ref gloss, 8.0f, 256.0f);
         Gloss = gloss;
     }
 
