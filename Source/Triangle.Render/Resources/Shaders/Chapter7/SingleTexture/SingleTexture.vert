@@ -15,7 +15,7 @@ Out;
 
 void main()
 {
-    Out.WorldNormal = normalize(mat3(Uni_Transforms.WorldToObject) * In_Normal);
+    Out.WorldNormal = ObjectToWorldNormal(In_Normal);
     Out.WorldPos = (Uni_Transforms.ObjectToWorld * vec4(In_Position, 1.0)).xyz;
     Out.UV = In_TexCoord;
 

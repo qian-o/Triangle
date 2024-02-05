@@ -168,7 +168,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
                 Projection = parameters.Camera.Projection,
                 ObjectToWorld = parameters.Model,
                 ObjectToClip = parameters.Model * parameters.Camera.View * parameters.Camera.Projection,
-                WorldToObject = Matrix4X4.Transpose(parameters.Model.Invert())
+                WorldToObject = parameters.Model.Invert()
             });
             _uboVectors.SetData(new UniVectors()
             {

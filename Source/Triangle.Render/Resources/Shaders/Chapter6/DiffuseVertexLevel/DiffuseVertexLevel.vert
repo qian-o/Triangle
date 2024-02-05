@@ -19,7 +19,7 @@ Uni_Material;
 
 void main()
 {
-    vec3 worldNormal = normalize(mat3(Uni_Transforms.WorldToObject) * In_Normal);
+    vec3 worldNormal = ObjectToWorldNormal(In_Normal);
     vec3 worldLightDir = normalize(Uni_DirectionalLight.Position);
 
     vec3 diffuse = Uni_DirectionalLight.Color * Uni_Material.Diffuse.rgb * Saturate(dot(worldNormal, worldLightDir));
