@@ -300,6 +300,13 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
 
     protected override void Destroy(bool disposing = false)
     {
+        foreach (TrRenderPipeline renderPipeline in RenderPass.RenderPipelines)
+        {
+            renderPipeline.Dispose();
+        }
+
+        RenderPass.Dispose();
+
         _uboTransforms.Dispose();
         _uboVectors.Dispose();
         _uboConstants.Dispose();
@@ -308,12 +315,6 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
         _uboTexScaleOffset.Dispose();
 
         DestroyCore(disposing);
-
-        foreach (TrRenderPipeline renderPipeline in RenderPass.RenderPipelines)
-        {
-            renderPipeline.Dispose();
-        }
-        RenderPass.Dispose();
     }
 
     protected abstract void DrawCore(TrMesh mesh, GlobalParameters globalParameters);

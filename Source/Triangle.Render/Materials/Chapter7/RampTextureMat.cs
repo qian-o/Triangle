@@ -69,7 +69,7 @@ public class RampTextureMat(TrContext context) : GlobalMat(context, "RampTexture
         mesh.Draw();
     }
 
-    protected override void AdjustPropertiesCore()
+    protected override void ControllerCore()
     {
         Vector4 color = Color.ToSystem();
         ImGui.ColorEdit4("Color", ref color);

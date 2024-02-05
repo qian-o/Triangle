@@ -193,4 +193,33 @@ public static class ImGuiHelper
         ImGui.SetCursorPos(ImGui.GetCursorPos() + offset.ToSystem());
         ImGui.Image(texture != null ? (nint)texture.Handle : 0, size.ToSystem());
     }
+
+    public static void Frame(TrFrame? frame)
+    {
+        Vector2D<float> size = Vector2D<float>.Zero;
+        if (frame != null)
+        {
+            size.X = frame.Width;
+            size.Y = frame.Height;
+        }
+
+        Frame(frame, ImGui.GetContentRegionAvail().ToGeneric(), size);
+    }
+
+    public static void Frame(TrFrame? frame, Vector2D<float> area, Vector2D<float> size, TrHorizontalAlignment horizontalAlignment = TrHorizontalAlignment.Center, TrVerticalAlignment verticalAlignment = TrVerticalAlignment.Center)
+    {
+        // 如果区域比图片小，等比例缩放图片。
+        if (area.X < size.X || area.Y < size.Y)
+        {
+            float ratio = Math.Min(area.X / size.X, area.Y / size.Y);
+
+            size.X *= ratio;
+            size.Y *= ratio;
+        }
+
+        Vector2D<float> offset = new(horizontalAlignment.Alignment(area, size), verticalAlignment.Alignment(area, size));
+
+        ImGui.SetCursorPos(ImGui.GetCursorPos() + offset.ToSystem());
+        ImGui.Image(frame != null ? (nint)frame.Texture : 0, size.ToSystem(), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
+    }
 }

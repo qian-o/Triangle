@@ -16,11 +16,15 @@ namespace Triangle.Render.Contracts.Tutorials;
 public abstract class BaseTutorial : ITutorial
 {
     #region Meshes
-    private readonly TrMesh _grid;
+    private readonly TrMesh[] _gridMeshes;
     #endregion
 
     #region Materials
     private readonly GridMat _gridMat;
+    #endregion
+
+    #region Models
+    private readonly MeshModel _grid;
     #endregion
 
     private bool disposedValue;
@@ -32,9 +36,13 @@ public abstract class BaseTutorial : ITutorial
         Scene = new TrScene(input, context, GetType().GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? GetType().Name);
         TransformController = new();
         LightingController = new();
+        PickupController = new(Context, Scene);
 
-        _grid = Context.CreateGrid();
+        _gridMeshes = [Context.CreateGrid()];
+
         _gridMat = new(Context);
+
+        _grid = new(TransformController, "Grid", _gridMeshes, _gridMat);
 
         Loaded();
     }
@@ -54,11 +62,15 @@ public abstract class BaseTutorial : ITutorial
 
     public LightingController LightingController { get; }
 
+    public PickupController PickupController { get; }
+
     public void Update(double deltaSeconds)
     {
         Scene.Update(deltaSeconds);
 
         UpdateScene(deltaSeconds);
+
+        PickupController.Update();
     }
 
     public void Render(double deltaSeconds)
@@ -77,10 +89,11 @@ public abstract class BaseTutorial : ITutorial
 
         RenderScene(deltaSeconds);
 
-        GlobalParameters parameters = new(Scene.Camera, Matrix4X4<float>.Identity, Scene.SceneData);
-        _gridMat.Draw(_grid, parameters);
+        _grid.Render(GetBaseParameters());
 
         Scene.End();
+
+        PickupController.Render(GetBaseParameters());
     }
 
     public virtual void ImGuiRender()
@@ -92,6 +105,8 @@ public abstract class BaseTutorial : ITutorial
                 int samples = Scene.Samples;
                 ImGui.SliderInt("Samples", ref samples, 1, 16);
                 Scene.Samples = samples;
+
+                _gridMat.Controller();
 
                 ImGui.TreePop();
             }
@@ -109,10 +124,9 @@ public abstract class BaseTutorial : ITutorial
                 ImGui.TreePop();
             }
 
-            _gridMat.AdjustProperties();
-
-            // TransformController.Controller();
             LightingController.Controller();
+
+            PickupController.PickupModel?.Controller();
 
             EditProperties();
         }
@@ -126,10 +140,10 @@ public abstract class BaseTutorial : ITutorial
 
     protected abstract void EditProperties();
 
-    protected GlobalParameters GetParameters(string transformName = "")
+    protected GlobalParameters GetBaseParameters()
     {
         return new(Scene.Camera,
-                   string.IsNullOrEmpty(transformName) ? Matrix4X4<float>.Identity : TransformController[transformName],
+                   Matrix4X4<float>.Identity,
                    Scene.SceneData,
                    LightingController.AmbientLight,
                    LightingController.DirectionalLight);
@@ -147,7 +161,13 @@ public abstract class BaseTutorial : ITutorial
             }
 
             _gridMat.Dispose();
-            _grid.Dispose();
+
+            foreach (TrMesh mesh in _gridMeshes)
+            {
+                mesh.Dispose();
+            }
+
+            PickupController.Dispose();
 
             Scene.Dispose();
 

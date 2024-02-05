@@ -89,7 +89,7 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
         renderPipeline.Unbind();
     }
 
-    protected override void AdjustPropertiesCore()
+    protected override void ControllerCore()
     {
         float distance = Distance;
         ImGui.SliderFloat("Distance", ref distance, 0.0f, 10.0f);

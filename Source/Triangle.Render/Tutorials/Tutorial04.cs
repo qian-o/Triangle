@@ -15,7 +15,7 @@ namespace Triangle.Render.Tutorials;
 public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     #region Meshes
-    private TrMesh capsule = null!;
+    private TrMesh[] capsuleMeshes = null!;
     #endregion
 
     #region Materials
@@ -25,16 +25,38 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
     private MaskTextureMat maskTextureMat = null!;
     #endregion
 
+    #region Models
+    private MeshModel capsule1 = null!;
+    private MeshModel capsule2 = null!;
+    private MeshModel capsule3 = null!;
+    private MeshModel capsule4 = null!;
+    #endregion
+
     protected override void Loaded()
     {
-        capsule = Context.AssimpParsing("Resources/Models/Capsule.glb".PathFormatter())[0];
+        capsuleMeshes = Context.AssimpParsing("Resources/Models/Capsule.glb".PathFormatter());
 
         singleTextureMat = new(Context);
         normalMapWorldSpaceMat = new(Context);
         normalMapTangentSpaceMat = new(Context);
         maskTextureMat = new(Context);
 
-        TransformController.Add("Capsule");
+        capsule1 = new(TransformController, "Capsule 1", capsuleMeshes, singleTextureMat);
+        capsule1.SetTranslation(new Vector3D<float>(-4.5f, 0.0f, 0.0f));
+
+        capsule2 = new(TransformController, "Capsule 2", capsuleMeshes, normalMapWorldSpaceMat);
+        capsule2.SetTranslation(new Vector3D<float>(-1.5f, 0.0f, 0.0f));
+
+        capsule3 = new(TransformController, "Capsule 3", capsuleMeshes, normalMapTangentSpaceMat);
+        capsule3.SetTranslation(new Vector3D<float>(1.5f, 0.0f, 0.0f));
+
+        capsule4 = new(TransformController, "Capsule 4", capsuleMeshes, maskTextureMat);
+        capsule4.SetTranslation(new Vector3D<float>(4.5f, 0.0f, 0.0f));
+
+        PickupController.Add(capsule1);
+        PickupController.Add(capsule2);
+        PickupController.Add(capsule3);
+        PickupController.Add(capsule4);
     }
 
     protected override void UpdateScene(double deltaSeconds)
@@ -43,27 +65,14 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        GlobalParameters parameters = GetParameters("Capsule");
-
-        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-4.5f, 0.0f, 0.0f));
-        singleTextureMat.Draw(capsule, parameters);
-
-        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
-        normalMapWorldSpaceMat.Draw(capsule, parameters);
-
-        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
-        normalMapTangentSpaceMat.Draw(capsule, parameters);
-
-        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
-        maskTextureMat.Draw(capsule, parameters);
+        capsule1.Render(GetBaseParameters());
+        capsule2.Render(GetBaseParameters());
+        capsule3.Render(GetBaseParameters());
+        capsule4.Render(GetBaseParameters());
     }
 
     protected override void EditProperties()
     {
-        singleTextureMat.AdjustProperties();
-        normalMapWorldSpaceMat.AdjustProperties();
-        normalMapTangentSpaceMat.AdjustProperties();
-        maskTextureMat.AdjustProperties();
     }
 
     protected override void Destroy(bool disposing = false)
@@ -72,6 +81,7 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
         normalMapWorldSpaceMat.Dispose();
         normalMapTangentSpaceMat.Dispose();
         maskTextureMat.Dispose();
-        capsule.Dispose();
+
+        capsuleMeshes.Dispose();
     }
 }

@@ -3,6 +3,7 @@ using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core.Contracts.Graphics;
+using Triangle.Core.Helpers;
 using Triangle.Core.Structs;
 
 namespace Triangle.Core.Graphics;
@@ -191,7 +192,7 @@ public class TrScene : TrGraphics<TrContext>
                 FramebufferResize?.Invoke(new Vector2D<int>(Width, Height));
             }
 
-            ImGui.Image((nint)_frame.Texture, size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
+            ImGuiHelper.Frame(_frame);
 
             DrawContentInWindow?.Invoke();
 

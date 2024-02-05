@@ -15,4 +15,9 @@ public class GlobalParameters(TrCamera camera, Matrix4X4<float> model, TrSceneDa
     public TrAmbientLight AmbientLight { get; set; } = ambientLight;
 
     public TrDirectionalLight DirectionalLight { get; set; } = directionalLight;
+
+    public GlobalParameters Copy()
+    {
+        return new(Camera, Model, SceneData, AmbientLight, DirectionalLight);
+    }
 }

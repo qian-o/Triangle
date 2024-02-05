@@ -15,7 +15,7 @@ namespace Triangle.Render.Tutorials;
 public class Tutorial02(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     #region Meshes
-    private TrMesh goldStar = null!;
+    private TrMesh[] goldStarMeshes = null!;
     #endregion
 
     #region Materials
@@ -24,15 +24,32 @@ public class Tutorial02(IInputContext input, TrContext context) : BaseTutorial(i
     private HalfLambertMat halfLambertMat = null!;
     #endregion
 
+    #region Models
+    private MeshModel goldStar1 = null!;
+    private MeshModel goldStar2 = null!;
+    private MeshModel goldStar3 = null!;
+    #endregion
+
     protected override void Loaded()
     {
-        goldStar = Context.AssimpParsing("Resources/Models/Gold Star.glb".PathFormatter())[0];
+        goldStarMeshes = Context.AssimpParsing("Resources/Models/Gold Star.glb".PathFormatter());
 
         diffuseVertexLevelMat = new(Context);
         diffusePixelLevelMat = new(Context);
         halfLambertMat = new(Context);
 
-        TransformController.Add("Gold Star");
+        goldStar1 = new(TransformController, "Gold Star 1", goldStarMeshes, diffuseVertexLevelMat);
+        goldStar1.SetTranslation(new Vector3D<float>(-2.0f, 0.0f, 0.0f));
+
+        goldStar2 = new(TransformController, "Gold Star 2", goldStarMeshes, diffusePixelLevelMat);
+        goldStar2.SetTranslation(new Vector3D<float>(0.0f, 0.0f, 0.0f));
+
+        goldStar3 = new(TransformController, "Gold Star 3", goldStarMeshes, halfLambertMat);
+        goldStar3.SetTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
+
+        PickupController.Add(goldStar1);
+        PickupController.Add(goldStar2);
+        PickupController.Add(goldStar3);
     }
 
     protected override void UpdateScene(double deltaSeconds)
@@ -41,23 +58,13 @@ public class Tutorial02(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        GlobalParameters parameters = GetParameters("Gold Star");
-
-        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-2.0f, 0.0f, 0.0f));
-        diffuseVertexLevelMat.Draw(goldStar, parameters);
-
-        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
-        diffusePixelLevelMat.Draw(goldStar, parameters);
-
-        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
-        halfLambertMat.Draw(goldStar, parameters);
+        goldStar1.Render(GetBaseParameters());
+        goldStar2.Render(GetBaseParameters());
+        goldStar3.Render(GetBaseParameters());
     }
 
     protected override void EditProperties()
     {
-        diffuseVertexLevelMat.AdjustProperties();
-        diffusePixelLevelMat.AdjustProperties();
-        halfLambertMat.AdjustProperties();
     }
 
     protected override void Destroy(bool disposing = false)
@@ -65,6 +72,7 @@ public class Tutorial02(IInputContext input, TrContext context) : BaseTutorial(i
         halfLambertMat.Dispose();
         diffusePixelLevelMat.Dispose();
         diffuseVertexLevelMat.Dispose();
-        goldStar.Dispose();
+
+        goldStarMeshes.Dispose();
     }
 }

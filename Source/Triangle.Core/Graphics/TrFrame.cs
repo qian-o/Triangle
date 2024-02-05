@@ -1,4 +1,5 @@
-﻿using Silk.NET.OpenGL;
+﻿using Silk.NET.Maths;
+using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
 
 namespace Triangle.Core.Graphics;
@@ -110,5 +111,20 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         gl.BlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, (uint)GLEnum.ColorBufferBit, GLEnum.Nearest);
         gl.BindFramebuffer(GLEnum.DrawFramebuffer, 0);
         gl.BindFramebuffer(GLEnum.ReadFramebuffer, 0);
+    }
+
+    public Vector4D<byte> GetPixel(int x, int y)
+    {
+        GL gl = Context.GL;
+
+        gl.BindFramebuffer(GLEnum.Framebuffer, Handle);
+        gl.ReadBuffer(GLEnum.ColorAttachment0);
+
+        Vector4D<byte> pixel = new();
+        gl.ReadPixels(x, Height - y, 1, 1, GLEnum.Rgba, GLEnum.UnsignedByte, &pixel);
+
+        gl.BindFramebuffer(GLEnum.Framebuffer, 0);
+
+        return pixel;
     }
 }

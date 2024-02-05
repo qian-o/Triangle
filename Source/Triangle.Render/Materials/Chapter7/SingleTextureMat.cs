@@ -69,7 +69,7 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
         mesh.Draw();
     }
 
-    protected override void AdjustPropertiesCore()
+    protected override void ControllerCore()
     {
         Vector4 color = Color.ToSystem();
         ImGui.ColorEdit4("Color", ref color);

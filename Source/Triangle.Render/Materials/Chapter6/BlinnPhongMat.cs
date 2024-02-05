@@ -69,7 +69,7 @@ public class BlinnPhongMat(TrContext context) : GlobalMat(context, "BlinnPhong")
         renderPipeline.Unbind();
     }
 
-    protected override void AdjustPropertiesCore()
+    protected override void ControllerCore()
     {
         Vector4 diffuse = Diffuse.ToSystem();
         ImGui.ColorEdit4("Diffuse", ref diffuse);

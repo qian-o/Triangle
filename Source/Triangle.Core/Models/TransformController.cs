@@ -31,34 +31,41 @@ public class TransformController
         _cache.Clear();
     }
 
-    public void SetTransform(string name, Vector3D<float> translation, Vector3D<float> rotationDegree, Vector3D<float> scale)
+    public void SetTransform(string name, Vector3D<float>? translation = null, Vector3D<float>? rotation = null, Vector3D<float>? scale = null)
     {
-        _cache[name] = (translation, rotationDegree.DegreeToRadian(), scale);
+        if (translation is null && rotation is null && scale is null)
+        {
+            return;
+        }
+
+        (Vector3D<float> t, Vector3D<float> r, Vector3D<float> s) = _cache[name];
+
+        _cache[name] = (translation ?? t, rotation ?? r, scale ?? s);
     }
 
     public void Controller(string name)
     {
-        if (ImGui.TreeNode("Transform"))
+        ImGui.PushID(name);
         {
-            (Vector3D<float> translation, Vector3D<float> rotation, Vector3D<float> scale) = _cache[name];
-
-            ImGui.PushID(name);
+            ImGui.SetNextItemOpen(true, ImGuiCond.Once);
+            if (ImGui.TreeNode("Transform"))
             {
+                (Vector3D<float> translation, Vector3D<float> rotation, Vector3D<float> scale) = _cache[name];
+
                 Vector3 t = translation.ToSystem();
                 Vector3 r = rotation.RadianToDegree().ToSystem();
                 Vector3 s = scale.ToSystem();
 
-                ImGui.Text(name);
                 ImGui.DragFloat3("Translation", ref t, 0.01f);
                 ImGui.DragFloat3("Rotation", ref r, 0.1f);
                 ImGui.DragFloat3("Scale", ref s, 0.01f);
 
                 _cache[name] = (t.ToGeneric(), r.ToGeneric().DegreeToRadian(), s.ToGeneric());
-            }
-            ImGui.PopID();
 
-            ImGui.TreePop();
+                ImGui.TreePop();
+            }
         }
+        ImGui.PopID();
     }
 
     private Matrix4X4<float> GetModelMatrix(string name)

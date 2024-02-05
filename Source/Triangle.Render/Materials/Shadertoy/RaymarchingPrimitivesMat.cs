@@ -30,7 +30,7 @@ public class RaymarchingPrimitivesMat(TrContext context) : GlobalMat(context, "R
         renderPipeline.Unbind();
     }
 
-    protected override void AdjustPropertiesCore()
+    protected override void ControllerCore()
     {
     }
 

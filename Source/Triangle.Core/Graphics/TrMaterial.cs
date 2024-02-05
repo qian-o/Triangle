@@ -20,13 +20,18 @@ public abstract class TrMaterial : TrGraphics<TrContext>
 
     public abstract void Draw(TrMesh mesh, object[] args);
 
-    public void AdjustProperties()
+    public void Controller(string name = "")
     {
-        ImGui.PushID(GetHashCode());
+        if (string.IsNullOrEmpty(name))
         {
-            if (ImGui.TreeNode($"{Name} Material"))
+            name = $"{Name} Material";
+        }
+
+        ImGui.PushID(name);
+        {
+            if (ImGui.TreeNode(name))
             {
-                AdjustPropertiesCore();
+                ControllerCore();
 
                 ImGui.TreePop();
             }
@@ -34,7 +39,7 @@ public abstract class TrMaterial : TrGraphics<TrContext>
         ImGui.PopID();
     }
 
-    protected abstract void AdjustPropertiesCore();
+    protected abstract void ControllerCore();
 }
 
 public abstract class TrMaterial<TParameters>(TrContext context, string name) : TrMaterial(context, name)

@@ -3,7 +3,6 @@ using Silk.NET.Input;
 using Triangle.Core;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
-using Triangle.Core.Models;
 using Triangle.Render.Contracts.Tutorials;
 using Triangle.Render.Materials.Chapter5;
 using Triangle.Render.Models;
@@ -15,20 +14,24 @@ namespace Triangle.Render.Tutorials;
 public class Tutorial01(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     #region Meshes
-    private TrMesh sphere = null!;
+    private TrMesh[] sphereMeshes = null!;
     #endregion
 
     #region Materials
     private SimpleMat simpleMat = null!;
     #endregion
 
+    #region Models
+    private MeshModel sphere = null!;
+    #endregion
+
     protected override void Loaded()
     {
-        sphere = Context.AssimpParsing("Resources/Models/Sphere.glb".PathFormatter())[0];
+        sphereMeshes = Context.AssimpParsing("Resources/Models/Sphere.glb".PathFormatter());
 
         simpleMat = new(Context);
 
-        TransformController.Add("Sphere");
+        PickupController.Add(sphere = new(TransformController, "Sphere", sphereMeshes, simpleMat));
     }
 
     protected override void UpdateScene(double deltaSeconds)
@@ -37,19 +40,17 @@ public class Tutorial01(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        GlobalParameters parameters = GetParameters("Sphere");
-
-        simpleMat.Draw(sphere, parameters);
+        sphere.Render(GetBaseParameters());
     }
 
     protected override void EditProperties()
     {
-        simpleMat.AdjustProperties();
     }
 
     protected override void Destroy(bool disposing = false)
     {
         simpleMat.Dispose();
-        sphere.Dispose();
+
+        sphereMeshes.Dispose();
     }
 }

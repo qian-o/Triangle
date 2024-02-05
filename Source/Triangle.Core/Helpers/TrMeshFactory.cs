@@ -172,4 +172,12 @@ public static unsafe class TrMeshFactory
             return new(context, vertices, indices);
         }
     }
+
+    public static void Dispose(this TrMesh[] meshes)
+    {
+        foreach (TrMesh mesh in meshes)
+        {
+            mesh.Dispose();
+        }
+    }
 }

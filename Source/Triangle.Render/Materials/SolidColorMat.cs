@@ -9,29 +9,29 @@ using Triangle.Core.Helpers;
 using Triangle.Render.Contracts.Materials;
 using Triangle.Render.Models;
 
-namespace Triangle.Render.Materials.Chapter6;
+namespace Triangle.Render.Materials;
 
-public class HalfLambertMat(TrContext context) : GlobalMat(context, "HalfLambert")
+public class SolidColorMat(TrContext context) : GlobalMat(context, "SolidColor")
 {
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
-    private struct UniMaterial
+    private struct UniParameters
     {
         [FieldOffset(0)]
-        public Vector4D<float> Diffuse;
+        public Vector4D<float> Color;
     }
     #endregion
 
-    private TrBuffer<UniMaterial> uboMaterial = null!;
+    private TrBuffer<UniParameters> uboParameters = null!;
 
-    public Vector4D<float> Diffuse { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
+    public Vector4D<float> Color { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter6/HalfLambert/HalfLambert.vert.spv".PathFormatter());
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter6/HalfLambert/HalfLambert.frag.spv".PathFormatter());
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/SolidColor/SolidColor.vert.spv".PathFormatter());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/SolidColor/SolidColor.frag.spv".PathFormatter());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);
@@ -45,12 +45,12 @@ public class HalfLambertMat(TrContext context) : GlobalMat(context, "HalfLambert
 
         renderPipeline.Bind();
 
-        uboMaterial.SetData(new UniMaterial()
+        uboParameters.SetData(new UniParameters()
         {
-            Diffuse = Diffuse
+            Color = Color
         });
 
-        renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboMaterial);
+        renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);
 
         mesh.Draw();
 
@@ -59,13 +59,13 @@ public class HalfLambertMat(TrContext context) : GlobalMat(context, "HalfLambert
 
     protected override void ControllerCore()
     {
-        Vector4 diffuse = Diffuse.ToSystem();
-        ImGui.ColorEdit4("Diffuse", ref diffuse);
-        Diffuse = diffuse.ToGeneric();
+        Vector4 color = Color.ToSystem();
+        ImGui.ColorEdit4("Color", ref color);
+        Color = color.ToGeneric();
     }
 
     protected override void DestroyCore(bool disposing = false)
     {
-        uboMaterial.Dispose();
+        uboParameters.Dispose();
     }
 }

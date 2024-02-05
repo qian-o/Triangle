@@ -15,7 +15,7 @@ namespace Triangle.Render.Tutorials;
 public class Tutorial03(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     #region Meshes
-    private TrMesh capsule = null!;
+    private TrMesh[] capsuleMeshes = null!;
     #endregion
 
     #region Materials
@@ -24,15 +24,32 @@ public class Tutorial03(IInputContext input, TrContext context) : BaseTutorial(i
     private BlinnPhongMat blinnPhongMat = null!;
     #endregion
 
+    #region Models
+    private MeshModel capsule1 = null!;
+    private MeshModel capsule2 = null!;
+    private MeshModel capsule3 = null!;
+    #endregion
+
     protected override void Loaded()
     {
-        capsule = Context.AssimpParsing("Resources/Models/Capsule.glb".PathFormatter())[0];
+        capsuleMeshes = Context.AssimpParsing("Resources/Models/Capsule.glb".PathFormatter());
 
         specularVertexLevelMat = new(Context);
         specularPixelLevelMat = new(Context);
         blinnPhongMat = new(Context);
 
-        TransformController.Add("Capsule");
+        capsule1 = new(TransformController, "Capsule 1", capsuleMeshes, specularVertexLevelMat);
+        capsule1.SetTranslation(new Vector3D<float>(-3.0f, 0.0f, 0.0f));
+
+        capsule2 = new(TransformController, "Capsule 2", capsuleMeshes, specularPixelLevelMat);
+        capsule2.SetTranslation(new Vector3D<float>(0.0f, 0.0f, 0.0f));
+
+        capsule3 = new(TransformController, "Capsule 3", capsuleMeshes, blinnPhongMat);
+        capsule3.SetTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
+
+        PickupController.Add(capsule1);
+        PickupController.Add(capsule2);
+        PickupController.Add(capsule3);
     }
 
     protected override void UpdateScene(double deltaSeconds)
@@ -41,23 +58,13 @@ public class Tutorial03(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        GlobalParameters parameters = GetParameters("Capsule");
-
-        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(-3.0f, 0.0f, 0.0f));
-        specularVertexLevelMat.Draw(capsule, parameters);
-
-        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
-        specularPixelLevelMat.Draw(capsule, parameters);
-
-        parameters.Model *= Matrix4X4.CreateTranslation(new Vector3D<float>(3.0f, 0.0f, 0.0f));
-        blinnPhongMat.Draw(capsule, parameters);
+        capsule1.Render(GetBaseParameters());
+        capsule2.Render(GetBaseParameters());
+        capsule3.Render(GetBaseParameters());
     }
 
     protected override void EditProperties()
     {
-        specularVertexLevelMat.AdjustProperties();
-        specularPixelLevelMat.AdjustProperties();
-        blinnPhongMat.AdjustProperties();
     }
 
     protected override void Destroy(bool disposing = false)
@@ -65,6 +72,7 @@ public class Tutorial03(IInputContext input, TrContext context) : BaseTutorial(i
         blinnPhongMat.Dispose();
         specularPixelLevelMat.Dispose();
         specularVertexLevelMat.Dispose();
-        capsule.Dispose();
+
+        capsuleMeshes.Dispose();
     }
 }

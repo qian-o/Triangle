@@ -31,7 +31,7 @@ public class FullSpectrumCyberMat(TrContext context) : GlobalMat(context, "FullS
         renderPipeline.Unbind();
     }
 
-    protected override void AdjustPropertiesCore()
+    protected override void ControllerCore()
     {
     }
 

@@ -7,7 +7,6 @@ using Triangle.Core.Helpers;
 using Triangle.Render.Contracts.Materials;
 using Triangle.Render.Contracts.Tutorials;
 using Triangle.Render.Materials.Shadertoy;
-using Triangle.Render.Models;
 
 namespace Triangle.Render.Tutorials;
 
@@ -42,9 +41,7 @@ public class Tutorial05(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        GlobalParameters parameters = GetParameters();
-
-        mats[materialIndex].Draw(canvas, parameters);
+        mats[materialIndex].Draw(canvas, GetBaseParameters());
     }
 
     protected override void EditProperties()
