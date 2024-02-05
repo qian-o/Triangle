@@ -55,9 +55,9 @@ public class Tutorial02(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void EditProperties()
     {
-        diffuseVertexLevelMat.AdjustImGuiProperties();
-        diffusePixelLevelMat.AdjustImGuiProperties();
-        halfLambertMat.AdjustImGuiProperties();
+        diffuseVertexLevelMat.AdjustProperties();
+        diffusePixelLevelMat.AdjustProperties();
+        halfLambertMat.AdjustProperties();
     }
 
     protected override void Destroy(bool disposing = false)

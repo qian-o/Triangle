@@ -31,7 +31,7 @@ public class BoxFrameDistance3DMat(TrContext context) : GlobalMat(context, "BoxF
         renderPipeline.Unbind();
     }
 
-    protected override void AdjustImGuiPropertiesCore()
+    protected override void AdjustPropertiesCore()
     {
     }
 

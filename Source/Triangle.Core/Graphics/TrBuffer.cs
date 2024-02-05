@@ -6,14 +6,26 @@ using Triangle.Core.Helpers;
 
 namespace Triangle.Core.Graphics;
 
-public unsafe class TrBuffer<TDataType> : TrGraphics<TrContext> where TDataType : unmanaged
+public class TrBuffer(TrContext context, TrBufferTarget bufferTarget, TrBufferUsage bufferUsage, uint length = 1) : TrGraphics<TrContext>(context)
 {
-    public TrBuffer(TrContext context, TrBufferTarget bufferTarget, TrBufferUsage bufferUsage, uint length = 1) : base(context)
-    {
-        Length = length;
-        BufferTarget = bufferTarget;
-        BufferUsage = bufferUsage;
+    public uint Length { get; } = length;
 
+    public TrBufferTarget BufferTarget { get; } = bufferTarget;
+
+    public TrBufferUsage BufferUsage { get; } = bufferUsage;
+
+    protected override void Destroy(bool disposing = false)
+    {
+        GL gl = Context.GL;
+
+        gl.DeleteBuffer(Handle);
+    }
+}
+
+public unsafe class TrBuffer<TDataType> : TrBuffer where TDataType : unmanaged
+{
+    public TrBuffer(TrContext context, TrBufferTarget bufferTarget, TrBufferUsage bufferUsage, uint length = 1) : base(context, bufferTarget, bufferUsage, length)
+    {
         GL gl = Context.GL;
 
         Handle = gl.GenBuffer();
@@ -21,19 +33,6 @@ public unsafe class TrBuffer<TDataType> : TrGraphics<TrContext> where TDataType 
         gl.BindBuffer(BufferTarget.ToGL(), Handle);
         gl.BufferData(BufferTarget.ToGL(), (uint)(Length * sizeof(TDataType)), null, BufferUsage.ToGL());
         gl.BindBuffer(BufferTarget.ToGL(), 0);
-    }
-
-    public uint Length { get; }
-
-    public TrBufferTarget BufferTarget { get; }
-
-    public TrBufferUsage BufferUsage { get; }
-
-    protected override void Destroy(bool disposing = false)
-    {
-        GL gl = Context.GL;
-
-        gl.DeleteBuffer(Handle);
     }
 
     public void SetData(TDataType[] data, uint offset = 0)

@@ -60,10 +60,10 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void EditProperties()
     {
-        singleTextureMat.AdjustImGuiProperties();
-        normalMapWorldSpaceMat.AdjustImGuiProperties();
-        normalMapTangentSpaceMat.AdjustImGuiProperties();
-        maskTextureMat.AdjustImGuiProperties();
+        singleTextureMat.AdjustProperties();
+        normalMapWorldSpaceMat.AdjustProperties();
+        normalMapTangentSpaceMat.AdjustProperties();
+        maskTextureMat.AdjustProperties();
     }
 
     protected override void Destroy(bool disposing = false)

@@ -57,7 +57,7 @@ public class DiffuseVertexLevelMat(TrContext context) : GlobalMat(context, "Diff
         renderPipeline.Unbind();
     }
 
-    protected override void AdjustImGuiPropertiesCore()
+    protected override void AdjustPropertiesCore()
     {
         Vector4 diffuse = Diffuse.ToSystem();
         ImGui.ColorEdit4("Diffuse", ref diffuse);

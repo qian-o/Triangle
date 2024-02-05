@@ -46,7 +46,7 @@ public class Tutorial06(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void EditProperties()
     {
-        rampTextureMat.AdjustImGuiProperties();
+        rampTextureMat.AdjustProperties();
     }
 
     protected override void Destroy(bool disposing = false)

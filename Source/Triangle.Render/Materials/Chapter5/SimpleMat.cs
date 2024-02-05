@@ -57,7 +57,7 @@ public class SimpleMat(TrContext context) : GlobalMat(context, "Simple")
         renderPipeline.Unbind();
     }
 
-    protected override void AdjustImGuiPropertiesCore()
+    protected override void AdjustPropertiesCore()
     {
         Vector4 color = Color.ToSystem();
         ImGui.ColorEdit4("Color", ref color);

@@ -44,7 +44,7 @@ public class Tutorial01(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void EditProperties()
     {
-        simpleMat.AdjustImGuiProperties();
+        simpleMat.AdjustProperties();
     }
 
     protected override void Destroy(bool disposing = false)

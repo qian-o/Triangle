@@ -109,9 +109,9 @@ public abstract class BaseTutorial : ITutorial
                 ImGui.TreePop();
             }
 
-            _gridMat.AdjustImGuiProperties();
+            _gridMat.AdjustProperties();
 
-            TransformController.Controller();
+            // TransformController.Controller();
             LightingController.Controller();
 
             EditProperties();

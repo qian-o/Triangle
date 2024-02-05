@@ -83,7 +83,7 @@ public class MaskTextureMat(TrContext context) : GlobalMat(context, "MaskTexture
         mesh.Draw();
     }
 
-    protected override void AdjustImGuiPropertiesCore()
+    protected override void AdjustPropertiesCore()
     {
         Vector4 color = Color.ToSystem();
         ImGui.ColorEdit4("Color", ref color);

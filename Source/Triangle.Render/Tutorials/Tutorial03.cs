@@ -55,9 +55,9 @@ public class Tutorial03(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void EditProperties()
     {
-        specularVertexLevelMat.AdjustImGuiProperties();
-        specularPixelLevelMat.AdjustImGuiProperties();
-        blinnPhongMat.AdjustImGuiProperties();
+        specularVertexLevelMat.AdjustProperties();
+        specularPixelLevelMat.AdjustProperties();
+        blinnPhongMat.AdjustProperties();
     }
 
     protected override void Destroy(bool disposing = false)
