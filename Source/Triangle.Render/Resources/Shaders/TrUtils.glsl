@@ -92,7 +92,7 @@ vec4 ObjectToClipPos(vec3 pos)
 /// </summary>
 vec3 ObjectToWorldNormal(vec3 normal)
 {
-    return normalize((Uni_Transforms.ObjectToWorld * vec4(normal, 0.0)).xyz);
+    return normalize((Uni_Transforms.WorldToObject * vec4(normal, 0.0)).xyz);
 }
 
 /// <summary>
