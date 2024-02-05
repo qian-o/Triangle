@@ -43,7 +43,6 @@ layout(std140, binding = 4) uniform DirectionalLight
 {
     vec3 Color;
     vec3 Position;
-    vec3 Direction;
 }
 Uni_DirectionalLight;
 
@@ -108,7 +107,7 @@ vec3 ObjectToWorldDir(vec3 dir)
 /// </summary>
 vec3 ObjSpaceDirectionalLightDir()
 {
-    return (Uni_Transforms.WorldToObject * vec4(Uni_DirectionalLight.Position, 1.0)).xyz;
+    return (Uni_Transforms.WorldToObject * vec4(Uni_DirectionalLight.Position, 0.0)).xyz;
 }
 
 /// <summary>

@@ -93,9 +93,6 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
 
         [FieldOffset(16)]
         public Vector3D<float> Position;
-
-        [FieldOffset(32)]
-        public Vector3D<float> Direction;
     }
 
     [StructLayout(LayoutKind.Explicit)]
@@ -196,8 +193,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
             _uboDirectionalLight.SetData(new UniDirectionalLight()
             {
                 Color = parameters.DirectionalLight.Color,
-                Position = -parameters.DirectionalLight.Direction,
-                Direction = parameters.DirectionalLight.Direction,
+                Position = -parameters.DirectionalLight.Direction
             });
             _uboTexScaleOffset.SetData(new UniTexScaleOffset()
             {
