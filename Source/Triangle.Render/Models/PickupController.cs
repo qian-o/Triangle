@@ -5,13 +5,14 @@ using Silk.NET.OpenGL;
 using Triangle.Core;
 using Triangle.Core.Contracts;
 using Triangle.Core.Graphics;
-using Triangle.Core.Helpers;
 using Triangle.Render.Materials;
 
 namespace Triangle.Render.Models;
 
 public class PickupController(TrContext context, TrScene scene) : Disposable
 {
+    public static readonly Vector4D<byte> PickupColor = new(255, 255, 255, 255);
+
     private readonly Random _random = new();
     private readonly List<(MeshModel Model, Vector4D<byte> Color)> _cache = [];
     private readonly List<MeshModel> _selectedModels = [];
@@ -20,13 +21,32 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
     private readonly TrFrame _frame = new(context);
     private readonly SolidColorMat _solidColorMat = new(context);
 
+    private readonly TrFrame _pickupFrame = new(context);
+
     public IReadOnlyCollection<MeshModel> PickupModels => _selectedModels;
 
     public void Add(MeshModel model)
     {
-        Vector4D<byte> color = new((byte)_random.Next(0, 256), (byte)_random.Next(0, 256), (byte)_random.Next(0, 256), 255);
+        Vector4D<byte> color = RandomColor();
+
+        while (true)
+        {
+            if (color == PickupColor || _cache.Any(item => item.Color == color))
+            {
+                color = RandomColor();
+            }
+            else
+            {
+                break;
+            }
+        }
 
         _cache.Add((model, color));
+
+        Vector4D<byte> RandomColor()
+        {
+            return new((byte)_random.Next(0, 256), (byte)_random.Next(0, 256), (byte)_random.Next(0, 256), 255);
+        }
     }
 
     public void Remove(MeshModel model)
@@ -41,23 +61,35 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
 
     public void Render(GlobalParameters baseParameters)
     {
-        _frame.Update(_scene.Width, _scene.Height, _scene.Samples);
-
-        _frame.Bind();
-
         GL gl = context.GL;
 
-        gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
-
-        foreach ((MeshModel model, Vector4D<byte> color) in _cache)
+        _frame.Bind();
         {
-            _solidColorMat.Color = new Vector4D<float>(color.X / 255.0f, color.Y / 255.0f, color.Z / 255.0f, color.W / 255.0f);
+            gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
 
-            model.Render(_solidColorMat, baseParameters);
+            foreach ((MeshModel model, Vector4D<byte> color) in _cache)
+            {
+                _solidColorMat.Color = new(color.X / 255.0f, color.Y / 255.0f, color.Z / 255.0f, color.W / 255.0f);
+
+                model.Render(_solidColorMat, baseParameters);
+            }
         }
-
         _frame.Unbind();
+
+        _pickupFrame.Bind();
+        {
+            gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
+
+            foreach (MeshModel model in _selectedModels)
+            {
+                _solidColorMat.Color = new(PickupColor.X / 255.0f, PickupColor.Y / 255.0f, PickupColor.Z / 255.0f, PickupColor.W / 255.0f);
+
+                model.Render(_solidColorMat, baseParameters);
+            }
+        }
+        _pickupFrame.Unbind();
     }
 
     public void Update()
@@ -107,6 +139,9 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
                 }
             }
         }
+
+        _frame.Update(_scene.Width, _scene.Height, _scene.Samples);
+        _pickupFrame.Update(_scene.Width, _scene.Height, _scene.Samples);
     }
 
     public void Controller()
@@ -145,16 +180,6 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
 
                 ImGui.TreePop();
             }
-
-            ImGui.End();
-        }
-    }
-
-    public void Frame()
-    {
-        if (ImGui.Begin("Pickup"))
-        {
-            ImGuiHelper.Frame(_frame);
 
             ImGui.End();
         }
