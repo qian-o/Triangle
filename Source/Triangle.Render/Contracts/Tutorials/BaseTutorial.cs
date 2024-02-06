@@ -98,6 +98,8 @@ public abstract class BaseTutorial : ITutorial
 
     public virtual void ImGuiRender()
     {
+        PickupController.Controller();
+
         if (ImGui.Begin("Properties"))
         {
             if (ImGui.TreeNode("Scene"))
@@ -126,7 +128,10 @@ public abstract class BaseTutorial : ITutorial
 
             LightingController.Controller();
 
-            PickupController.PickupModel?.Controller();
+            foreach (MeshModel model in PickupController.PickupModels)
+            {
+                model.Controller();
+            }
 
             EditProperties();
         }

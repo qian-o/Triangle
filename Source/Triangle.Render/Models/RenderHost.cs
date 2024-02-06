@@ -28,7 +28,6 @@ public unsafe class RenderHost<TApplication> : Disposable where TApplication : I
     #endregion
 
     #region Parameters
-    private string renderer = string.Empty;
     private bool firstFrame = true;
     #endregion
 
@@ -74,8 +73,6 @@ public unsafe class RenderHost<TApplication> : Disposable where TApplication : I
         trContext = new TrContext(gl);
         imGuiController = new ImGuiController(gl, _window, inputContext, new ImGuiFontConfig("Resources/Fonts/MSYH.TTC", 14, (a) => a.Fonts.GetGlyphRangesChineseFull()));
 
-        renderer = Marshal.PtrToStringAnsi((nint)gl.GetString(GLEnum.Renderer))!;
-
         TrTextureManager.InitializeImages(trContext, "Resources/Textures".PathFormatter());
 
         _application.Initialize(_window, inputContext, trContext);
@@ -120,8 +117,10 @@ public unsafe class RenderHost<TApplication> : Disposable where TApplication : I
 
         if (ImGui.Begin("Info"))
         {
-            ImGui.Text(renderer);
-            ImGui.Value("FPS", ImGui.GetIO().Framerate);
+            ImGui.Text($"Renderer : {Marshal.PtrToStringAnsi((nint)gl.GetString(GLEnum.Renderer))}");
+            ImGui.Text($"Version : OpenGL {Marshal.PtrToStringAnsi((nint)gl.GetString(GLEnum.Version))}");
+            ImGui.Text($"Vendor : {Marshal.PtrToStringAnsi((nint)gl.GetString(GLEnum.Vendor))}");
+            ImGui.Text($"FPS : {ImGui.GetIO().Framerate}");
 
             ImGui.End();
         }

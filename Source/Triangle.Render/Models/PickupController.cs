@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Triangle.Core;
@@ -13,12 +14,13 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
 {
     private readonly Random _random = new();
     private readonly List<(MeshModel Model, Vector4D<byte> Color)> _cache = [];
+    private readonly List<MeshModel> _selectedModels = [];
 
     private readonly TrScene _scene = scene;
     private readonly TrFrame _frame = new(context);
     private readonly SolidColorMat _solidColorMat = new(context);
 
-    public MeshModel? PickupModel { get; private set; }
+    public IReadOnlyCollection<MeshModel> PickupModels => _selectedModels;
 
     public void Add(MeshModel model)
     {
@@ -60,33 +62,95 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
 
     public void Update()
     {
-        if (_scene.IsFocused)
+        if (_scene.IsFocused && _scene.IsLeftClicked)
         {
-            Vector4D<float> mouse = _scene.Mouse;
+            Vector2D<float> point = new(_scene.Mouse.X, _scene.Mouse.Y);
 
-            if (mouse.Z == 1)
+            Rectangle<float> rectangle = new(0.0f, 0.0f, _scene.Width, _scene.Height);
+
+            if (rectangle.Contains(point))
             {
-                if (mouse.X >= 0 && mouse.Y >= 0 && mouse.X <= _scene.Width && mouse.Y <= _scene.Height)
+                bool anySelected = false;
+                bool isMultiSelect = _scene.KeyPressed(Key.ControlLeft) || _scene.KeyPressed(Key.ControlRight);
+
+                Vector4D<byte> pickColor = _frame.GetPixel(Convert.ToInt32(point.X), Convert.ToInt32(point.Y));
+
+                foreach ((MeshModel model, Vector4D<byte> color) in _cache)
                 {
-                    PickupModel = null;
-
-                    Vector4D<byte> pickColor = _frame.GetPixel(Convert.ToInt32(mouse.X), Convert.ToInt32(mouse.Y));
-
-                    foreach ((MeshModel model, Vector4D<byte> color) in _cache)
+                    if (color == pickColor)
                     {
-                        if (color == pickColor)
-                        {
-                            PickupModel = model;
+                        anySelected = true;
 
-                            break;
+                        bool isSelected = _selectedModels.Contains(model);
+
+                        if (isMultiSelect)
+                        {
+                            _selectedModels.Remove(model);
                         }
+                        else
+                        {
+                            _selectedModels.Clear();
+                        }
+
+                        if (!isMultiSelect || (isMultiSelect && !isSelected))
+                        {
+                            _selectedModels.Add(model);
+                        }
+
+                        break;
                     }
+                }
+
+                if (!anySelected)
+                {
+                    _selectedModels.Clear();
                 }
             }
         }
     }
 
-    public void ShowPickupFrame()
+    public void Controller()
+    {
+        bool isMultiSelect = _scene.KeyPressed(Key.ControlLeft) || _scene.KeyPressed(Key.ControlRight);
+
+        if (ImGui.Begin("Scene Collection"))
+        {
+            ImGui.SetNextItemOpen(true, ImGuiCond.Once);
+            if (ImGui.TreeNode("Collection"))
+            {
+                foreach ((MeshModel model, Vector4D<byte> _) in _cache)
+                {
+                    ImGui.PushID(model.GetHashCode());
+
+                    bool isSelected = _selectedModels.Contains(model);
+                    if (ImGui.Selectable(model.Name, isSelected))
+                    {
+                        if (isMultiSelect)
+                        {
+                            _selectedModels.Remove(model);
+                        }
+                        else
+                        {
+                            _selectedModels.Clear();
+                        }
+
+                        if (!isMultiSelect || (isMultiSelect && !isSelected))
+                        {
+                            _selectedModels.Add(model);
+                        }
+                    }
+
+                    ImGui.PopID();
+                }
+
+                ImGui.TreePop();
+            }
+
+            ImGui.End();
+        }
+    }
+
+    public void Frame()
     {
         if (ImGui.Begin("Pickup"))
         {

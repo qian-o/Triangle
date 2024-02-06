@@ -50,6 +50,10 @@ public class TrScene : TrGraphics<TrContext>
 
     public bool IsFocused { get; private set; }
 
+    public bool IsLeftClicked { get; private set; }
+
+    public bool IsRightClicked { get; private set; }
+
     public Vector4D<float> Mouse { get; private set; }
 
     public Vector4D<float> Date { get; private set; }
@@ -76,7 +80,7 @@ public class TrScene : TrGraphics<TrContext>
     {
         if (IsHovered)
         {
-            if (_mouse.IsButtonPressed(MouseButton.Right))
+            if (MousePressed(MouseButton.Right))
             {
                 Vector2D<float> vector = new(_mouse.Position.X, _mouse.Position.Y);
 
@@ -102,32 +106,32 @@ public class TrScene : TrGraphics<TrContext>
                 firstMove = true;
             }
 
-            if (_keyboard.IsKeyPressed(Key.W))
+            if (KeyPressed(Key.W))
             {
                 Camera.Position += Camera.Front * CameraSpeed * (float)deltaSeconds;
             }
 
-            if (_keyboard.IsKeyPressed(Key.A))
+            if (KeyPressed(Key.A))
             {
                 Camera.Position -= Camera.Right * CameraSpeed * (float)deltaSeconds;
             }
 
-            if (_keyboard.IsKeyPressed(Key.S))
+            if (KeyPressed(Key.S))
             {
                 Camera.Position -= Camera.Front * CameraSpeed * (float)deltaSeconds;
             }
 
-            if (_keyboard.IsKeyPressed(Key.D))
+            if (KeyPressed(Key.D))
             {
                 Camera.Position += Camera.Right * CameraSpeed * (float)deltaSeconds;
             }
 
-            if (_keyboard.IsKeyPressed(Key.Q))
+            if (KeyPressed(Key.Q))
             {
                 Camera.Position -= Camera.Up * CameraSpeed * (float)deltaSeconds;
             }
 
-            if (_keyboard.IsKeyPressed(Key.E))
+            if (KeyPressed(Key.E))
             {
                 Camera.Position += Camera.Up * CameraSpeed * (float)deltaSeconds;
             }
@@ -171,6 +175,8 @@ public class TrScene : TrGraphics<TrContext>
 
             IsHovered = ImGui.IsWindowHovered();
             IsFocused = ImGui.IsWindowFocused();
+            IsLeftClicked = ImGui.IsMouseClicked(ImGuiMouseButton.Left);
+            IsRightClicked = ImGui.IsMouseClicked(ImGuiMouseButton.Right);
             Mouse = IsFocused ? new Vector4D<float>(pos.X, pos.Y, Convert.ToSingle(isLeftDown), Convert.ToSingle(isRightDown)) : Vector4D<float>.Zero;
 
             Date = new Vector4D<float>(now.Year, now.Month, now.Day, seconds);
@@ -200,6 +206,16 @@ public class TrScene : TrGraphics<TrContext>
         }
 
         IsClosed = !isOpen;
+    }
+
+    public bool MousePressed(MouseButton button)
+    {
+        return _mouse.IsButtonPressed(button);
+    }
+
+    public bool KeyPressed(Key key)
+    {
+        return _keyboard.IsKeyPressed(key);
     }
 
     protected override void Destroy(bool disposing = false)
