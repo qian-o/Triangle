@@ -1,7 +1,6 @@
 ﻿using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
-using Silk.NET.OpenGL;
 using Triangle.Core;
 using Triangle.Core.Contracts;
 using Triangle.Core.Graphics;
