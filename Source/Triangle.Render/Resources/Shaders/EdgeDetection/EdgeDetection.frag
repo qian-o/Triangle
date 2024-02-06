@@ -25,8 +25,8 @@ float luminance(vec4 color)
 
 float sobel()
 {
-    const float Gx[9] = {-1, -2, -1, 0, 0, 0, 1, 2, 1};
-    const float Gy[9] = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
+    const float Gx[9] = {-1.0, -2.0, -1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0};
+    const float Gy[9] = {-1.0, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0};
 
     float texColor;
     float edgeX = 0.0;
@@ -38,12 +38,12 @@ float sobel()
         edgeY += texColor * Gy[j];
     }
 
-    return 1 - abs(edgeX) - abs(edgeY);
+    return 1.0 - abs(edgeX) - abs(edgeY);
 }
 
 void main()
 {
     float edge = sobel();
 
-    Out_Color = mix(Uni_Parameters.EdgeColor, vec4(0.0), edge);
+    Out_Color = vec4(Uni_Parameters.EdgeColor.rgb, 1.0 - edge);
 }

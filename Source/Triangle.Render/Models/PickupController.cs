@@ -61,33 +61,6 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
         }
     }
 
-    public void Render(GlobalParameters baseParameters)
-    {
-        _frame.Clear();
-        _frame.Bind();
-        {
-            foreach ((MeshModel model, Vector4D<byte> color) in _cache)
-            {
-                _solidColorMat.Color = new(color.X / 255.0f, color.Y / 255.0f, color.Z / 255.0f, color.W / 255.0f);
-
-                model.Render(_solidColorMat, baseParameters);
-            }
-        }
-        _frame.Unbind();
-
-        _pickupFrame.Clear();
-        _pickupFrame.Bind();
-        {
-            foreach (MeshModel model in _selectedModels)
-            {
-                _solidColorMat.Color = new(PickupColor.X / 255.0f, PickupColor.Y / 255.0f, PickupColor.Z / 255.0f, PickupColor.W / 255.0f);
-
-                model.Render(_solidColorMat, baseParameters);
-            }
-        }
-        _pickupFrame.Unbind();
-    }
-
     public void PostEffects(GlobalParameters baseParameters)
     {
         _edgeDetectionMat.Channel0 = _pickupFrame.Texture;
@@ -97,6 +70,9 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
 
     public void Update()
     {
+        _frame.Update(_scene.Width, _scene.Height);
+        _pickupFrame.Update(_scene.Width, _scene.Height, _scene.Samples);
+
         if (_scene.IsFocused && _scene.IsLeftClicked)
         {
             Vector2D<float> point = new(_scene.Mouse.X, _scene.Mouse.Y);
@@ -142,20 +118,44 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
                 }
             }
         }
+    }
 
-        _frame.Update(_scene.Width, _scene.Height);
-        _pickupFrame.Update(_scene.Width, _scene.Height, _scene.Samples);
+    public void Render(GlobalParameters baseParameters)
+    {
+        _frame.Clear();
+        _frame.Bind();
+        {
+            foreach ((MeshModel model, Vector4D<byte> color) in _cache)
+            {
+                _solidColorMat.Color = new(color.X / 255.0f, color.Y / 255.0f, color.Z / 255.0f, color.W / 255.0f);
+
+                model.Render(_solidColorMat, baseParameters);
+            }
+        }
+        _frame.Unbind();
+
+        _pickupFrame.Clear();
+        _pickupFrame.Bind();
+        {
+            foreach (MeshModel model in _selectedModels)
+            {
+                _solidColorMat.Color = new(PickupColor.X / 255.0f, PickupColor.Y / 255.0f, PickupColor.Z / 255.0f, PickupColor.W / 255.0f);
+
+                model.Render(_solidColorMat, baseParameters);
+            }
+        }
+        _pickupFrame.Unbind();
     }
 
     public void Controller()
     {
-        bool isMultiSelect = _scene.KeyPressed(Key.ControlLeft) || _scene.KeyPressed(Key.ControlRight);
-
         if (ImGui.Begin("Scene Collection"))
         {
             ImGui.SetNextItemOpen(true, ImGuiCond.Once);
             if (ImGui.TreeNode("Collection"))
             {
+                bool isMultiSelect = _scene.KeyPressed(Key.ControlLeft) || _scene.KeyPressed(Key.ControlRight);
+
                 foreach ((MeshModel model, Vector4D<byte> _) in _cache)
                 {
                     ImGui.PushID(model.GetHashCode());
