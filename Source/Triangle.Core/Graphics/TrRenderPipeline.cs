@@ -172,7 +172,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 IsColorWrite = true;
                 IsDepthTest = false;
                 IsDepthWrite = false;
-                DepthFunction = TrDepthFunction.Less;
+                DepthFunction = TrDepthFunction.Always;
                 IsStencilTest = false;
                 IsStencilWrite = false;
                 StencilFunction = TrStencilFunction.Always;

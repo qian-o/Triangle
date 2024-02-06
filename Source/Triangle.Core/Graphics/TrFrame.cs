@@ -99,6 +99,27 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         }
     }
 
+    public void Clear()
+    {
+        Clear(Vector4D<float>.UnitW);
+    }
+
+    public void Clear(Vector4D<float> color)
+    {
+        Bind();
+
+        GL gl = Context.GL;
+
+        gl.ColorMask(true, true, true, true);
+        gl.DepthMask(true);
+        gl.StencilMask(0xFF);
+
+        gl.ClearColor(color.X, color.Y, color.Z, color.W);
+        gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
+
+        Unbind();
+    }
+
     public void Bind()
     {
         GL gl = Context.GL;

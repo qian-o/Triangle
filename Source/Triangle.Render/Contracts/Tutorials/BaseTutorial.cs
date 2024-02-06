@@ -3,7 +3,6 @@ using System.Reflection;
 using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
-using Silk.NET.OpenGL;
 using Triangle.Core;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
@@ -80,12 +79,8 @@ public abstract class BaseTutorial : ITutorial
             return;
         }
 
-        GL gl = Context.GL;
-
+        Scene.Clear(new Vector4D<float>(0.2f, 0.2f, 0.2f, 1.0f));
         Scene.Begin();
-
-        gl.ClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-        gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
 
         RenderScene(deltaSeconds);
 

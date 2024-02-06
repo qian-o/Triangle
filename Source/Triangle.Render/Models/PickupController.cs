@@ -64,13 +64,9 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
 
     public void Render(GlobalParameters baseParameters)
     {
-        GL gl = context.GL;
-
+        _frame.Clear();
         _frame.Bind();
         {
-            gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
-
             foreach ((MeshModel model, Vector4D<byte> color) in _cache)
             {
                 _solidColorMat.Color = new(color.X / 255.0f, color.Y / 255.0f, color.Z / 255.0f, color.W / 255.0f);
@@ -80,11 +76,9 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
         }
         _frame.Unbind();
 
+        _pickupFrame.Clear();
         _pickupFrame.Bind();
         {
-            gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
-
             foreach (MeshModel model in _selectedModels)
             {
                 _solidColorMat.Color = new(PickupColor.X / 255.0f, PickupColor.Y / 255.0f, PickupColor.Z / 255.0f, PickupColor.W / 255.0f);
@@ -199,5 +193,9 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
     {
         _frame.Dispose();
         _solidColorMat.Dispose();
+
+        _pickupFrame.Dispose();
+        _pickupMesh.Dispose();
+        _edgeDetectionMat.Dispose();
     }
 }

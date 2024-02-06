@@ -34,7 +34,7 @@ public class EdgeDetectionMat(TrContext context) : GlobalMat(context, "EdgeDetec
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/EdgeDetection/EdgeDetection.frag.spv".PathFormatter());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
-        renderPipeline.SetRenderLayer(TrRenderLayer.Geometry);
+        renderPipeline.SetRenderLayer(TrRenderLayer.Overlay);
 
         return new TrRenderPass(Context, [renderPipeline]);
     }

@@ -143,6 +143,16 @@ public class TrScene : TrGraphics<TrContext>
         Camera.Height = Height;
     }
 
+    public void Clear()
+    {
+        _frame.Clear();
+    }
+
+    public void Clear(Vector4D<float> color)
+    {
+        _frame.Clear(color);
+    }
+
     public void Begin()
     {
         _frame.Update(Width, Height, Samples);

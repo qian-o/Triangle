@@ -85,7 +85,13 @@ public unsafe class RenderHost<TApplication> : Disposable where TApplication : I
 
     private void OnRender(double deltaSeconds)
     {
-        gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
+        // Clear the screen
+        {
+            gl.ColorMask(true, true, true, true);
+            gl.DepthMask(true);
+            gl.StencilMask(0xFF);
+            gl.Clear((uint)GLEnum.ColorBufferBit | (uint)GLEnum.DepthBufferBit | (uint)GLEnum.StencilBufferBit);
+        }
 
         _application.Render(deltaSeconds);
 
