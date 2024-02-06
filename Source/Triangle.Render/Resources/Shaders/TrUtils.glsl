@@ -88,12 +88,10 @@ vec4 ObjectToClipPos(vec3 pos)
 
 /// <summary>
 /// Transforms normal from object space to world space.
-/// Uni_Transforms.WorldToObject = inverse(Uni_Transforms.ObjectToWorld)
-/// so we can use right multiplication to transform the normal.
 /// </summary>
 vec3 ObjectToWorldNormal(vec3 normal)
 {
-    return normalize((vec4(normal, 0.0) * Uni_Transforms.WorldToObject).xyz);
+    return normalize((normal * mat3(Uni_Transforms.WorldToObject)));
 }
 
 /// <summary>
