@@ -95,15 +95,11 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
         _pickupFrame.Unbind();
     }
 
-    public void PostEffects(TrFrame frame, GlobalParameters baseParameters)
+    public void PostEffects(GlobalParameters baseParameters)
     {
-        frame.Bind();
-        {
-            _edgeDetectionMat.Channel0 = _pickupFrame.Texture;
+        _edgeDetectionMat.Channel0 = _pickupFrame.Texture;
 
-            _edgeDetectionMat.Draw(_pickupMesh, baseParameters);
-        }
-        frame.Unbind();
+        _edgeDetectionMat.Draw(_pickupMesh, baseParameters);
     }
 
     public void Update()
@@ -154,8 +150,8 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
             }
         }
 
-        _frame.Update(_scene.Width, _scene.Height, _scene.Samples);
-        _pickupFrame.Update(_scene.Width, _scene.Height, _scene.Samples);
+        _frame.Update(_scene.Width, _scene.Height);
+        _pickupFrame.Update(_scene.Width, _scene.Height);
     }
 
     public void Controller()

@@ -45,7 +45,7 @@ void main()
 {
     float edge = sobel();
 
-    if (edge > 0.5)
+    if (edge > 0.1)
     {
         discard;
     }

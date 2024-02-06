@@ -2,6 +2,7 @@
 using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
+using Triangle.Core.Exceptions;
 
 namespace Triangle.Core.Graphics;
 
@@ -52,8 +53,13 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         Texture.Dispose();
     }
 
-    public void Update(int width, int height, int samples)
+    public void Update(int width, int height, int samples = 1)
     {
+        if (samples < 1)
+        {
+            throw new TrException("The number of samples must be greater than or equal to 1.");
+        }
+
         if (Width == width && Height == height && Samples == samples)
         {
             return;

@@ -91,11 +91,11 @@ public abstract class BaseTutorial : ITutorial
 
         _grid.Render(GetBaseParameters());
 
+        PickupController.PostEffects(GetBaseParameters());
+
         Scene.End();
 
         PickupController.Render(GetBaseParameters());
-
-        PickupController.PostEffects(Scene.Frame, GetBaseParameters());
     }
 
     public virtual void ImGuiRender()
