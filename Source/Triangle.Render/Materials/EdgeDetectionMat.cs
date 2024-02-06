@@ -24,7 +24,7 @@ public class EdgeDetectionMat(TrContext context) : GlobalMat(context, "EdgeDetec
 
     private TrBuffer<UniParameters> uboParameters = null!;
 
-    public Vector4D<float> EdgeColor { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
+    public Vector4D<float> EdgeColor { get; set; } = new(0.9215686274509803f, 0.6352941176470588f, 0.0392156862745098f, 1.0f);
 
     public override TrRenderPass CreateRenderPass()
     {
