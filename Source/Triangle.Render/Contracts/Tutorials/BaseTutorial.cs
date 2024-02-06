@@ -94,6 +94,8 @@ public abstract class BaseTutorial : ITutorial
         Scene.End();
 
         PickupController.Render(GetBaseParameters());
+
+        PickupController.PostEffects(Scene.Frame, GetBaseParameters());
     }
 
     public virtual void ImGuiRender()

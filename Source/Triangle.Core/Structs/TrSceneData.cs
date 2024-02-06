@@ -2,7 +2,7 @@
 
 namespace Triangle.Core.Structs;
 
-public struct TrSceneData(Vector2D<float> resolution, Vector4D<float> mouse, Vector4D<float> date, float time, float deltaTime, float frameRate, int frame)
+public struct TrSceneData(Vector2D<float> resolution, Vector4D<float> mouse, Vector4D<float> date, float time, float deltaTime, float frameRate, int frameCount)
 {
     public Vector2D<float> Resolution = resolution;
 
@@ -16,5 +16,5 @@ public struct TrSceneData(Vector2D<float> resolution, Vector4D<float> mouse, Vec
 
     public float FrameRate = frameRate;
 
-    public int Frame = frame;
+    public int FrameCount = frameCount;
 }

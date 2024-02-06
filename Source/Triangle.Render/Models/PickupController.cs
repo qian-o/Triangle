@@ -5,6 +5,7 @@ using Silk.NET.OpenGL;
 using Triangle.Core;
 using Triangle.Core.Contracts;
 using Triangle.Core.Graphics;
+using Triangle.Core.Helpers;
 using Triangle.Render.Materials;
 
 namespace Triangle.Render.Models;
@@ -22,6 +23,8 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
     private readonly SolidColorMat _solidColorMat = new(context);
 
     private readonly TrFrame _pickupFrame = new(context);
+    private readonly TrMesh _pickupMesh = context.CreateCanvas();
+    private readonly EdgeDetectionMat _edgeDetectionMat = new(context);
 
     public IReadOnlyCollection<MeshModel> PickupModels => _selectedModels;
 
@@ -90,6 +93,17 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
             }
         }
         _pickupFrame.Unbind();
+    }
+
+    public void PostEffects(TrFrame frame, GlobalParameters baseParameters)
+    {
+        frame.Bind();
+        {
+            _edgeDetectionMat.Channel0 = _pickupFrame.Texture;
+
+            _edgeDetectionMat.Draw(_pickupMesh, baseParameters);
+        }
+        frame.Unbind();
     }
 
     public void Update()

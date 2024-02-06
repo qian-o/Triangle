@@ -220,6 +220,6 @@ public static class ImGuiHelper
         Vector2D<float> offset = new(horizontalAlignment.Alignment(area, size), verticalAlignment.Alignment(area, size));
 
         ImGui.SetCursorPos(ImGui.GetCursorPos() + offset.ToSystem());
-        ImGui.Image(frame != null ? (nint)frame.Texture : 0, size.ToSystem(), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
+        ImGui.Image(frame != null ? (nint)frame.Texture.Handle : 0, size.ToSystem(), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
     }
 }

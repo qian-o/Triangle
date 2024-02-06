@@ -44,7 +44,7 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         gl.DeleteTexture(Handle);
     }
 
-    public void WriteImage(string file)
+    public void Write(string file)
     {
         Name = Path.GetFileName(file);
 
@@ -53,6 +53,16 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         fixed (byte* ptr = image.Data)
         {
             Write((uint)image.Width, (uint)image.Height, TrPixelFormat.RGBA8, ptr);
+        }
+    }
+
+    public void Write(TrFrame frame)
+    {
+        byte[] pixels = frame.GetPixels();
+
+        fixed (byte* ptr = pixels)
+        {
+            Write((uint)frame.Width, (uint)frame.Height, TrPixelFormat.RGBA8, ptr);
         }
     }
 
@@ -71,6 +81,21 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         gl.BindTexture(GLEnum.Texture2D, 0);
 
         UpdateParameters();
+    }
+
+    public void Clear(uint width, uint height, TrPixelFormat pixelFormat)
+    {
+        Width = width;
+        Height = height;
+        PixelFormat = pixelFormat;
+
+        GL gl = Context.GL;
+
+        (GLEnum Target, GLEnum Format) = pixelFormat.ToGL();
+
+        gl.BindTexture(GLEnum.Texture2D, Handle);
+        gl.TexImage2D(GLEnum.Texture2D, 0, (int)Target, Width, Height, 0, Format, GLEnum.UnsignedByte, null);
+        gl.BindTexture(GLEnum.Texture2D, 0);
     }
 
     public void AdjustImGuiProperties()

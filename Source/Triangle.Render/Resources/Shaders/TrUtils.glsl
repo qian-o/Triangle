@@ -1,4 +1,4 @@
-#define UNIFORM_BUFFER_BINDING_START 6
+#define UNIFORM_BUFFER_BINDING_START 7
 #define UNIFORM_SAMPLER_2D_BINDING_START 4
 #define ANTI_ALIASING 4
 
@@ -29,7 +29,7 @@ layout(std140, binding = 2) uniform Constants
     float Time;
     float DeltaTime;
     float FrameRate;
-    int Frame;
+    int FrameCount;
 }
 Uni_Constants;
 
@@ -46,7 +46,16 @@ layout(std140, binding = 4) uniform DirectionalLight
 }
 Uni_DirectionalLight;
 
-layout(std140, binding = 5) uniform TexScaleOffset
+layout(std140, binding = 5) uniform TexParams
+{
+    vec4 Channel0Size;
+    vec4 Channel1Size;
+    vec4 Channel2Size;
+    vec4 Channel3Size;
+}
+Uni_TexParams;
+
+layout(std140, binding = 6) uniform TexScaleOffset
 {
     vec4 Channel0ST;
     vec4 Channel1ST;

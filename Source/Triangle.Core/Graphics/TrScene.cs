@@ -36,6 +36,8 @@ public class TrScene : TrGraphics<TrContext>
 
     public string Name { get; }
 
+    public TrFrame Frame => _frame;
+
     public string HostName => $"{Name} - Frame Id: {_frame.Handle}";
 
     public TrCamera Camera { get; }
@@ -64,7 +66,7 @@ public class TrScene : TrGraphics<TrContext>
 
     public float FrameRate { get; private set; }
 
-    public int Frame { get; private set; }
+    public int FrameCount { get; private set; }
 
     public bool IsClosed { get; private set; }
 
@@ -74,7 +76,7 @@ public class TrScene : TrGraphics<TrContext>
 
     public float CameraSensitivity { get; set; } = 0.1f;
 
-    public TrSceneData SceneData => new(new Vector2D<float>(Width, Height), Mouse, Date, Time, DeltaTime, FrameRate, Frame);
+    public TrSceneData SceneData => new(new Vector2D<float>(Width, Height), Mouse, Date, Time, DeltaTime, FrameRate, FrameCount);
 
     public void Update(double deltaSeconds)
     {
@@ -183,7 +185,7 @@ public class TrScene : TrGraphics<TrContext>
             Time = Convert.ToSingle(ImGui.GetTime());
             DeltaTime = ImGui.GetIO().DeltaTime;
             FrameRate = ImGui.GetIO().Framerate;
-            Frame = ImGui.GetFrameCount();
+            FrameCount = ImGui.GetFrameCount();
 
             Vector2 size = ImGui.GetContentRegionAvail();
 

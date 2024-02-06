@@ -14,7 +14,7 @@ namespace Triangle.Render.Contracts.Materials;
 
 public abstract class GlobalMat : TrMaterial<GlobalParameters>
 {
-    public const uint UniformBufferBindingStart = 6;
+    public const uint UniformBufferBindingStart = 7;
     public const uint UniformSampler2dBindingStart = 4;
 
     #region Uniforms
@@ -75,7 +75,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
         public float FrameRate;
 
         [FieldOffset(12)]
-        public int Frame;
+        public int FrameCount;
     }
 
     [StructLayout(LayoutKind.Explicit)]
@@ -93,6 +93,22 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
 
         [FieldOffset(16)]
         public Vector3D<float> Position;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
+    private struct UniTexTexParams
+    {
+        [FieldOffset(0)]
+        public Vector4D<float> Channel0Size;
+
+        [FieldOffset(16)]
+        public Vector4D<float> Channel1Size;
+
+        [FieldOffset(32)]
+        public Vector4D<float> Channel2Size;
+
+        [FieldOffset(48)]
+        public Vector4D<float> Channel3Size;
     }
 
     [StructLayout(LayoutKind.Explicit)]
@@ -117,6 +133,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
     private readonly TrBuffer<UniConstants> _uboConstants;
     private readonly TrBuffer<UniAmbientLight> _uboAmbientLight;
     private readonly TrBuffer<UniDirectionalLight> _uboDirectionalLight;
+    private readonly TrBuffer<UniTexTexParams> _uboUniTexTexParams;
     private readonly TrBuffer<UniTexScaleOffset> _uboTexScaleOffset;
     private readonly Dictionary<int, (PropertyInfo Channel, PropertyInfo ChannelST)> _channelCache;
 
@@ -128,6 +145,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
         _uboAmbientLight = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
         _uboDirectionalLight = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
         _uboTexScaleOffset = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        _uboUniTexTexParams = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
         _channelCache = [];
     }
@@ -150,6 +168,28 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
 
     public override void Draw(TrMesh mesh, GlobalParameters parameters)
     {
+        Vector4D<float> channel0Size = Vector4D<float>.Zero;
+        Vector4D<float> channel1Size = Vector4D<float>.Zero;
+        Vector4D<float> channel2Size = Vector4D<float>.Zero;
+        Vector4D<float> channel3Size = Vector4D<float>.Zero;
+
+        if (Channel0 != null)
+        {
+            channel0Size = new Vector4D<float>(1.0f / Channel0.Width, 1.0f / Channel0.Height, Channel0.Width, Channel0.Height);
+        }
+        if (Channel1 != null)
+        {
+            channel1Size = new Vector4D<float>(1.0f / Channel1.Width, 1.0f / Channel1.Height, Channel1.Width, Channel1.Height);
+        }
+        if (Channel2 != null)
+        {
+            channel2Size = new Vector4D<float>(1.0f / Channel2.Width, 1.0f / Channel2.Height, Channel2.Width, Channel2.Height);
+        }
+        if (Channel3 != null)
+        {
+            channel3Size = new Vector4D<float>(1.0f / Channel3.Width, 1.0f / Channel3.Height, Channel3.Width, Channel3.Height);
+        }
+
         foreach (TrRenderPipeline renderPipeline in RenderPass.RenderPipelines)
         {
             renderPipeline.Bind();
@@ -184,7 +224,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
                 Time = parameters.SceneData.Time,
                 DeltaTime = parameters.SceneData.DeltaTime,
                 FrameRate = parameters.SceneData.FrameRate,
-                Frame = parameters.SceneData.Frame
+                FrameCount = parameters.SceneData.FrameCount
             });
             _uboAmbientLight.SetData(new UniAmbientLight()
             {
@@ -194,6 +234,13 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
             {
                 Color = parameters.DirectionalLight.Color,
                 Position = -parameters.DirectionalLight.Direction
+            });
+            _uboUniTexTexParams.SetData(new UniTexTexParams()
+            {
+                Channel0Size = channel0Size,
+                Channel1Size = channel1Size,
+                Channel2Size = channel2Size,
+                Channel3Size = channel3Size
             });
             _uboTexScaleOffset.SetData(new UniTexScaleOffset()
             {
@@ -208,7 +255,8 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
             renderPipeline.BindUniformBlock(2, _uboConstants);
             renderPipeline.BindUniformBlock(3, _uboAmbientLight);
             renderPipeline.BindUniformBlock(4, _uboDirectionalLight);
-            renderPipeline.BindUniformBlock(5, _uboTexScaleOffset);
+            renderPipeline.BindUniformBlock(5, _uboUniTexTexParams);
+            renderPipeline.BindUniformBlock(6, _uboTexScaleOffset);
 
             renderPipeline.BindUniformBlock(0, Channel0);
             renderPipeline.BindUniformBlock(1, Channel1);
@@ -308,6 +356,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
         _uboConstants.Dispose();
         _uboAmbientLight.Dispose();
         _uboDirectionalLight.Dispose();
+        _uboUniTexTexParams.Dispose();
         _uboTexScaleOffset.Dispose();
 
         DestroyCore(disposing);

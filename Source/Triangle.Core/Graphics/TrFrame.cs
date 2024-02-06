@@ -1,6 +1,7 @@
 ﻿using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
+using Triangle.Core.Enums;
 
 namespace Triangle.Core.Graphics;
 
@@ -11,16 +12,17 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         GL gl = Context.GL;
 
         Handle = gl.GenFramebuffer();
-        Texture = gl.GenTexture();
 
         Framebuffer = gl.GenFramebuffer();
         ColorBuffer = gl.GenRenderbuffer();
         DepthStencilBuffer = gl.GenRenderbuffer();
 
-        gl.BindTexture(GLEnum.Texture2D, Texture);
-        gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureMinFilter, (int)GLEnum.Nearest);
-        gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureMagFilter, (int)GLEnum.Nearest);
-        gl.BindTexture(GLEnum.Texture2D, 0);
+        Texture = new TrTexture(Context)
+        {
+            TextureMinFilter = TrTextureFilter.Nearest,
+            TextureMagFilter = TrTextureFilter.Nearest
+        };
+        Texture.UpdateParameters();
     }
 
     public int Width { get; private set; }
@@ -29,7 +31,7 @@ public unsafe class TrFrame : TrGraphics<TrContext>
 
     public int Samples { get; private set; }
 
-    public uint Texture { get; }
+    public TrTexture Texture { get; }
 
     public uint Framebuffer { get; }
 
@@ -42,11 +44,12 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         GL gl = Context.GL;
 
         gl.DeleteFramebuffer(Handle);
-        gl.DeleteTexture(Texture);
 
         gl.DeleteFramebuffer(Framebuffer);
         gl.DeleteRenderbuffer(ColorBuffer);
         gl.DeleteRenderbuffer(DepthStencilBuffer);
+
+        Texture.Dispose();
     }
 
     public void Update(int width, int height, int samples)
@@ -67,12 +70,10 @@ public unsafe class TrFrame : TrGraphics<TrContext>
 
         GL gl = Context.GL;
 
-        gl.BindTexture(GLEnum.Texture2D, Texture);
-        gl.TexImage2D(GLEnum.Texture2D, 0, (int)GLEnum.Rgb, (uint)Width, (uint)Height, 0, GLEnum.Rgb, GLEnum.UnsignedByte, null);
-        gl.BindTexture(GLEnum.Texture2D, 0);
+        Texture.Clear((uint)Width, (uint)Height, TrPixelFormat.RGB8);
 
         gl.BindFramebuffer(GLEnum.Framebuffer, Handle);
-        gl.FramebufferTexture2D(GLEnum.Framebuffer, GLEnum.ColorAttachment0, GLEnum.Texture2D, Texture, 0);
+        gl.FramebufferTexture2D(GLEnum.Framebuffer, GLEnum.ColorAttachment0, GLEnum.Texture2D, Texture.Handle, 0);
         gl.BindFramebuffer(GLEnum.Framebuffer, 0);
 
         // 多重采样缓冲区
@@ -126,5 +127,20 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         gl.BindFramebuffer(GLEnum.Framebuffer, 0);
 
         return pixel;
+    }
+
+    public byte[] GetPixels()
+    {
+        GL gl = Context.GL;
+
+        gl.BindFramebuffer(GLEnum.Framebuffer, Handle);
+        gl.ReadBuffer(GLEnum.ColorAttachment0);
+
+        byte[] pixels = new byte[Width * Height * 4];
+        gl.ReadPixels<byte>(0, 0, (uint)Width, (uint)Height, GLEnum.Rgba, GLEnum.UnsignedByte, pixels);
+
+        gl.BindFramebuffer(GLEnum.Framebuffer, 0);
+
+        return pixels;
     }
 }
