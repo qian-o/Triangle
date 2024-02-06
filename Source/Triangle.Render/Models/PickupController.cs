@@ -144,7 +144,7 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
         }
 
         _frame.Update(_scene.Width, _scene.Height);
-        _pickupFrame.Update(_scene.Width, _scene.Height);
+        _pickupFrame.Update(_scene.Width, _scene.Height, _scene.Samples);
     }
 
     public void Controller()

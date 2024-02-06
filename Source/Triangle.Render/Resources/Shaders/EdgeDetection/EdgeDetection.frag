@@ -45,12 +45,5 @@ void main()
 {
     float edge = sobel();
 
-    if (edge > 0.1)
-    {
-        discard;
-    }
-    else
-    {
-        Out_Color = Uni_Parameters.EdgeColor;
-    }
+    Out_Color = mix(Uni_Parameters.EdgeColor, vec4(0.0), edge);
 }
