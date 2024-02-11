@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using ImGuiNET;
+using ImGuizmoNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core.Contracts.Graphics;
@@ -197,6 +198,7 @@ public class TrScene : TrGraphics<TrContext>
             FrameRate = ImGui.GetIO().Framerate;
             FrameCount = ImGui.GetFrameCount();
 
+            Vector2 offset = ImGui.GetCursorScreenPos();
             Vector2 size = ImGui.GetContentRegionAvail();
 
             int newWidth = Convert.ToInt32(size.X);
@@ -211,6 +213,14 @@ public class TrScene : TrGraphics<TrContext>
             }
 
             ImGuiHelper.Frame(_frame);
+
+            // ImGuizmo
+            {
+                float[] view = Camera.View.ToArray();
+
+                ImGuizmo.SetRect(offset.X, offset.Y, size.X, size.Y);
+                ImGuizmo.ViewManipulate(ref view[0], 8.0f, new Vector2(offset.X + size.X - 128.0f, offset.Y), new Vector2(128.0f, 128.0f), 0x10101010);
+            }
 
             DrawContentInWindow?.Invoke();
 
