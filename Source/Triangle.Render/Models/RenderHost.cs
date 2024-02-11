@@ -1,15 +1,13 @@
 ﻿using System.Runtime.InteropServices;
 using ImGuiNET;
-using ImGuizmoNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
+using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
 using Triangle.Core;
 using Triangle.Core.Contracts;
-using Triangle.Core.Controllers;
 using Triangle.Core.Helpers;
-using Triangle.Core.Structs;
 using Triangle.Render.Contracts.Applications;
 
 namespace Triangle.Render.Models;
@@ -73,11 +71,10 @@ public unsafe class RenderHost<TApplication> : Disposable where TApplication : I
         gl = _window.CreateOpenGL();
         inputContext = _window.CreateInput();
         trContext = new TrContext(gl);
-        imGuiController = new ImGuiController(trContext,
+        imGuiController = new ImGuiController(gl,
                                               _window,
                                               inputContext,
-                                              new ImGuiFontConfig("Resources/Fonts/MSYH.TTC", 14, (a) => a.Fonts.GetGlyphRangesChineseFull()),
-                                              () => { ImGuizmo.SetImGuiContext(ImGui.GetCurrentContext()); });
+                                              new ImGuiFontConfig("Resources/Fonts/MSYH.TTC", 14, (a) => a.Fonts.GetGlyphRangesChineseFull()));
 
         TrTextureManager.InitializeImages(trContext, "Resources/Textures".PathFormatter());
 
@@ -105,7 +102,6 @@ public unsafe class RenderHost<TApplication> : Disposable where TApplication : I
         gl.BindFramebuffer(GLEnum.Framebuffer, 0);
 
         imGuiController.Update((float)deltaSeconds);
-        ImGuizmo.BeginFrame();
 
         if (firstFrame)
         {
