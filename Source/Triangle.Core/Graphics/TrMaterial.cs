@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+﻿using Hexa.NET.ImGui;
 using Triangle.Core.Contracts.Graphics;
 
 namespace Triangle.Core.Graphics;

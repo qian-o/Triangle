@@ -171,6 +171,17 @@ public static class EnumExtensions
         };
     }
 
+    public static GLEnum ToGL(this TrPolygonMode polygonMode)
+    {
+        return polygonMode switch
+        {
+            TrPolygonMode.Fill => GLEnum.Fill,
+            TrPolygonMode.Line => GLEnum.Line,
+            TrPolygonMode.Point => GLEnum.Point,
+            _ => throw new NotSupportedException("不支持的多边形模式。")
+        };
+    }
+
     public static float Alignment(this TrHorizontalAlignment alignment, Vector2D<float> area, Vector2D<float> size)
     {
         return alignment switch

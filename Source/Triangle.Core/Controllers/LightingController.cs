@@ -1,10 +1,10 @@
 ﻿using System.Numerics;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Silk.NET.Maths;
 using Triangle.Core.Helpers;
 using Triangle.Core.Structs;
 
-namespace Triangle.Core.Models;
+namespace Triangle.Core.Controllers;
 
 public class LightingController
 {

@@ -58,9 +58,9 @@ public class Tutorial02(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        goldStar1.Render(GetBaseParameters());
-        goldStar2.Render(GetBaseParameters());
-        goldStar3.Render(GetBaseParameters());
+        goldStar1.Render(GetSceneParameters());
+        goldStar2.Render(GetSceneParameters());
+        goldStar3.Render(GetSceneParameters());
     }
 
     protected override void EditProperties()

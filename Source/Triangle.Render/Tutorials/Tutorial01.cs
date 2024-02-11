@@ -40,7 +40,7 @@ public class Tutorial01(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        sphere.Render(GetBaseParameters());
+        sphere.Render(GetSceneParameters());
     }
 
     protected override void EditProperties()

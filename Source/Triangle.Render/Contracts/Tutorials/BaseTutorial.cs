@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
+using Triangle.Core.Controllers;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
-using Triangle.Core.Models;
 using Triangle.Render.Materials;
 using Triangle.Render.Models;
 
@@ -84,13 +84,13 @@ public abstract class BaseTutorial : ITutorial
 
         RenderScene(deltaSeconds);
 
-        _grid.Render(GetBaseParameters());
+        _grid.Render(GetSceneParameters());
 
-        PickupController.PostEffects(GetBaseParameters());
+        PickupController.PostEffects(GetSceneParameters());
 
         Scene.End();
 
-        PickupController.Render(GetBaseParameters());
+        PickupController.Render(GetSceneParameters());
     }
 
     public virtual void ImGuiRender()
@@ -142,7 +142,7 @@ public abstract class BaseTutorial : ITutorial
 
     protected abstract void EditProperties();
 
-    protected GlobalParameters GetBaseParameters()
+    protected GlobalParameters GetSceneParameters()
     {
         return new(Scene.Camera,
                    Matrix4X4<float>.Identity,

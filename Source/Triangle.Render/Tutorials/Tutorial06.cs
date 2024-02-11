@@ -6,6 +6,7 @@ using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Render.Contracts.Tutorials;
 using Triangle.Render.Materials.Chapter7;
+using Triangle.Render.Models;
 
 namespace Triangle.Render.Tutorials;
 
@@ -45,11 +46,14 @@ public class Tutorial06(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        knot.Render(GetBaseParameters());
+        GlobalParameters parameters = GetSceneParameters();
+
+        knot.Render(parameters);
     }
 
     protected override void EditProperties()
     {
+
     }
 
     protected override void Destroy(bool disposing = false)

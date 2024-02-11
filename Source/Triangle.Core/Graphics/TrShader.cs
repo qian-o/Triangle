@@ -8,17 +8,25 @@ namespace Triangle.Core.Graphics;
 
 public unsafe class TrShader : TrGraphics<TrContext>
 {
-    public TrShader(TrContext context, TrShaderType shaderType, string path) : base(context)
+    public TrShader(TrContext context, TrShaderType shaderType, string source, bool isSpv = true) : base(context)
     {
         GL gl = Context.GL;
 
         Handle = gl.CreateShader(shaderType.ToGL());
 
-        byte[] bytes = File.ReadAllBytes(path);
-        uint size = (uint)bytes.Length;
+        if (isSpv)
+        {
+            byte[] bytes = File.ReadAllBytes(source);
+            uint size = (uint)bytes.Length;
 
-        gl.ShaderBinary(1, Handle, GLEnum.ShaderBinaryFormatSpirV, bytes[0], size);
-        gl.SpecializeShader(Handle, "main", 0, null, null);
+            gl.ShaderBinary(1, Handle, GLEnum.ShaderBinaryFormatSpirV, bytes[0], size);
+            gl.SpecializeShader(Handle, "main", 0, null, null);
+        }
+        else
+        {
+            gl.ShaderSource(Handle, source);
+            gl.CompileShader(Handle);
+        }
 
         string error = gl.GetShaderInfoLog(Handle);
 

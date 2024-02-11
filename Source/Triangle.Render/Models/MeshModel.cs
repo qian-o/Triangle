@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Silk.NET.Maths;
+using Triangle.Core.Controllers;
 using Triangle.Core.Helpers;
-using Triangle.Core.Models;
 using Triangle.Render.Contracts.Materials;
 using Triangle.Render.Models;
 

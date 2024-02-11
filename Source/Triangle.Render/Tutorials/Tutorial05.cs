@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Silk.NET.Input;
 using Triangle.Core;
 using Triangle.Core.Graphics;
@@ -41,7 +41,7 @@ public class Tutorial05(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        mats[materialIndex].Draw(canvas, GetBaseParameters());
+        mats[materialIndex].Draw(canvas, GetSceneParameters());
     }
 
     protected override void EditProperties()

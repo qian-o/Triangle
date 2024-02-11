@@ -65,10 +65,10 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        capsule1.Render(GetBaseParameters());
-        capsule2.Render(GetBaseParameters());
-        capsule3.Render(GetBaseParameters());
-        capsule4.Render(GetBaseParameters());
+        capsule1.Render(GetSceneParameters());
+        capsule2.Render(GetSceneParameters());
+        capsule3.Render(GetSceneParameters());
+        capsule4.Render(GetSceneParameters());
     }
 
     protected override void EditProperties()

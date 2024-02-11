@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+﻿using Hexa.NET.ImGui;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;

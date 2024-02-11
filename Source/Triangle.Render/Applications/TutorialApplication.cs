@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Numerics;
 using System.Reflection;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Silk.NET.Maths;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
@@ -108,7 +108,7 @@ public class TutorialApplication : BaseApplication
         {
             TrScene scene = tutorial.Scene;
 
-            uint id = ImGui.DockSpaceOverViewport(ImGui.FindViewportByID(ImGui.GetID(scene.HostName)));
+            int id = ImGui.DockSpaceOverViewport(ImGui.FindViewportByID(ImGui.GetID(scene.HostName)));
 
             ImGui.SetNextWindowDockID(id, ImGuiCond.Once);
 

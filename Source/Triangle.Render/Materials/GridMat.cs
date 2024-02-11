@@ -1,5 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;

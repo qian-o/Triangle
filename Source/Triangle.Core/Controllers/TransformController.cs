@@ -1,9 +1,9 @@
 ﻿using System.Numerics;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Silk.NET.Maths;
 using Triangle.Core.Helpers;
 
-namespace Triangle.Core.Models;
+namespace Triangle.Core.Controllers;
 
 public class TransformController
 {

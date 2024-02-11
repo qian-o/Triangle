@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+﻿using Hexa.NET.ImGui;
 using Silk.NET.OpenGL;
 using StbImageSharp;
 using Triangle.Core.Contracts.Graphics;
@@ -29,13 +29,13 @@ public unsafe class TrTexture : TrGraphics<TrContext>
 
     public int Anisotropy { get; set; } = 16;
 
-    public TrTextureFilter TextureMinFilter { get; set; } = TrTextureFilter.NearestMipmapLinear;
+    public TrTextureFilter TextureMinFilter { get; set; } = TrTextureFilter.Linear;
 
-    public TrTextureFilter TextureMagFilter { get; set; } = TrTextureFilter.LinearMipmapLinear;
+    public TrTextureFilter TextureMagFilter { get; set; } = TrTextureFilter.Linear;
 
     public TrTextureWrap TextureWrap { get; set; } = TrTextureWrap.Repeat;
 
-    public bool IsGenerateMipmap { get; set; } = true;
+    public bool IsGenerateMipmap { get; set; }
 
     protected override void Destroy(bool disposing = false)
     {
