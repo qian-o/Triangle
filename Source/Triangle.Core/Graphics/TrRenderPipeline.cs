@@ -66,7 +66,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 
     public TrBlendEquation BlendEquation { get; set; } = TrBlendEquation.Add;
 
-    public TrBlendFunc BlendFunc { get; set; } = TrBlendFunc.Default;
+    public TrBlendFuncSeparate BlendFuncSeparate { get; set; } = TrBlendFuncSeparate.Default;
 
     public TrPolygon Polygon { get; set; } = TrPolygon.Default;
 
@@ -114,7 +114,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 SourceFactor = TrBlendFactor.One;
                 DestinationFactor = TrBlendFactor.Zero;
                 BlendEquation = TrBlendEquation.Add;
-                BlendFunc = TrBlendFunc.Default;
+                BlendFuncSeparate = TrBlendFuncSeparate.Default;
                 Polygon = TrPolygon.Default;
                 IsMultisample = true;
                 break;
@@ -135,7 +135,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 SourceFactor = TrBlendFactor.SrcAlpha;
                 DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
                 BlendEquation = TrBlendEquation.Add;
-                BlendFunc = TrBlendFunc.Default;
+                BlendFuncSeparate = TrBlendFuncSeparate.Default;
                 Polygon = TrPolygon.Default;
                 IsMultisample = true;
                 break;
@@ -156,7 +156,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 SourceFactor = TrBlendFactor.One;
                 DestinationFactor = TrBlendFactor.Zero;
                 BlendEquation = TrBlendEquation.Add;
-                BlendFunc = TrBlendFunc.Default;
+                BlendFuncSeparate = TrBlendFuncSeparate.Default;
                 Polygon = TrPolygon.Default;
                 IsMultisample = true;
                 break;
@@ -177,7 +177,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 SourceFactor = TrBlendFactor.SrcAlpha;
                 DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
                 BlendEquation = TrBlendEquation.Add;
-                BlendFunc = TrBlendFunc.Default;
+                BlendFuncSeparate = TrBlendFuncSeparate.Default;
                 Polygon = TrPolygon.Default;
                 IsMultisample = true;
                 break;
@@ -198,7 +198,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 SourceFactor = TrBlendFactor.SrcAlpha;
                 DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
                 BlendEquation = TrBlendEquation.Add;
-                BlendFunc = TrBlendFunc.Default;
+                BlendFuncSeparate = TrBlendFuncSeparate.Default;
                 Polygon = TrPolygon.Default;
                 IsMultisample = true;
                 break;
@@ -384,7 +384,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 
         gl.BlendEquation(BlendEquation.ToGL());
 
-        gl.BlendFuncSeparate(BlendFunc.SrcRGB.ToGL(), BlendFunc.DstRGB.ToGL(), BlendFunc.SrcAlpha.ToGL(), BlendFunc.DstAlpha.ToGL());
+        gl.BlendFuncSeparate(BlendFuncSeparate.SrcRGB.ToGL(), BlendFuncSeparate.DstRGB.ToGL(), BlendFuncSeparate.SrcAlpha.ToGL(), BlendFuncSeparate.DstAlpha.ToGL());
 
         gl.PolygonMode(Polygon.Face.ToGL(), Polygon.Mode.ToGL());
 
