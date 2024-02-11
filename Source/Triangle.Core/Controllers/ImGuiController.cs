@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.Numerics;
-using Hexa.NET.ImGui;
-using Hexa.NET.ImGuizmo;
+using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -20,6 +19,7 @@ public unsafe class ImGuiController : Disposable
     private readonly IView _view;
     private readonly IInputContext _input;
     private readonly Key[] _keyEnumArr = (Key[])Enum.GetValues(typeof(Key));
+    private readonly nint _context;
 
     private bool _frameBegun;
     private readonly List<char> _pressedChars = [];
@@ -39,8 +39,6 @@ public unsafe class ImGuiController : Disposable
 
     private int _windowWidth;
     private int _windowHeight;
-
-    private ImGuiContextPtr _context;
 
     /// <summary>
     /// Constructs a new ImGuiController.
@@ -84,7 +82,7 @@ public unsafe class ImGuiController : Disposable
         {
             nint glyphRange = imGuiFontConfig.Value.GetGlyphRange?.Invoke(io) ?? default;
 
-            io.Fonts.AddFontFromFileTTF(imGuiFontConfig.Value.FontPath, imGuiFontConfig.Value.FontSize, null, (char*)glyphRange);
+            io.Fonts.AddFontFromFileTTF(imGuiFontConfig.Value.FontPath, imGuiFontConfig.Value.FontSize, null, glyphRange);
         }
 
         onConfigureIO?.Invoke();
@@ -99,10 +97,61 @@ public unsafe class ImGuiController : Disposable
         BeginFrame();
     }
 
-    public void MakeCurrent()
+    /// <summary>
+    /// Renders the ImGui draw list data.
+    /// This method requires a <see cref="GraphicsDevice"/> because it may create new DeviceBuffers if the size of vertex
+    /// or index data has increased beyond the capacity of the existing buffers.
+    /// A <see cref="CommandList"/> is needed to submit drawing and resource update commands.
+    /// </summary>
+    public void Render()
     {
-        ImGui.SetCurrentContext(_context);
-        ImGuizmo.SetImGuiContext(_context);
+        if (_frameBegun)
+        {
+            nint oldCtx = ImGui.GetCurrentContext();
+
+            if (oldCtx != _context)
+            {
+                ImGui.SetCurrentContext(_context);
+            }
+
+            _frameBegun = false;
+            ImGui.Render();
+            RenderImDrawData(ImGui.GetDrawData());
+
+            if (oldCtx != _context)
+            {
+                ImGui.SetCurrentContext(oldCtx);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Updates ImGui input and IO configuration state.
+    /// </summary>
+    public void Update(float deltaSeconds)
+    {
+        nint oldCtx = ImGui.GetCurrentContext();
+
+        if (oldCtx != _context)
+        {
+            ImGui.SetCurrentContext(_context);
+        }
+
+        if (_frameBegun)
+        {
+            ImGui.Render();
+        }
+
+        SetPerFrameImGuiData(deltaSeconds);
+        UpdateImGuiInput();
+
+        _frameBegun = true;
+        ImGui.NewFrame();
+
+        if (oldCtx != _context)
+        {
+            ImGui.SetCurrentContext(oldCtx);
+        }
     }
 
     private void BeginFrame()
@@ -123,67 +172,6 @@ public unsafe class ImGuiController : Disposable
     {
         _windowWidth = size.X;
         _windowHeight = size.Y;
-    }
-
-    /// <summary>
-    /// Renders the ImGui draw list data.
-    /// This method requires a <see cref="GraphicsDevice"/> because it may create new DeviceBuffers if the size of vertex
-    /// or index data has increased beyond the capacity of the existing buffers.
-    /// A <see cref="CommandList"/> is needed to submit drawing and resource update commands.
-    /// </summary>
-    public void Render()
-    {
-        if (_frameBegun)
-        {
-            ImGuiContextPtr oldCtx = ImGui.GetCurrentContext();
-
-            if (oldCtx != _context)
-            {
-                ImGui.SetCurrentContext(_context);
-                ImGuizmo.SetImGuiContext(_context);
-            }
-
-            _frameBegun = false;
-            ImGui.Render();
-            RenderImDrawData(ImGui.GetDrawData());
-
-            if (oldCtx != _context)
-            {
-                ImGui.SetCurrentContext(oldCtx);
-                ImGuizmo.SetImGuiContext(_context);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Updates ImGui input and IO configuration state.
-    /// </summary>
-    public void Update(float deltaSeconds)
-    {
-        ImGuiContextPtr oldCtx = ImGui.GetCurrentContext();
-
-        if (oldCtx != _context)
-        {
-            ImGui.SetCurrentContext(_context);
-            ImGuizmo.SetImGuiContext(_context);
-        }
-
-        if (_frameBegun)
-        {
-            ImGui.Render();
-        }
-
-        SetPerFrameImGuiData(deltaSeconds);
-        UpdateImGuiInput();
-
-        _frameBegun = true;
-        ImGui.NewFrame();
-
-        if (oldCtx != _context)
-        {
-            ImGui.SetCurrentContext(oldCtx);
-            ImGuizmo.SetImGuiContext(_context);
-        }
     }
 
     /// <summary>
@@ -244,14 +232,10 @@ public unsafe class ImGuiController : Disposable
         io.KeySuper = keyboardState.IsKeyPressed(Key.SuperLeft) || keyboardState.IsKeyPressed(Key.SuperRight);
     }
 
-    internal void PressChar(char keyChar)
-    {
-        _pressedChars.Add(keyChar);
-    }
-
     private static void SetKeyMappings()
     {
-        var io = ImGui.GetIO();
+        ImGuiIOPtr io = ImGui.GetIO();
+
         io.KeyMap[(int)ImGuiKey.Tab] = (int)Key.Tab;
         io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)Key.Left;
         io.KeyMap[(int)ImGuiKey.RightArrow] = (int)Key.Right;
@@ -273,7 +257,7 @@ public unsafe class ImGuiController : Disposable
         io.KeyMap[(int)ImGuiKey.Z] = (int)Key.Z;
     }
 
-    private unsafe void SetupRenderState(ImDrawDataPtr drawDataPtr, int framebufferWidth, int framebufferHeight)
+    private void SetupRenderState(ImDrawDataPtr drawDataPtr, int framebufferWidth, int framebufferHeight)
     {
         float L = drawDataPtr.DisplayPos.X;
         float R = drawDataPtr.DisplayPos.X + drawDataPtr.DisplaySize.X;
@@ -323,7 +307,7 @@ public unsafe class ImGuiController : Disposable
         _gl.VertexAttribPointer((uint)_attribLocationVtxColor, 4, GLEnum.UnsignedByte, true, (uint)sizeof(ImDrawVert), (void*)16);
     }
 
-    private unsafe void RenderImDrawData(ImDrawDataPtr drawDataPtr)
+    private void RenderImDrawData(ImDrawDataPtr drawDataPtr)
     {
         int framebufferWidth = (int)(drawDataPtr.DisplaySize.X * drawDataPtr.FramebufferScale.X);
         int framebufferHeight = (int)(drawDataPtr.DisplaySize.Y * drawDataPtr.FramebufferScale.Y);
@@ -374,7 +358,7 @@ public unsafe class ImGuiController : Disposable
         // Render command lists
         for (int n = 0; n < drawDataPtr.CmdListsCount; n++)
         {
-            ImDrawListPtr cmdListPtr = drawDataPtr.CmdLists.Data[n];
+            ImDrawListPtr cmdListPtr = drawDataPtr.CmdListsRange[n];
 
             // Upload vertex/index buffers
 
@@ -383,9 +367,9 @@ public unsafe class ImGuiController : Disposable
 
             for (int cmd_i = 0; cmd_i < cmdListPtr.CmdBuffer.Size; cmd_i++)
             {
-                ImDrawCmd cmdPtr = cmdListPtr.CmdBuffer.Data[cmd_i];
+                ImDrawCmdPtr cmdPtr = cmdListPtr.CmdBuffer[cmd_i];
 
-                if (cmdPtr.UserCallback != null)
+                if (cmdPtr.UserCallback != IntPtr.Zero)
                 {
                     throw new NotImplementedException();
                 }
@@ -403,7 +387,7 @@ public unsafe class ImGuiController : Disposable
                         _gl.Scissor((int)clipRect.X, (int)(framebufferHeight - clipRect.W), (uint)(clipRect.Z - clipRect.X), (uint)(clipRect.W - clipRect.Y));
 
                         // Bind texture, Draw
-                        _gl.BindTexture(GLEnum.Texture2D, (uint)cmdPtr.TextureId.Handle);
+                        _gl.BindTexture(GLEnum.Texture2D, (uint)cmdPtr.TextureId);
 
                         _gl.DrawElementsBaseVertex(GLEnum.Triangles, cmdPtr.ElemCount, GLEnum.UnsignedShort, (void*)(cmdPtr.IdxOffset * sizeof(ushort)), (int)cmdPtr.VtxOffset);
                     }
@@ -547,20 +531,17 @@ public unsafe class ImGuiController : Disposable
     /// <summary>
     /// Creates the texture used to render text.
     /// </summary>
-    private unsafe void RecreateFontDeviceTexture()
+    private void RecreateFontDeviceTexture()
     {
         // Build texture atlas
         var io = ImGui.GetIO();
-        byte* pixels;
-        int width;
-        int height;
-        io.Fonts.GetTexDataAsRGBA32(&pixels, &width, &height);  // Load as RGBA 32-bit (75% of the memory is wasted, but default font is so small) because it is more likely to be compatible with user's existing shaders. If your ImTextureId represent a higher-level concept than just a GL texture id, consider calling GetTexDataAsAlpha8() instead to save on GPU memory.
+        io.Fonts.GetTexDataAsRGBA32(out nint pixels, out int width, out int height, out int _);   // Load as RGBA 32-bit (75% of the memory is wasted, but default font is so small) because it is more likely to be compatible with user's existing shaders. If your ImTextureId represent a higher-level concept than just a GL texture id, consider calling GetTexDataAsAlpha8() instead to save on GPU memory.
 
         // Upload texture to graphics system
         _gl.GetInteger(GLEnum.TextureBinding2D, out int lastTexture);
 
         _fontTexture = new TrTexture(_trContext);
-        _fontTexture.Write((uint)width, (uint)height, TrPixelFormat.RGBA8, pixels);
+        _fontTexture.Write((uint)width, (uint)height, TrPixelFormat.RGBA8, (void*)pixels);
         _fontTexture.TextureMagFilter = TrTextureFilter.Linear;
         _fontTexture.TextureMinFilter = TrTextureFilter.Linear;
         _fontTexture.UpdateParameters();

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
-using Hexa.NET.ImGui;
+using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;

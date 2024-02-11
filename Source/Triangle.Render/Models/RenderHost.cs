@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
-using Hexa.NET.ImGui;
+using ImGuiNET;
+using ImGuizmoNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -72,7 +73,11 @@ public unsafe class RenderHost<TApplication> : Disposable where TApplication : I
         gl = _window.CreateOpenGL();
         inputContext = _window.CreateInput();
         trContext = new TrContext(gl);
-        imGuiController = new ImGuiController(trContext, _window, inputContext, new ImGuiFontConfig("Resources/Fonts/MSYH.TTC", 14, (a) => (nint)a.Fonts.GetGlyphRangesChineseFull()));
+        imGuiController = new ImGuiController(trContext,
+                                              _window,
+                                              inputContext,
+                                              new ImGuiFontConfig("Resources/Fonts/MSYH.TTC", 14, (a) => a.Fonts.GetGlyphRangesChineseFull()),
+                                              () => { ImGuizmo.SetImGuiContext(ImGui.GetCurrentContext()); });
 
         TrTextureManager.InitializeImages(trContext, "Resources/Textures".PathFormatter());
 
@@ -100,6 +105,7 @@ public unsafe class RenderHost<TApplication> : Disposable where TApplication : I
         gl.BindFramebuffer(GLEnum.Framebuffer, 0);
 
         imGuiController.Update((float)deltaSeconds);
+        ImGuizmo.BeginFrame();
 
         if (firstFrame)
         {

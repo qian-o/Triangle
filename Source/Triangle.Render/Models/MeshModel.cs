@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using Hexa.NET.ImGui;
+using ImGuiNET;
 using Silk.NET.Maths;
 using Triangle.Core.Controllers;
 using Triangle.Core.Helpers;

@@ -13,8 +13,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Hexa.NET.ImGui" Version="1.0.2" />
-		<PackageReference Include="Hexa.NET.ImGuizmo" Version="1.0.2" />
 		<PackageReference Include="Silk.NET.Assimp" Version="2.20.0" />
 		<PackageReference Include="Silk.NET.Input" Version="2.20.0" />
 		<PackageReference Include="Silk.NET.Maths" Version="2.20.0" />
@@ -23,6 +21,8 @@
 		<PackageReference Include="Silk.NET.Shaderc.Native" Version="2.20.0" />
 		<PackageReference Include="Silk.NET.Windowing" Version="2.20.0" />
 		<PackageReference Include="StbImageSharp" Version="2.27.13" />
+		<PackageReference Include="Twizzle.ImGui.NET" Version="1.89.4" />
+		<PackageReference Include="Twizzle.ImGuizmo.NET" Version="1.89.4.1" />
 	</ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using ImGuizmoNET;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
@@ -53,7 +54,15 @@ public class Tutorial06(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void EditProperties()
     {
+        GlobalParameters parameters = GetSceneParameters();
 
+        float[] view = parameters.Camera.View.ToArray();
+        float[] projection = parameters.Camera.Projection.ToArray();
+        float[] obj = Matrix4X4<float>.Identity.ToArray();
+
+        ImGuizmo.SetRect(0, 0, 1280, 720);
+        ImGuizmo.DrawCubes(ref view[0], ref projection[0], ref obj[0], 1);
+        ImGuizmo.ViewManipulate(ref view[0], 8.0f, new System.Numerics.Vector2(128.0f, 128.0f), new System.Numerics.Vector2(128, 128), 0x10101010);
     }
 
     protected override void Destroy(bool disposing = false)
