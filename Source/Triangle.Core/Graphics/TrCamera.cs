@@ -63,6 +63,20 @@ public class TrCamera
 
     public Matrix4X4<float> Projection => Matrix4X4.CreatePerspectiveFieldOfView(fov, (float)Width / Height, Near, Far);
 
+    public void InverseView(Matrix4X4<float> matrix)
+    {
+        matrix.InverseLookAt(out Vector3D<float> cameraPosition, out Vector3D<float> cameraTarget, out Vector3D<float> _);
+
+        Position = cameraPosition;
+
+        Vector3D<float> front = cameraTarget - cameraPosition;
+
+        pitch = MathF.Asin(front.Y);
+        yaw = MathF.Atan2(front.Z, front.X);
+
+        UpdateVectors();
+    }
+
     private void UpdateVectors()
     {
         front.X = MathF.Cos(pitch) * MathF.Cos(yaw);

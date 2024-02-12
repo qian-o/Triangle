@@ -243,6 +243,8 @@ public class TrScene : TrGraphics<TrContext>
                                         new Vector2(Left + Width - 128.0f, Top),
                                         new Vector2(128.0f, 128.0f),
                                         0x10101010);
+
+                Camera.InverseView(view.ToMatrix());
             }
 
             DrawContentInWindow?.Invoke();
