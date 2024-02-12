@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGuizmo;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core.Contracts.Graphics;
@@ -79,6 +80,8 @@ public class TrScene : TrGraphics<TrContext>
     public float CameraSpeed { get; set; } = 2.0f;
 
     public float CameraSensitivity { get; set; } = 0.1f;
+
+    public bool IsShowAxis { get; set; } = true;
 
     public TrSceneData SceneData => new(new Vector2D<float>(Width, Height), Mouse, Date, Time, DeltaTime, FrameRate, FrameCount);
 
@@ -226,6 +229,21 @@ public class TrScene : TrGraphics<TrContext>
             }
 
             ImGuiHelper.Frame(_frame);
+
+            if (IsShowAxis)
+            {
+                ImGuizmo.SetDrawlist();
+
+                ImGuizmo.SetRect(Left, Top, Width, Height);
+
+                float[] view = Camera.View.ToArray();
+
+                ImGuizmo.ViewManipulate(ref view[0],
+                                        8.0f,
+                                        new Vector2(Left + Width - 128.0f, Top),
+                                        new Vector2(128.0f, 128.0f),
+                                        0x10101010);
+            }
 
             DrawContentInWindow?.Invoke();
 

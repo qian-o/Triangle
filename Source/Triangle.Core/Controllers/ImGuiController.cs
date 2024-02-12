@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Numerics;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGuizmo;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -97,6 +98,8 @@ public unsafe class ImGuiController : Disposable
         _context = ImGui.CreateContext();
 
         ImGui.SetCurrentContext(_context);
+        ImGuizmo.SetImGuiContext(_context);
+
         ImGui.StyleColorsDark();
 
         ImGuiIOPtr iO = ImGui.GetIO();
@@ -119,6 +122,7 @@ public unsafe class ImGuiController : Disposable
     public void MakeCurrent()
     {
         ImGui.SetCurrentContext(_context);
+        ImGuizmo.SetImGuiContext(_context);
     }
 
     private void BeginFrame()
@@ -158,6 +162,7 @@ public unsafe class ImGuiController : Disposable
             if (currentContext != _context)
             {
                 ImGui.SetCurrentContext(_context);
+                ImGuizmo.SetImGuiContext(_context);
             }
 
             _frameBegun = false;
@@ -168,6 +173,7 @@ public unsafe class ImGuiController : Disposable
             if (currentContext != _context)
             {
                 ImGui.SetCurrentContext(currentContext);
+                ImGuizmo.SetImGuiContext(currentContext);
             }
         }
     }
@@ -182,6 +188,7 @@ public unsafe class ImGuiController : Disposable
         if (currentContext != _context)
         {
             ImGui.SetCurrentContext(_context);
+            ImGuizmo.SetImGuiContext(_context);
         }
 
         if (_frameBegun)
@@ -195,10 +202,12 @@ public unsafe class ImGuiController : Disposable
         _frameBegun = true;
 
         ImGui.NewFrame();
+        ImGuizmo.BeginFrame();
 
         if (currentContext != _context)
         {
             ImGui.SetCurrentContext(currentContext);
+            ImGuizmo.SetImGuiContext(currentContext);
         }
     }
 
