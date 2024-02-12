@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+﻿using Hexa.NET.ImGui;
 using Silk.NET.OpenGL;
 using StbImageSharp;
 using Triangle.Core.Contracts.Graphics;

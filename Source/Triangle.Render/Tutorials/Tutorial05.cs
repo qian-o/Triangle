@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Silk.NET.Input;
 using Triangle.Core;
 using Triangle.Core.Graphics;

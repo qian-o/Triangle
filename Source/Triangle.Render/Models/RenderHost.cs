@@ -1,13 +1,14 @@
 ﻿using System.Runtime.InteropServices;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
-using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
 using Triangle.Core;
 using Triangle.Core.Contracts;
+using Triangle.Core.Controllers;
 using Triangle.Core.Helpers;
+using Triangle.Core.Structs;
 using Triangle.Render.Contracts.Applications;
 
 namespace Triangle.Render.Models;
@@ -71,10 +72,10 @@ public unsafe class RenderHost<TApplication> : Disposable where TApplication : I
         gl = _window.CreateOpenGL();
         inputContext = _window.CreateInput();
         trContext = new TrContext(gl);
-        imGuiController = new ImGuiController(gl,
+        imGuiController = new ImGuiController(trContext,
                                               _window,
                                               inputContext,
-                                              new ImGuiFontConfig("Resources/Fonts/MSYH.TTC", 14, (a) => a.Fonts.GetGlyphRangesChineseFull()));
+                                              new ImGuiFontConfig("Resources/Fonts/MSYH.TTC", 14, (a) => (nint)a.Fonts.GetGlyphRangesChineseFull()));
 
         TrTextureManager.InitializeImages(trContext, "Resources/Textures".PathFormatter());
 
