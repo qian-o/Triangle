@@ -5,7 +5,6 @@ using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Render.Contracts.Tutorials;
 using Triangle.Render.Materials.Chapter5;
-using Triangle.Render.Models;
 
 namespace Triangle.Render.Tutorials;
 
