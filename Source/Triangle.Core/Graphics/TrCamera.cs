@@ -65,7 +65,7 @@ public class TrCamera
 
     public void InverseView(Matrix4X4<float> matrix)
     {
-        matrix.InverseLookAt(out Vector3D<float> cameraPosition, out Vector3D<float> cameraTarget, out Vector3D<float> _);
+        matrix.DecomposeLookAt(out Vector3D<float> cameraPosition, out Vector3D<float> cameraTarget, out Vector3D<float> _);
 
         Position = cameraPosition;
 

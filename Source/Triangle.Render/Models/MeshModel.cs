@@ -93,6 +93,11 @@ public class MeshModel
         _transformController.SetTransform(Name, scale: scale);
     }
 
+    public void SetTransform(Matrix4X4<float> transform)
+    {
+        _transformController.SetTransform(Name, transform);
+    }
+
     /// <summary>
     /// 绘制所有网格。
     /// 用于 GlobalParameters 为引用类型，所以内部在使用的时候会进行Copy，不需要担心参数被修改。

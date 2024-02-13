@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGuizmo;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
@@ -26,6 +27,7 @@ public abstract class BaseTutorial : ITutorial
     private readonly MeshModel _grid;
     #endregion
 
+    private ImGuizmoOperation currentGizmoOperation = ImGuizmoOperation.Translate;
     private bool disposedValue;
 
     protected BaseTutorial(IInputContext input, TrContext context)
@@ -33,6 +35,8 @@ public abstract class BaseTutorial : ITutorial
         Input = input;
         Context = context;
         Scene = new TrScene(input, context, GetType().GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? GetType().Name);
+        Scene.DrawContentInWindow += Scene_DrawContentInWindow;
+
         TransformController = new();
         LightingController = new();
         PickupController = new(Context, Scene);
@@ -62,6 +66,20 @@ public abstract class BaseTutorial : ITutorial
     public LightingController LightingController { get; }
 
     public PickupController PickupController { get; }
+
+    private void Scene_DrawContentInWindow()
+    {
+        foreach (MeshModel model in PickupController.PickupModels)
+        {
+            float[] view = Scene.Camera.View.ToArray();
+            float[] projection = Scene.Camera.Projection.ToArray();
+            float[] transform = model.Transform.ToArray();
+
+            ImGuizmo.Manipulate(ref view[0], ref projection[0], currentGizmoOperation, ImGuizmoMode.World, ref transform[0]);
+
+            model.SetTransform(transform.ToMatrix());
+        }
+    }
 
     public void Update(double deltaSeconds)
     {
@@ -124,6 +142,28 @@ public abstract class BaseTutorial : ITutorial
             }
 
             LightingController.Controller();
+
+            if (PickupController.PickupModels.Count != 0)
+            {
+                if (ImGui.RadioButton("Translate", currentGizmoOperation == ImGuizmoOperation.Translate))
+                {
+                    currentGizmoOperation = ImGuizmoOperation.Translate;
+                }
+
+                ImGui.SameLine();
+
+                if (ImGui.RadioButton("Rotate", currentGizmoOperation == ImGuizmoOperation.Rotate))
+                {
+                    currentGizmoOperation = ImGuizmoOperation.Rotate;
+                }
+
+                ImGui.SameLine();
+
+                if (ImGui.RadioButton("Scale", currentGizmoOperation == ImGuizmoOperation.Scale))
+                {
+                    currentGizmoOperation = ImGuizmoOperation.Scale;
+                }
+            }
 
             foreach (MeshModel model in PickupController.PickupModels)
             {

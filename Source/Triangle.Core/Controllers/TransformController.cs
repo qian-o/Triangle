@@ -43,6 +43,15 @@ public class TransformController
         _cache[name] = (translation ?? t, rotation ?? r, scale ?? s);
     }
 
+    public void SetTransform(string name, Matrix4X4<float> matrix)
+    {
+        Matrix4X4.Decompose(matrix, out Vector3D<float> scale, out Quaternion<float> rotation, out Vector3D<float> translation);
+
+        rotation.ToEulerAngles(out float pitch, out float yaw, out float roll);
+
+        _cache[name] = (translation, new Vector3D<float>(pitch, yaw, roll), scale);
+    }
+
     public void Controller(string name)
     {
         ImGui.PushID(name);

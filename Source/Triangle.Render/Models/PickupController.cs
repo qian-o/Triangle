@@ -1,4 +1,5 @@
 ﻿using Hexa.NET.ImGui;
+using Hexa.NET.ImGuizmo;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
@@ -73,7 +74,7 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
         _frame.Update(_scene.Width, _scene.Height);
         _pickupFrame.Update(_scene.Width, _scene.Height, _scene.Samples);
 
-        if (_scene.IsFocused && _scene.IsLeftClicked)
+        if (_scene.IsFocused && _scene.IsLeftClicked && !ImGuizmo.IsUsing())
         {
             Vector2D<float> point = new(_scene.Mouse.X, _scene.Mouse.Y);
 
