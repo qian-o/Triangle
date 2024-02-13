@@ -8,6 +8,7 @@ using Triangle.Core;
 using Triangle.Core.Controllers;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
+using Triangle.Render.Controllers;
 using Triangle.Render.Materials;
 using Triangle.Render.Models;
 

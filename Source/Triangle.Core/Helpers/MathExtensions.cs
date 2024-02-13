@@ -31,7 +31,7 @@ public static class MathExtensions
         float test = rotation.X * rotation.W - rotation.Y * rotation.Z;
 
         if (test > 0.49975f * unit)
-        {   
+        {
             // singularity at north pole
             yaw = 2f * MathF.Atan2(rotation.Y, rotation.X);
             pitch = MathF.PI / 2f;
@@ -39,7 +39,7 @@ public static class MathExtensions
             return;
         }
         if (test < -0.49975f * unit)
-        {   
+        {
             // singularity at south pole
             yaw = -2f * MathF.Atan2(rotation.Y, rotation.X);
             pitch = -MathF.PI / 2f;

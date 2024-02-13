@@ -7,8 +7,9 @@ using Triangle.Core.Contracts;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Render.Materials;
+using Triangle.Render.Models;
 
-namespace Triangle.Render.Models;
+namespace Triangle.Render.Controllers;
 
 public class PickupController(TrContext context, TrScene scene) : Disposable
 {
@@ -74,7 +75,7 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
         _frame.Update(_scene.Width, _scene.Height);
         _pickupFrame.Update(_scene.Width, _scene.Height, _scene.Samples);
 
-        if (_scene.IsFocused && _scene.IsLeftClicked && !ImGuizmo.IsUsing())
+        if (_scene.IsFocused && _scene.IsLeftClicked && !ImGuizmo.IsOver())
         {
             Vector2D<float> point = new(_scene.Mouse.X, _scene.Mouse.Y);
 
@@ -104,7 +105,7 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
                             _selectedModels.Clear();
                         }
 
-                        if (!isMultiSelect || (isMultiSelect && !isSelected))
+                        if (!isMultiSelect || isMultiSelect && !isSelected)
                         {
                             _selectedModels.Add(model);
                         }
@@ -173,7 +174,7 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
                             _selectedModels.Clear();
                         }
 
-                        if (!isMultiSelect || (isMultiSelect && !isSelected))
+                        if (!isMultiSelect || isMultiSelect && !isSelected)
                         {
                             _selectedModels.Add(model);
                         }
