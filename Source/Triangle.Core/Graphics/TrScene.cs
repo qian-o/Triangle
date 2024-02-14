@@ -252,7 +252,7 @@ public class TrScene : TrGraphics<TrContext>
                                         new Vector2(128.0f, 128.0f),
                                         ImGui.GetColorU32(Vector4.Zero));
 
-                Camera.InverseView(view.ToMatrix());
+                Camera.UpdateView(view.ToMatrix());
             }
 
             DrawContentInWindow?.Invoke();

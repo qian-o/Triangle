@@ -63,7 +63,7 @@ public class TrCamera
 
     public Matrix4X4<float> Projection => Matrix4X4.CreatePerspectiveFieldOfView(fov, (float)Width / Height, Near, Far);
 
-    public void InverseView(Matrix4X4<float> matrix)
+    public void UpdateView(Matrix4X4<float> matrix)
     {
         matrix.DecomposeLookAt(out Vector3D<float> cameraPosition, out Vector3D<float> cameraTarget, out Vector3D<float> _);
 
