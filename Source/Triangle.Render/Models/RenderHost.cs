@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGuizmo;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -117,6 +118,8 @@ public unsafe class RenderHost<TApplication> : Disposable where TApplication : I
             {
                 ImGui.LoadIniSettingsFromDisk($"{_application.GetType().Name}.ini");
             }
+
+            ImGuizmo.AllowAxisFlip(false);
 
             firstFrame = false;
         }

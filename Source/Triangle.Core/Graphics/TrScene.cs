@@ -21,6 +21,8 @@ public class TrScene : TrGraphics<TrContext>
     private bool firstMove = true;
     private Vector2D<float> lastPos;
 
+    private ImGuiWindowFlags gizmoWindowFlags = ImGuiWindowFlags.NoMove;
+
     public TrScene(IInputContext input, TrContext context, string name) : base(context)
     {
         Name = name;
@@ -180,7 +182,7 @@ public class TrScene : TrGraphics<TrContext>
         }
 
         bool isOpen = true;
-        if (IsVisible = ImGui.Begin(HostName, ref isOpen, ImGuiWindowFlags.NoSavedSettings))
+        if (IsVisible = ImGui.Begin(HostName, ref isOpen, ImGuiWindowFlags.NoSavedSettings | gizmoWindowFlags))
         {
             // 鼠标在窗口中的位置。
             Vector2 pos = ImGui.GetMousePos() - ImGui.GetCursorScreenPos();
@@ -203,6 +205,13 @@ public class TrScene : TrGraphics<TrContext>
             DeltaTime = ImGui.GetIO().DeltaTime;
             FrameRate = ImGui.GetIO().Framerate;
             FrameCount = ImGui.GetFrameCount();
+
+            // 移动窗口。
+            {
+                ImGuiWindowPtr window = ImGui.GetCurrentWindow();
+
+                gizmoWindowFlags = IsHovered && ImGui.IsMouseHoveringRect(window.InnerRect.Min, window.InnerRect.Max) ? ImGuiWindowFlags.NoMove : ImGuiWindowFlags.None;
+            }
 
             // 窗口位置。
             {
@@ -233,7 +242,6 @@ public class TrScene : TrGraphics<TrContext>
             if (IsShowAxis)
             {
                 ImGuizmo.SetDrawlist();
-
                 ImGuizmo.SetRect(Left, Top, Width, Height);
 
                 float[] view = Camera.View.ToArray();
