@@ -181,86 +181,90 @@ public class TrScene : TrGraphics<TrContext>
             return;
         }
 
-        bool isOpen = true;
-        if (IsVisible = ImGui.Begin(HostName, ref isOpen, ImGuiWindowFlags.NoSavedSettings | gizmoWindowFlags))
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0, 0));
         {
-            // 鼠标在窗口中的位置。
-            Vector2 pos = ImGui.GetMousePos() - ImGui.GetCursorScreenPos();
-            bool isLeftDown = ImGui.IsMouseDown(ImGuiMouseButton.Left);
-            bool isRightDown = ImGui.IsMouseDown(ImGuiMouseButton.Right);
-
-            // 日期。
-            DateTime now = DateTime.Now;
-            TimeSpan timeSinceMidnight = now - now.Date;
-            float seconds = Convert.ToSingle(timeSinceMidnight.TotalMilliseconds / 1000.0);
-
-            IsHovered = ImGui.IsWindowHovered();
-            IsFocused = ImGui.IsWindowFocused();
-            IsLeftClicked = ImGui.IsMouseClicked(ImGuiMouseButton.Left);
-            IsRightClicked = ImGui.IsMouseClicked(ImGuiMouseButton.Right);
-            Mouse = IsFocused ? new Vector4D<float>(pos.X, pos.Y, Convert.ToSingle(isLeftDown), Convert.ToSingle(isRightDown)) : Vector4D<float>.Zero;
-
-            Date = new Vector4D<float>(now.Year, now.Month, now.Day, seconds);
-            Time = Convert.ToSingle(ImGui.GetTime());
-            DeltaTime = ImGui.GetIO().DeltaTime;
-            FrameRate = ImGui.GetIO().Framerate;
-            FrameCount = ImGui.GetFrameCount();
-
-            // 移动窗口。
+            bool isOpen = true;
+            if (IsVisible = ImGui.Begin(HostName, ref isOpen, ImGuiWindowFlags.NoSavedSettings | gizmoWindowFlags))
             {
-                ImGuiWindowPtr window = ImGui.GetCurrentWindow();
+                // 鼠标在窗口中的位置。
+                Vector2 pos = ImGui.GetMousePos() - ImGui.GetCursorScreenPos();
+                bool isLeftDown = ImGui.IsMouseDown(ImGuiMouseButton.Left);
+                bool isRightDown = ImGui.IsMouseDown(ImGuiMouseButton.Right);
 
-                gizmoWindowFlags = IsHovered && ImGui.IsMouseHoveringRect(window.InnerRect.Min, window.InnerRect.Max) ? ImGuiWindowFlags.NoMove : ImGuiWindowFlags.None;
-            }
+                // 日期。
+                DateTime now = DateTime.Now;
+                TimeSpan timeSinceMidnight = now - now.Date;
+                float seconds = Convert.ToSingle(timeSinceMidnight.TotalMilliseconds / 1000.0);
 
-            // 窗口位置。
-            {
-                Vector2 offset = ImGui.GetCursorScreenPos();
+                IsHovered = ImGui.IsWindowHovered();
+                IsFocused = ImGui.IsWindowFocused();
+                IsLeftClicked = ImGui.IsMouseClicked(ImGuiMouseButton.Left);
+                IsRightClicked = ImGui.IsMouseClicked(ImGuiMouseButton.Right);
+                Mouse = IsFocused ? new Vector4D<float>(pos.X, pos.Y, Convert.ToSingle(isLeftDown), Convert.ToSingle(isRightDown)) : Vector4D<float>.Zero;
 
-                Left = Convert.ToInt32(offset.X);
-                Top = Convert.ToInt32(offset.Y);
-            }
+                Date = new Vector4D<float>(now.Year, now.Month, now.Day, seconds);
+                Time = Convert.ToSingle(ImGui.GetTime());
+                DeltaTime = ImGui.GetIO().DeltaTime;
+                FrameRate = ImGui.GetIO().Framerate;
+                FrameCount = ImGui.GetFrameCount();
 
-            // 窗口大小。
-            {
-                Vector2 size = ImGui.GetContentRegionAvail();
-
-                int newWidth = Convert.ToInt32(size.X);
-                int newHeight = Convert.ToInt32(size.Y);
-
-                if (newWidth - Width != 0 || newHeight - Height != 0)
+                // 移动窗口。
                 {
-                    Width = newWidth;
-                    Height = newHeight;
+                    ImGuiWindowPtr window = ImGui.GetCurrentWindow();
 
-                    FramebufferResize?.Invoke(new Vector2D<int>(Width, Height));
+                    gizmoWindowFlags = IsHovered && ImGui.IsMouseHoveringRect(window.InnerRect.Min, window.InnerRect.Max) ? ImGuiWindowFlags.NoMove : ImGuiWindowFlags.None;
                 }
+
+                // 窗口位置。
+                {
+                    Vector2 offset = ImGui.GetCursorScreenPos();
+
+                    Left = Convert.ToInt32(offset.X);
+                    Top = Convert.ToInt32(offset.Y);
+                }
+
+                // 窗口大小。
+                {
+                    Vector2 size = ImGui.GetContentRegionAvail();
+
+                    int newWidth = Convert.ToInt32(size.X);
+                    int newHeight = Convert.ToInt32(size.Y);
+
+                    if (newWidth - Width != 0 || newHeight - Height != 0)
+                    {
+                        Width = newWidth;
+                        Height = newHeight;
+
+                        FramebufferResize?.Invoke(new Vector2D<int>(Width, Height));
+                    }
+                }
+
+                ImGuiHelper.Frame(_frame);
+
+                if (IsShowAxis)
+                {
+                    ImGuizmo.SetDrawlist();
+                    ImGuizmo.SetRect(Left, Top, Width, Height);
+
+                    float[] view = Camera.View.ToArray();
+
+                    ImGuizmo.ViewManipulate(ref view[0],
+                                            8.0f,
+                                            new Vector2(Left + Width - 128.0f, Top),
+                                            new Vector2(128.0f, 128.0f),
+                                            ImGui.GetColorU32(Vector4.Zero));
+
+                    Camera.UpdateView(view.ToMatrix());
+                }
+
+                DrawContentInWindow?.Invoke();
+
+                ImGui.End();
             }
 
-            ImGuiHelper.Frame(_frame);
-
-            if (IsShowAxis)
-            {
-                ImGuizmo.SetDrawlist();
-                ImGuizmo.SetRect(Left, Top, Width, Height);
-
-                float[] view = Camera.View.ToArray();
-
-                ImGuizmo.ViewManipulate(ref view[0],
-                                        8.0f,
-                                        new Vector2(Left + Width - 128.0f, Top),
-                                        new Vector2(128.0f, 128.0f),
-                                        ImGui.GetColorU32(Vector4.Zero));
-
-                Camera.UpdateView(view.ToMatrix());
-            }
-
-            DrawContentInWindow?.Invoke();
-
-            ImGui.End();
+            IsClosed = !isOpen;
         }
-
-        IsClosed = !isOpen;
+        ImGui.PopStyleVar();
     }
 
     public bool MousePressed(MouseButton button)

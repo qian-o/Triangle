@@ -98,9 +98,9 @@ public unsafe class ImGuiController : Disposable
         _context = ImGui.CreateContext();
 
         ImGui.SetCurrentContext(_context);
-        ImGuizmo.SetImGuiContext(_context);
-
         ImGui.StyleColorsDark();
+
+        ImGuizmo.SetImGuiContext(_context);
 
         ImGuiIOPtr iO = ImGui.GetIO();
 
@@ -128,6 +128,7 @@ public unsafe class ImGuiController : Disposable
     private void BeginFrame()
     {
         ImGui.NewFrame();
+        ImGuizmo.BeginFrame();
 
         _frameBegun = true;
         _keyboard = _input.Keyboards[0];
@@ -293,7 +294,7 @@ public unsafe class ImGuiController : Disposable
         iO.KeyMap[571] = 90;
     }
 
-    private unsafe void SetupRenderState(ImDrawDataPtr drawDataPtr, int framebufferWidth, int framebufferHeight)
+    private unsafe void SetupRenderState(ImDrawDataPtr drawDataPtr)
     {
         float x = drawDataPtr.DisplayPos.X;
         float num = drawDataPtr.DisplayPos.X + drawDataPtr.DisplaySize.X;
@@ -341,45 +342,57 @@ public unsafe class ImGuiController : Disposable
 
     private unsafe void RenderImDrawData(ImDrawDataPtr drawDataPtr)
     {
-        int num = (int)(drawDataPtr.DisplaySize.X * drawDataPtr.FramebufferScale.X);
-        int num2 = (int)(drawDataPtr.DisplaySize.Y * drawDataPtr.FramebufferScale.Y);
-        if (num <= 0 || num2 <= 0)
+        int framebufferWidth = (int)(drawDataPtr.DisplaySize.X * drawDataPtr.FramebufferScale.X);
+        int framebufferHeight = (int)(drawDataPtr.DisplaySize.Y * drawDataPtr.FramebufferScale.Y);
+        if (framebufferWidth <= 0 || framebufferHeight <= 0)
         {
             return;
         }
 
-        _gl.GetInteger(GLEnum.ActiveTexture, out var data);
+        _gl.GetInteger(GLEnum.ActiveTexture, out int lastActiveTexture);
         _gl.ActiveTexture(GLEnum.Texture0);
-        _gl.GetInteger(GLEnum.CurrentProgram, out var data2);
-        _gl.GetInteger(GLEnum.TextureBinding2D, out var data3);
-        _gl.GetInteger(GLEnum.SamplerBinding, out var data4);
-        _gl.GetInteger(GLEnum.ArrayBufferBinding, out var data5);
-        _gl.GetInteger(GLEnum.VertexArrayBinding, out var data6);
-        Span<int> data7 = stackalloc int[2];
-        _gl.GetInteger(GLEnum.PolygonMode, data7);
-        Span<int> data8 = stackalloc int[4];
-        _gl.GetInteger(GLEnum.ScissorBox, data8);
-        _gl.GetInteger(GLEnum.BlendSrcRgb, out var data9);
-        _gl.GetInteger(GLEnum.BlendDstRgb, out var data10);
-        _gl.GetInteger(GLEnum.BlendSrcAlpha, out var data11);
-        _gl.GetInteger(GLEnum.BlendDstAlpha, out var data12);
-        _gl.GetInteger(GLEnum.BlendEquation, out var data13);
-        _gl.GetInteger(GLEnum.BlendEquationAlpha, out var data14);
-        bool flag = _gl.IsEnabled(GLEnum.Blend);
-        bool flag2 = _gl.IsEnabled(GLEnum.CullFace);
-        bool flag3 = _gl.IsEnabled(GLEnum.DepthTest);
-        bool flag4 = _gl.IsEnabled(GLEnum.StencilTest);
-        bool flag5 = _gl.IsEnabled(GLEnum.ScissorTest);
-        bool flag6 = _gl.IsEnabled(GLEnum.PrimitiveRestart);
-        SetupRenderState(drawDataPtr, num, num2);
+
+        _gl.GetInteger(GLEnum.CurrentProgram, out int lastProgram);
+        _gl.GetInteger(GLEnum.TextureBinding2D, out int lastTexture);
+
+        _gl.GetInteger(GLEnum.SamplerBinding, out int lastSampler);
+
+        _gl.GetInteger(GLEnum.ArrayBufferBinding, out int lastArrayBuffer);
+        _gl.GetInteger(GLEnum.VertexArrayBinding, out int lastVertexArrayObject);
+
+        Span<int> lastPolygonMode = stackalloc int[2];
+        _gl.GetInteger(GLEnum.PolygonMode, lastPolygonMode);
+
+        Span<int> lastScissorBox = stackalloc int[4];
+        _gl.GetInteger(GLEnum.ScissorBox, lastScissorBox);
+
+        _gl.GetInteger(GLEnum.BlendSrcRgb, out int lastBlendSrcRgb);
+        _gl.GetInteger(GLEnum.BlendDstRgb, out int lastBlendDstRgb);
+
+        _gl.GetInteger(GLEnum.BlendSrcAlpha, out int lastBlendSrcAlpha);
+        _gl.GetInteger(GLEnum.BlendDstAlpha, out int lastBlendDstAlpha);
+
+        _gl.GetInteger(GLEnum.BlendEquationRgb, out int lastBlendEquationRgb);
+        _gl.GetInteger(GLEnum.BlendEquationAlpha, out int lastBlendEquationAlpha);
+
+        bool lastEnableBlend = _gl.IsEnabled(GLEnum.Blend);
+        bool lastEnableCullFace = _gl.IsEnabled(GLEnum.CullFace);
+        bool lastEnableDepthTest = _gl.IsEnabled(GLEnum.DepthTest);
+        bool lastEnableStencilTest = _gl.IsEnabled(GLEnum.StencilTest);
+        bool lastEnableScissorTest = _gl.IsEnabled(GLEnum.ScissorTest);
+        bool lastEnablePrimitiveRestart = _gl.IsEnabled(GLEnum.PrimitiveRestart);
+
+        SetupRenderState(drawDataPtr);
+
         Vector2 displayPos = drawDataPtr.DisplayPos;
         Vector2 framebufferScale = drawDataPtr.FramebufferScale;
         Vector4 vector = default;
         for (int i = 0; i < drawDataPtr.CmdListsCount; i++)
         {
             ImDrawListPtr imDrawListPtr = drawDataPtr.CmdLists.Data[i];
-            _gl.BufferData(GLEnum.ArrayBuffer, (nuint)(imDrawListPtr.VtxBuffer.Size * sizeof(ImDrawVert)), (void*)imDrawListPtr.VtxBuffer.Data, GLEnum.StreamDraw);
-            _gl.BufferData(GLEnum.ElementArrayBuffer, (nuint)(imDrawListPtr.IdxBuffer.Size * 2), (void*)imDrawListPtr.IdxBuffer.Data, GLEnum.StreamDraw);
+            _gl.BufferData(GLEnum.ArrayBuffer, (nuint)(imDrawListPtr.VtxBuffer.Size * sizeof(ImDrawVert)), imDrawListPtr.VtxBuffer.Data, GLEnum.StreamDraw);
+            _gl.BufferData(GLEnum.ElementArrayBuffer, (nuint)(imDrawListPtr.IdxBuffer.Size * 2), imDrawListPtr.IdxBuffer.Data, GLEnum.StreamDraw);
+
             for (int j = 0; j < imDrawListPtr.CmdBuffer.Size; j++)
             {
                 ImDrawCmd imDrawCmd = imDrawListPtr.CmdBuffer.Data[j];
@@ -394,9 +407,9 @@ public unsafe class ImGuiController : Disposable
                 vector.Z = (imDrawCmd.ClipRect.Z - displayPos.X) * framebufferScale.X;
                 vector.W = (imDrawCmd.ClipRect.W - displayPos.Y) * framebufferScale.Y;
 
-                if (vector.X < num && vector.Y < num2 && vector.Z >= 0f && vector.W >= 0f)
+                if (vector.X < framebufferWidth && vector.Y < framebufferHeight && vector.Z >= 0f && vector.W >= 0f)
                 {
-                    _gl.Scissor((int)vector.X, (int)(num2 - vector.W), (uint)(vector.Z - vector.X), (uint)(vector.W - vector.Y));
+                    _gl.Scissor((int)vector.X, (int)(framebufferHeight - vector.W), (uint)(vector.Z - vector.X), (uint)(vector.W - vector.Y));
                     _gl.BindTexture(GLEnum.Texture2D, (uint)(int)imDrawCmd.TextureId.Handle);
                     _gl.DrawElementsBaseVertex(GLEnum.Triangles, imDrawCmd.ElemCount, GLEnum.UnsignedShort, (void*)(imDrawCmd.IdxOffset * 2), (int)imDrawCmd.VtxOffset);
                 }
@@ -405,15 +418,19 @@ public unsafe class ImGuiController : Disposable
 
         _gl.DeleteVertexArray(_vertexArrayObject);
         _vertexArrayObject = 0u;
-        _gl.UseProgram((uint)data2);
-        _gl.BindTexture(GLEnum.Texture2D, (uint)data3);
-        _gl.BindSampler(0u, (uint)data4);
-        _gl.ActiveTexture((GLEnum)data);
-        _gl.BindVertexArray((uint)data6);
-        _gl.BindBuffer(GLEnum.ArrayBuffer, (uint)data5);
-        _gl.BlendEquationSeparate((GLEnum)data13, (GLEnum)data14);
-        _gl.BlendFuncSeparate((GLEnum)data9, (GLEnum)data10, (GLEnum)data11, (GLEnum)data12);
-        if (flag)
+
+        _gl.UseProgram((uint)lastProgram);
+        _gl.BindTexture(GLEnum.Texture2D, (uint)lastTexture);
+
+        _gl.BindSampler(0, (uint)lastSampler);
+        _gl.ActiveTexture((GLEnum)lastActiveTexture);
+        _gl.BindVertexArray((uint)lastVertexArrayObject);
+
+        _gl.BindBuffer(GLEnum.ArrayBuffer, (uint)lastArrayBuffer);
+        _gl.BlendEquationSeparate((GLEnum)lastBlendEquationRgb, (GLEnum)lastBlendEquationAlpha);
+        _gl.BlendFuncSeparate((GLEnum)lastBlendSrcRgb, (GLEnum)lastBlendDstRgb, (GLEnum)lastBlendSrcAlpha, (GLEnum)lastBlendDstAlpha);
+
+        if (lastEnableBlend)
         {
             _gl.Enable(GLEnum.Blend);
         }
@@ -422,7 +439,7 @@ public unsafe class ImGuiController : Disposable
             _gl.Disable(GLEnum.Blend);
         }
 
-        if (flag2)
+        if (lastEnableCullFace)
         {
             _gl.Enable(GLEnum.CullFace);
         }
@@ -431,7 +448,7 @@ public unsafe class ImGuiController : Disposable
             _gl.Disable(GLEnum.CullFace);
         }
 
-        if (flag3)
+        if (lastEnableDepthTest)
         {
             _gl.Enable(GLEnum.DepthTest);
         }
@@ -440,7 +457,7 @@ public unsafe class ImGuiController : Disposable
             _gl.Disable(GLEnum.DepthTest);
         }
 
-        if (flag4)
+        if (lastEnableStencilTest)
         {
             _gl.Enable(GLEnum.StencilTest);
         }
@@ -449,7 +466,7 @@ public unsafe class ImGuiController : Disposable
             _gl.Disable(GLEnum.StencilTest);
         }
 
-        if (flag5)
+        if (lastEnableScissorTest)
         {
             _gl.Enable(GLEnum.ScissorTest);
         }
@@ -458,7 +475,7 @@ public unsafe class ImGuiController : Disposable
             _gl.Disable(GLEnum.ScissorTest);
         }
 
-        if (flag6)
+        if (lastEnablePrimitiveRestart)
         {
             _gl.Enable(GLEnum.PrimitiveRestart);
         }
@@ -467,23 +484,33 @@ public unsafe class ImGuiController : Disposable
             _gl.Disable(GLEnum.PrimitiveRestart);
         }
 
-        _gl.PolygonMode(GLEnum.FrontAndBack, (GLEnum)data7[0]);
-        _gl.Scissor(data8[0], data8[1], (uint)data8[2], (uint)data8[3]);
+        _gl.PolygonMode(GLEnum.FrontAndBack, (GLEnum)lastPolygonMode[0]);
+        _gl.Scissor(lastScissorBox[0], lastScissorBox[1], (uint)lastScissorBox[2], (uint)lastScissorBox[3]);
     }
 
     private void CreateDeviceResources()
     {
-        _gl.GetInteger(GLEnum.TextureBinding2D, out int data);
-        _gl.GetInteger(GLEnum.ArrayBufferBinding, out int data2);
-        _gl.GetInteger(GLEnum.VertexArrayBinding, out int data3);
+        _gl.GetInteger(GLEnum.TextureBinding2D, out int lastTexture);
+        _gl.GetInteger(GLEnum.ArrayBufferBinding, out int lastArrayBuffer);
+        _gl.GetInteger(GLEnum.VertexArrayBinding, out int lastVertexArray);
 
         string vertexShader = "#version 330\n        layout (location = 0) in vec2 Position;\n        layout (location = 1) in vec2 UV;\n        layout (location = 2) in vec4 Color;\n        uniform mat4 ProjMtx;\n        out vec2 Frag_UV;\n        out vec4 Frag_Color;\n        void main()\n        {\n            Frag_UV = UV;\n            Frag_Color = Color;\n            gl_Position = ProjMtx * vec4(Position.xy,0,1);\n        }";
         string fragmentShader = "#version 330\n        in vec2 Frag_UV;\n        in vec4 Frag_Color;\n        uniform sampler2D Texture;\n        layout (location = 0) out vec4 Out_Color;\n        void main()\n        {\n            Out_Color = Frag_Color * texture(Texture, Frag_UV.st);\n        }";
 
         using TrShader vs = new(_trContext, TrShaderType.Vertex, vertexShader, false);
         using TrShader fs = new(_trContext, TrShaderType.Fragment, fragmentShader, false);
-        _pipeline = new(_trContext, [vs, fs]);
-        _pipeline.SetRenderLayer(TrRenderLayer.Overlay);
+        _pipeline = new(_trContext, [vs, fs])
+        {
+            IsBlend = true,
+            BlendEquation = TrBlendEquation.Add,
+            BlendFuncSeparate = new TrBlendFuncSeparate(TrBlendFactor.SrcAlpha, TrBlendFactor.OneMinusSrcAlpha, TrBlendFactor.One, TrBlendFactor.OneMinusSrcAlpha),
+            IsCullFace = false,
+            IsDepthTest = false,
+            IsStencilTest = false,
+            IsScissorTest = true,
+            IsPrimitiveRestart = false,
+            Polygon = new TrPolygon(TrTriangleFace.FrontAndBack, TrPolygonMode.Fill)
+        };
 
         _attribLocationTex = _pipeline.GetUniformLocation("Texture");
         _attribLocationProjMtx = _pipeline.GetUniformLocation("ProjMtx");
@@ -496,9 +523,10 @@ public unsafe class ImGuiController : Disposable
 
         RecreateFontDeviceTexture();
 
-        _gl.BindTexture(GLEnum.Texture2D, (uint)data);
-        _gl.BindBuffer(GLEnum.ArrayBuffer, (uint)data2);
-        _gl.BindVertexArray((uint)data3);
+        _gl.BindTexture(GLEnum.Texture2D, (uint)lastTexture);
+        _gl.BindBuffer(GLEnum.ArrayBuffer, (uint)lastArrayBuffer);
+
+        _gl.BindVertexArray((uint)lastVertexArray);
     }
 
     /// <summary>
@@ -513,7 +541,7 @@ public unsafe class ImGuiController : Disposable
         int height;
         iO.Fonts.GetTexDataAsRGBA32(&pixels, &width, &height);
 
-        _gl.GetInteger(GLEnum.TextureBinding2D, out int data);
+        _gl.GetInteger(GLEnum.TextureBinding2D, out int lastTexture);
 
         _fontTexture = new TrTexture(_trContext)
         {
@@ -525,7 +553,7 @@ public unsafe class ImGuiController : Disposable
         _fontTexture.UpdateParameters();
 
         iO.Fonts.SetTexID((nint)_fontTexture.Handle);
-        _gl.BindTexture(GLEnum.Texture2D, (uint)data);
+        _gl.BindTexture(GLEnum.Texture2D, (uint)lastTexture);
     }
 
     /// <summary>
@@ -535,11 +563,14 @@ public unsafe class ImGuiController : Disposable
     {
         _view.Resize -= WindowResized;
         _keyboard.KeyChar -= OnKeyChar;
+
         _gl.DeleteBuffer(_vboHandle);
         _gl.DeleteBuffer(_elementsHandle);
         _gl.DeleteVertexArray(_vertexArrayObject);
+
         _fontTexture.Dispose();
         _pipeline.Dispose();
+
         ImGui.DestroyContext(_context);
     }
 }

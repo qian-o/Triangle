@@ -107,10 +107,7 @@ public unsafe class RenderHost<TApplication> : Disposable where TApplication : I
 
         if (firstFrame)
         {
-            ImGui.StyleColorsLight();
-            ImGui.GetStyle().FrameRounding = 6.0f;
-            ImGui.GetStyle().FrameBorderSize = 1.0f;
-            ImGui.GetStyle().WindowMenuButtonPosition = ImGuiDir.None;
+            ImGuiHelper.SetThemeByProwl();
 
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 

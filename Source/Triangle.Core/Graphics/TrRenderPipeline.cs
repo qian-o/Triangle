@@ -68,6 +68,10 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 
     public TrBlendFuncSeparate BlendFuncSeparate { get; set; } = TrBlendFuncSeparate.Default;
 
+    public bool IsScissorTest { get; set; }
+
+    public bool IsPrimitiveRestart { get; set; }
+
     public TrPolygon Polygon { get; set; } = TrPolygon.Default;
 
     public bool IsMultisample { get; set; } = true;
@@ -115,6 +119,8 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 DestinationFactor = TrBlendFactor.Zero;
                 BlendEquation = TrBlendEquation.Add;
                 BlendFuncSeparate = TrBlendFuncSeparate.Default;
+                IsScissorTest = false;
+                IsPrimitiveRestart = false;
                 Polygon = TrPolygon.Default;
                 IsMultisample = true;
                 break;
@@ -136,6 +142,8 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
                 BlendEquation = TrBlendEquation.Add;
                 BlendFuncSeparate = TrBlendFuncSeparate.Default;
+                IsScissorTest = false;
+                IsPrimitiveRestart = false;
                 Polygon = TrPolygon.Default;
                 IsMultisample = true;
                 break;
@@ -157,6 +165,8 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 DestinationFactor = TrBlendFactor.Zero;
                 BlendEquation = TrBlendEquation.Add;
                 BlendFuncSeparate = TrBlendFuncSeparate.Default;
+                IsScissorTest = false;
+                IsPrimitiveRestart = false;
                 Polygon = TrPolygon.Default;
                 IsMultisample = true;
                 break;
@@ -178,6 +188,8 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
                 BlendEquation = TrBlendEquation.Add;
                 BlendFuncSeparate = TrBlendFuncSeparate.Default;
+                IsScissorTest = false;
+                IsPrimitiveRestart = false;
                 Polygon = TrPolygon.Default;
                 IsMultisample = true;
                 break;
@@ -199,6 +211,8 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
                 BlendEquation = TrBlendEquation.Add;
                 BlendFuncSeparate = TrBlendFuncSeparate.Default;
+                IsScissorTest = false;
+                IsPrimitiveRestart = false;
                 Polygon = TrPolygon.Default;
                 IsMultisample = true;
                 break;
@@ -385,6 +399,24 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
         gl.BlendEquation(BlendEquation.ToGL());
 
         gl.BlendFuncSeparate(BlendFuncSeparate.SrcRGB.ToGL(), BlendFuncSeparate.DstRGB.ToGL(), BlendFuncSeparate.SrcAlpha.ToGL(), BlendFuncSeparate.DstAlpha.ToGL());
+
+        if (IsScissorTest)
+        {
+            gl.Enable(GLEnum.ScissorTest);
+        }
+        else
+        {
+            gl.Disable(GLEnum.ScissorTest);
+        }
+
+        if (IsPrimitiveRestart)
+        {
+            gl.Enable(GLEnum.PrimitiveRestart);
+        }
+        else
+        {
+            gl.Disable(GLEnum.PrimitiveRestart);
+        }
 
         gl.PolygonMode(Polygon.Face.ToGL(), Polygon.Mode.ToGL());
 
