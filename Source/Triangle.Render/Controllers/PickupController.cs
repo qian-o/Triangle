@@ -19,6 +19,7 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
     private readonly List<(MeshModel Model, Vector4D<byte> Color)> _cache = [];
     private readonly List<MeshModel> _selectedModels = [];
 
+    private readonly TrContext _context = context;
     private readonly TrScene _scene = scene;
     private readonly TrFrame _frame = new(context);
     private readonly SolidColorMat _solidColorMat = new(context);
@@ -124,9 +125,10 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
 
     public void Render(GlobalParameters baseParameters)
     {
-        _frame.Clear();
         _frame.Bind();
         {
+            _context.Clear();
+
             foreach ((MeshModel model, Vector4D<byte> color) in _cache)
             {
                 _solidColorMat.Color = new(color.X / 255.0f, color.Y / 255.0f, color.Z / 255.0f, color.W / 255.0f);
@@ -136,9 +138,10 @@ public class PickupController(TrContext context, TrScene scene) : Disposable
         }
         _frame.Unbind();
 
-        _pickupFrame.Clear();
         _pickupFrame.Bind();
         {
+            _context.Clear();
+
             foreach (MeshModel model in _selectedModels)
             {
                 _solidColorMat.Color = new(PickupColor.X / 255.0f, PickupColor.Y / 255.0f, PickupColor.Z / 255.0f, PickupColor.W / 255.0f);

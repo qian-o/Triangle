@@ -98,15 +98,16 @@ public abstract class BaseTutorial : ITutorial
             return;
         }
 
-        Scene.Clear(new Vector4D<float>(0.2f, 0.2f, 0.2f, 1.0f));
         Scene.Begin();
+        {
+            Context.Clear(new Vector4D<float>(0.2f, 0.2f, 0.2f, 1.0f));
 
-        RenderScene(deltaSeconds);
+            RenderScene(deltaSeconds);
 
-        _grid.Render(GetSceneParameters());
+            _grid.Render(GetSceneParameters());
 
-        PickupController.PostEffects(GetSceneParameters());
-
+            PickupController.PostEffects(GetSceneParameters());
+        }
         Scene.End();
 
         PickupController.Render(GetSceneParameters());
