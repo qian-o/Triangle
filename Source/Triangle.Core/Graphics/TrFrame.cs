@@ -21,7 +21,8 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         Texture = new TrTexture(Context)
         {
             TextureMinFilter = TrTextureFilter.Nearest,
-            TextureMagFilter = TrTextureFilter.Nearest
+            TextureMagFilter = TrTextureFilter.Nearest,
+            TextureWrap = TrTextureWrap.ClampToEdge
         };
         Texture.UpdateParameters();
     }
