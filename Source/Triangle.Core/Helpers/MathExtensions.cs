@@ -11,6 +11,16 @@ public static class MathExtensions
         return result;
     }
 
+    public static Vector2D<float> RadianToDegree(this Vector2D<float> value)
+    {
+        return new(value.X * 180.0f / MathF.PI, value.Y * 180.0f / MathF.PI);
+    }
+
+    public static Vector2D<float> DegreeToRadian(this Vector2D<float> value)
+    {
+        return new(value.X * MathF.PI / 180.0f, value.Y * MathF.PI / 180.0f);
+    }
+
     public static Vector3D<float> RadianToDegree(this Vector3D<float> value)
     {
         return new(value.X * 180.0f / MathF.PI, value.Y * 180.0f / MathF.PI, value.Z * 180.0f / MathF.PI);
@@ -21,7 +31,7 @@ public static class MathExtensions
         return new(value.X * MathF.PI / 180.0f, value.Y * MathF.PI / 180.0f, value.Z * MathF.PI / 180.0f);
     }
 
-    public static void ToEulerAngles(this Quaternion<float> rotation, out float pitch, out float yaw, out float roll)
+    public static Vector3D<float> ToEulerAngles(this Quaternion<float> rotation)
     {
         float sqw = rotation.W * rotation.W;
         float sqx = rotation.X * rotation.X;
@@ -33,24 +43,30 @@ public static class MathExtensions
         if (test > 0.49975f * unit)
         {
             // singularity at north pole
-            yaw = 2f * MathF.Atan2(rotation.Y, rotation.X);
-            pitch = MathF.PI / 2f;
-            roll = 0;
-            return;
+            float yaw = 2f * MathF.Atan2(rotation.Y, rotation.X);
+            float pitch = MathF.PI / 2f;
+            float roll = 0;
+
+            return new Vector3D<float>(pitch, yaw, roll);
         }
         if (test < -0.49975f * unit)
         {
             // singularity at south pole
-            yaw = -2f * MathF.Atan2(rotation.Y, rotation.X);
-            pitch = -MathF.PI / 2f;
-            roll = 0;
-            return;
+            float yaw = -2f * MathF.Atan2(rotation.Y, rotation.X);
+            float pitch = -MathF.PI / 2f;
+            float roll = 0;
+
+            return new Vector3D<float>(pitch, yaw, roll);
         }
 
-        Quaternion<float> q1 = new(rotation.W, rotation.Z, rotation.X, rotation.Y);
+        {
+            Quaternion<float> q1 = new(rotation.W, rotation.Z, rotation.X, rotation.Y);
 
-        yaw = 1 * MathF.Atan2(2f * (q1.X * q1.W + q1.Y * q1.Z), 1f - 2f * (q1.Z * q1.Z + q1.W * q1.W));   // Yaw
-        pitch = 1 * MathF.Asin(2f * (q1.X * q1.Z - q1.W * q1.Y));                                         // Pitch
-        roll = 1 * MathF.Atan2(2f * (q1.X * q1.Y + q1.Z * q1.W), 1f - 2f * (q1.Y * q1.Y + q1.Z * q1.Z));  // Roll
+            float yaw = 1 * MathF.Atan2(2f * (q1.X * q1.W + q1.Y * q1.Z), 1f - 2f * (q1.Z * q1.Z + q1.W * q1.W));   // Yaw
+            float pitch = 1 * MathF.Asin(2f * (q1.X * q1.Z - q1.W * q1.Y));                                         // Pitch
+            float roll = 1 * MathF.Atan2(2f * (q1.X * q1.Y + q1.Z * q1.W), 1f - 2f * (q1.Y * q1.Y + q1.Z * q1.Z));  // Roll
+
+            return new Vector3D<float>(pitch, yaw, roll);
+        }
     }
 }

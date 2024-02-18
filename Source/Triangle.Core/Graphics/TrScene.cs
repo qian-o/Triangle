@@ -106,8 +106,7 @@ public class TrScene : TrGraphics<TrContext>
                     float deltaX = vector.X - lastPos.X;
                     float deltaY = vector.Y - lastPos.Y;
 
-                    Camera.Yaw += deltaX * CameraSensitivity;
-                    Camera.Pitch += -deltaY * CameraSensitivity;
+                    Camera.Rotation += new Vector2D<float>(-deltaY * CameraSensitivity, deltaX * CameraSensitivity);
 
                     lastPos = vector;
                 }
@@ -239,12 +238,12 @@ public class TrScene : TrGraphics<TrContext>
                     float[] view = Camera.View.ToArray();
 
                     ImGuizmo.ViewManipulate(ref view[0],
-                                            8.0f,
+                                            1.0f,
                                             new Vector2(Left + Width - 128.0f, Top),
                                             new Vector2(128.0f, 128.0f),
                                             ImGui.GetColorU32(Vector4.Zero));
 
-                    Camera.UpdateView(view.ToMatrix());
+                    Camera.DecomposeView(view.ToMatrix());
                 }
 
                 DrawContentInWindow?.Invoke();
