@@ -81,7 +81,7 @@ public class TrCamera
 
         Vector3D<float> front = cameraTarget - cameraPosition;
 
-        Rotation = new Vector2D<float>(MathF.Asin(front.Y), MathF.Atan2(front.Z, front.X)).RadianToDegree();
         Position = cameraPosition;
+        Rotation = new Vector2D<float>(MathF.Asin(front.Y), MathF.Atan2(front.Z, front.X)).RadianToDegree();
     }
 }

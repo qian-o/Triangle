@@ -238,7 +238,7 @@ public class TrScene : TrGraphics<TrContext>
                     float[] view = Camera.View.ToArray();
 
                     ImGuizmo.ViewManipulate(ref view[0],
-                                            1.0f,
+                                            Camera.Position.Length,
                                             new Vector2(Left + Width - 128.0f, Top),
                                             new Vector2(128.0f, 128.0f),
                                             ImGui.GetColorU32(Vector4.Zero));
