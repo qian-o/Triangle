@@ -65,14 +65,9 @@ public class TrCamera
 
     public void UpdateView(Matrix4X4<float> matrix)
     {
-        matrix.DecomposeLookAt(out Vector3D<float> cameraPosition, out Vector3D<float> cameraTarget, out Vector3D<float> _);
+        matrix.DecomposeLookAt(new Vector3D<float>(0.0f, 0.0f, -1.0f), out Vector3D<float> position, out pitch, out yaw);
 
-        Position = cameraPosition;
-
-        Vector3D<float> front = cameraTarget - cameraPosition;
-
-        pitch = MathF.Asin(front.Y);
-        yaw = MathF.Atan2(front.Z, front.X);
+        Position = position;
 
         UpdateVectors();
     }
