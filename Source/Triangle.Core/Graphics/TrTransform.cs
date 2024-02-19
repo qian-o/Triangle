@@ -30,8 +30,8 @@ public class TrTransform
 
     public Vector3D<float> EulerAngles
     {
-        get => rotation.ToRotation().RadianToDegree();
-        set => rotation = value.DegreeToRadian().ToQuaternion();
+        get => rotation.ToRotation().RadianToDegree().NormalizeEulerAngleDegrees();
+        set => rotation = value.NormalizeEulerAngleDegrees().DegreeToRadian().ToQuaternion();
     }
 
     public Vector3D<float> Right => Vector3D.Transform(TrContext.Right, rotation);

@@ -60,4 +60,28 @@ public static class MathExtensions
     {
         return Quaternion<float>.CreateFromYawPitchRoll(eulerAngles.Y, eulerAngles.X, eulerAngles.Z);
     }
+
+    public static Vector3D<float> NormalizeEulerAngleDegrees(this Vector3D<float> angle)
+    {
+        float normalizedX = angle.X % 360.0f;
+        float normalizedY = angle.Y % 360.0f;
+        float normalizedZ = angle.Z % 360.0f;
+
+        if (normalizedX < 0)
+        {
+            normalizedX += 360.0f;
+        }
+
+        if (normalizedY < 0)
+        {
+            normalizedY += 360.0f;
+        }
+
+        if (normalizedZ < 0)
+        {
+            normalizedZ += 360.0f;
+        }
+
+        return new(normalizedX, normalizedY, normalizedZ);
+    }
 }
