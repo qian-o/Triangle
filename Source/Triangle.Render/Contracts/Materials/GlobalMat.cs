@@ -213,9 +213,9 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
             _uboVectors.SetData(new UniVectors()
             {
                 Resolution = parameters.SceneData.Resolution,
-                CameraPosition = parameters.Camera.Position,
-                CameraUp = parameters.Camera.Up,
-                CameraRight = parameters.Camera.Right,
+                CameraPosition = parameters.Camera.Transform.Position,
+                CameraUp = parameters.Camera.Transform.Up,
+                CameraRight = parameters.Camera.Transform.Right,
                 Mouse = parameters.SceneData.Mouse,
                 Date = parameters.SceneData.Date
             });

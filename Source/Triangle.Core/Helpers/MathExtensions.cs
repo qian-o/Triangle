@@ -31,42 +31,33 @@ public static class MathExtensions
         return new(value.X * MathF.PI / 180.0f, value.Y * MathF.PI / 180.0f, value.Z * MathF.PI / 180.0f);
     }
 
-    public static Vector3D<float> ToEulerAngles(this Quaternion<float> rotation)
+    public static Vector3D<float> ToRotation(this Quaternion<float> rotation)
     {
-        float sqw = rotation.W * rotation.W;
-        float sqx = rotation.X * rotation.X;
-        float sqy = rotation.Y * rotation.Y;
-        float sqz = rotation.Z * rotation.Z;
-        float unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
-        float test = rotation.X * rotation.W - rotation.Y * rotation.Z;
+        float yaw = MathF.Atan2(2.0f * (rotation.Y * rotation.W + rotation.X * rotation.Z), 1.0f - 2.0f * (rotation.X * rotation.X + rotation.Y * rotation.Y));
+        float pitch = MathF.Asin(2.0f * (rotation.X * rotation.W - rotation.Y * rotation.Z));
+        float roll = MathF.Atan2(2.0f * (rotation.X * rotation.Y + rotation.Z * rotation.W), 1.0f - 2.0f * (rotation.X * rotation.X + rotation.Z * rotation.Z));
 
-        if (test > 0.49975f * unit)
+        // If any nan or inf, set that value to 0
+        if (float.IsNaN(yaw) || float.IsInfinity(yaw))
         {
-            // singularity at north pole
-            float yaw = 2f * MathF.Atan2(rotation.Y, rotation.X);
-            float pitch = MathF.PI / 2f;
-            float roll = 0;
-
-            return new Vector3D<float>(pitch, yaw, roll);
-        }
-        if (test < -0.49975f * unit)
-        {
-            // singularity at south pole
-            float yaw = -2f * MathF.Atan2(rotation.Y, rotation.X);
-            float pitch = -MathF.PI / 2f;
-            float roll = 0;
-
-            return new Vector3D<float>(pitch, yaw, roll);
+            yaw = 0;
         }
 
+        if (float.IsNaN(pitch) || float.IsInfinity(pitch))
         {
-            Quaternion<float> q1 = new(rotation.W, rotation.Z, rotation.X, rotation.Y);
-
-            float yaw = 1 * MathF.Atan2(2f * (q1.X * q1.W + q1.Y * q1.Z), 1f - 2f * (q1.Z * q1.Z + q1.W * q1.W));   // Yaw
-            float pitch = 1 * MathF.Asin(2f * (q1.X * q1.Z - q1.W * q1.Y));                                         // Pitch
-            float roll = 1 * MathF.Atan2(2f * (q1.X * q1.Y + q1.Z * q1.W), 1f - 2f * (q1.Y * q1.Y + q1.Z * q1.Z));  // Roll
-
-            return new Vector3D<float>(pitch, yaw, roll);
+            pitch = 0;
         }
+
+        if (float.IsNaN(roll) || float.IsInfinity(roll))
+        {
+            roll = 0;
+        }
+
+        return new Vector3D<float>(pitch, yaw, roll);
+    }
+
+    public static Quaternion<float> ToQuaternion(this Vector3D<float> eulerAngles)
+    {
+        return Quaternion<float>.CreateFromYawPitchRoll(eulerAngles.Y, eulerAngles.X, eulerAngles.Z);
     }
 }

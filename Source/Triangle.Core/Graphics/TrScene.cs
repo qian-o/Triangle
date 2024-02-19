@@ -28,9 +28,9 @@ public class TrScene : TrGraphics<TrContext>
         Name = name;
         Camera = new TrCamera
         {
-            Position = new Vector3D<float>(0.0f, 2.0f, 8.0f),
             Fov = 45.0f
         };
+        Camera.Transform.Translate(new Vector3D<float>(0.0f, 2.0f, 8.0f));
 
         _mouse = input.Mice[0];
         _keyboard = input.Keyboards[0];
@@ -106,7 +106,7 @@ public class TrScene : TrGraphics<TrContext>
                     float deltaX = vector.X - lastPos.X;
                     float deltaY = vector.Y - lastPos.Y;
 
-                    Camera.Rotation += new Vector2D<float>(-deltaY * CameraSensitivity, deltaX * CameraSensitivity);
+                    Camera.Transform.EulerAngles += new Vector3D<float>(-deltaY * CameraSensitivity, -deltaX * CameraSensitivity, 0.0f);
 
                     lastPos = vector;
                 }
@@ -118,32 +118,32 @@ public class TrScene : TrGraphics<TrContext>
 
             if (KeyPressed(Key.W))
             {
-                Camera.Position += Camera.Front * CameraSpeed * (float)deltaSeconds;
+                Camera.Transform.Translate(CameraSpeed * (float)deltaSeconds * TrContext.Forward);
             }
 
             if (KeyPressed(Key.A))
             {
-                Camera.Position -= Camera.Right * CameraSpeed * (float)deltaSeconds;
+                Camera.Transform.Translate(CameraSpeed * (float)deltaSeconds * TrContext.Left);
             }
 
             if (KeyPressed(Key.S))
             {
-                Camera.Position -= Camera.Front * CameraSpeed * (float)deltaSeconds;
+                Camera.Transform.Translate(CameraSpeed * (float)deltaSeconds * TrContext.Backward);
             }
 
             if (KeyPressed(Key.D))
             {
-                Camera.Position += Camera.Right * CameraSpeed * (float)deltaSeconds;
+                Camera.Transform.Translate(CameraSpeed * (float)deltaSeconds * TrContext.Right);
             }
 
             if (KeyPressed(Key.Q))
             {
-                Camera.Position -= Camera.Up * CameraSpeed * (float)deltaSeconds;
+                Camera.Transform.Translate(CameraSpeed * (float)deltaSeconds * TrContext.Down);
             }
 
             if (KeyPressed(Key.E))
             {
-                Camera.Position += Camera.Up * CameraSpeed * (float)deltaSeconds;
+                Camera.Transform.Translate(CameraSpeed * (float)deltaSeconds * TrContext.Up);
             }
         }
 

@@ -47,7 +47,7 @@ public class TransformController
     {
         Matrix4X4.Decompose(matrix, out Vector3D<float> scale, out Quaternion<float> rotation, out Vector3D<float> translation);
 
-        _cache[name] = (translation, rotation.ToEulerAngles(), scale);
+        _cache[name] = (translation, rotation.ToRotation(), scale);
     }
 
     public void Controller(string name)
