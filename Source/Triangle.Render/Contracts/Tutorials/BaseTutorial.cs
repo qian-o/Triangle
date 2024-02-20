@@ -74,9 +74,9 @@ public abstract class BaseTutorial : ITutorial
         {
             float[] view = Scene.Camera.View.ToArray();
             float[] projection = Scene.Camera.Projection.ToArray();
-            float[] transform = model.Transform.ToArray();
+            float[] transform = model.Transform.Model.ToArray();
 
-            ImGuizmo.Manipulate(ref view[0], ref projection[0], currentGizmoOperation, ImGuizmoMode.World, ref transform[0]);
+            ImGuizmo.Manipulate(ref view[0], ref projection[0], currentGizmoOperation, ImGuizmoMode.Local, ref transform[0]);
 
             model.SetTransform(transform.ToMatrix());
         }

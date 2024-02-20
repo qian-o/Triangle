@@ -1,29 +1,29 @@
 ﻿using System.Numerics;
 using Hexa.NET.ImGui;
 using Silk.NET.Maths;
-using Triangle.Core.Helpers;
+using Triangle.Core.Graphics;
 
 namespace Triangle.Core.Controllers;
 
 public class TransformController
 {
-    private readonly Dictionary<string, (Vector3D<float> Translation, Vector3D<float> Rotation, Vector3D<float> Scale)> _cache;
+    private readonly Dictionary<string, TrGameObject> _cache;
 
     public TransformController()
     {
         _cache = [];
     }
 
-    public Matrix4X4<float> this[string name] => GetModelMatrix(name);
+    public TrTransform this[string name] => _cache[name].Transform;
 
-    public void Add(string name)
+    public void Add(TrGameObject gameObject)
     {
-        _cache.Add(name, (new(0.0f, 0.0f, 0.0f), new(0.0f, 0.0f, 0.0f), new(1.0f, 1.0f, 1.0f)));
+        _cache.Add(gameObject.Name, gameObject);
     }
 
-    public void Remove(string name)
+    public void Remove(TrGameObject gameObject)
     {
-        _cache.Remove(name);
+        _cache.Remove(gameObject.Name);
     }
 
     public void Clear()
@@ -38,16 +38,33 @@ public class TransformController
             return;
         }
 
-        (Vector3D<float> t, Vector3D<float> r, Vector3D<float> s) = _cache[name];
+        TrTransform transform = this[name];
 
-        _cache[name] = (translation ?? t, rotation ?? r, scale ?? s);
+        if (translation != null)
+        {
+            transform.Position = translation.Value;
+        }
+
+        if (rotation != null)
+        {
+            transform.EulerAngles = rotation.Value;
+        }
+
+        if (scale != null)
+        {
+            transform.Scale = scale.Value;
+        }
     }
 
     public void SetTransform(string name, Matrix4X4<float> matrix)
     {
         Matrix4X4.Decompose(matrix, out Vector3D<float> scale, out Quaternion<float> rotation, out Vector3D<float> translation);
 
-        _cache[name] = (translation, rotation.ToRotation(), scale);
+        TrTransform transform = this[name];
+
+        transform.Position = translation;
+        transform.Rotation = rotation;
+        transform.Scale = scale;
     }
 
     public void Controller(string name)
@@ -57,28 +74,21 @@ public class TransformController
             ImGui.SetNextItemOpen(true, ImGuiCond.Once);
             if (ImGui.TreeNode("Transform"))
             {
-                (Vector3D<float> translation, Vector3D<float> rotation, Vector3D<float> scale) = _cache[name];
+                TrTransform transform = this[name];
 
-                Vector3 t = translation.ToSystem();
-                Vector3 r = rotation.RadianToDegree().ToSystem();
-                Vector3 s = scale.ToSystem();
+                Vector3 t = transform.Position.ToSystem();
+                Vector3 r = transform.EulerAngles.ToSystem();
+                Vector3 s = transform.Scale.ToSystem();
 
                 ImGui.DragFloat3("Translation", ref t, 0.01f);
-                ImGui.DragFloat3("Rotation", ref r, 0.1f);
+                ImGui.DragFloat3("Rotation", ref r, 0.01f);
                 ImGui.DragFloat3("Scale", ref s, 0.01f);
 
-                _cache[name] = (t.ToGeneric(), r.ToGeneric().DegreeToRadian(), s.ToGeneric());
+                SetTransform(name, t.ToGeneric(), r.ToGeneric(), s.ToGeneric());
 
                 ImGui.TreePop();
             }
         }
         ImGui.PopID();
-    }
-
-    private Matrix4X4<float> GetModelMatrix(string name)
-    {
-        (Vector3D<float> translation, Vector3D<float> rotation, Vector3D<float> scale) = _cache[name];
-
-        return Matrix4X4.CreateScale(scale) * Matrix4X4.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix4X4.CreateTranslation(translation);
     }
 }

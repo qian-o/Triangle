@@ -26,7 +26,7 @@ public class TrScene : TrGraphics<TrContext>
     public TrScene(IInputContext input, TrContext context, string name) : base(context)
     {
         Name = name;
-        Camera = new TrCamera
+        Camera = new TrCamera("Main Camera")
         {
             Fov = 45.0f
         };

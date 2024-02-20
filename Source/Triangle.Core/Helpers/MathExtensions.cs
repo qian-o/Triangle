@@ -11,16 +11,6 @@ public static class MathExtensions
         return result;
     }
 
-    public static Vector2D<float> RadianToDegree(this Vector2D<float> value)
-    {
-        return new(value.X * 180.0f / MathF.PI, value.Y * 180.0f / MathF.PI);
-    }
-
-    public static Vector2D<float> DegreeToRadian(this Vector2D<float> value)
-    {
-        return new(value.X * MathF.PI / 180.0f, value.Y * MathF.PI / 180.0f);
-    }
-
     public static Vector3D<float> RadianToDegree(this Vector3D<float> value)
     {
         return new(value.X * 180.0f / MathF.PI, value.Y * 180.0f / MathF.PI, value.Z * 180.0f / MathF.PI);

@@ -3,15 +3,13 @@ using Triangle.Core.Helpers;
 
 namespace Triangle.Core.Graphics;
 
-public class TrCamera
+public class TrCamera(string name) : TrGameObject(name)
 {
     private float fov = MathHelper.DegreesToRadians(45.0f);
 
     public int Width { get; set; }
 
     public int Height { get; set; }
-
-    public TrTransform Transform { get; } = new TrTransform();
 
     public float Fov
     {

@@ -8,23 +8,21 @@ using Triangle.Render.Models;
 
 namespace Triangle.Core.Graphics;
 
-public class MeshModel
+public class MeshModel : TrGameObject
 {
     private readonly TransformController _transformController;
     private readonly TrMesh[] _meshes;
     private readonly GlobalMat[] _materials;
     private readonly Dictionary<TrMesh, GlobalMat> _indexer;
 
-    private MeshModel(TransformController transformController, string name)
+    private MeshModel(TransformController transformController, string name) : base(name)
     {
         _transformController = transformController;
         _meshes = [];
         _materials = [];
         _indexer = [];
 
-        Name = name;
-
-        _transformController.Add(Name);
+        _transformController.Add(this);
     }
 
     public MeshModel(TransformController transformController, string name, TrMesh[] meshes, GlobalMat materials) : this(transformController, name)
@@ -67,11 +65,7 @@ public class MeshModel
         _indexer = indexer;
     }
 
-    public string Name { get; }
-
     public ReadOnlyCollection<TrMesh> Meshes => new(_meshes);
-
-    public Matrix4X4<float> Transform => _transformController[Name];
 
     public void SetTranslation(Vector3D<float> translation)
     {
@@ -106,7 +100,7 @@ public class MeshModel
     public void Render(GlobalParameters baseParameters)
     {
         GlobalParameters temp = baseParameters.Copy();
-        temp.Model = Transform;
+        temp.Model = Transform.Model;
 
         foreach (TrMesh mesh in Meshes)
         {
@@ -123,7 +117,7 @@ public class MeshModel
     public void Render(GlobalMat material, GlobalParameters baseParameters)
     {
         GlobalParameters temp = baseParameters.Copy();
-        temp.Model = Transform;
+        temp.Model = Transform.Model;
 
         foreach (TrMesh mesh in Meshes)
         {
