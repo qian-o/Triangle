@@ -26,68 +26,44 @@ public static class MathExtensions
         Vector3D<float> angles = new();
 
         // roll / x
-        double sinr_cosp = 2 * (rotation.W * rotation.X + rotation.Y * rotation.Z);
-        double cosr_cosp = 1 - 2 * (rotation.X * rotation.X + rotation.Y * rotation.Y);
-        angles.X = (float)Math.Atan2(sinr_cosp, cosr_cosp);
+        float sinr_cosp = 2.0f * (rotation.W * rotation.X + rotation.Y * rotation.Z);
+        float cosr_cosp = 1.0f - 2.0f * (rotation.X * rotation.X + rotation.Y * rotation.Y);
+        angles.X = MathF.Atan2(sinr_cosp, cosr_cosp);
 
         // pitch / y
-        double sinp = 2 * (rotation.W * rotation.Y - rotation.Z * rotation.X);
-        if (Math.Abs(sinp) >= 1)
+        float sinp = 2.0f * (rotation.W * rotation.Y - rotation.Z * rotation.X);
+        if (MathF.Abs(sinp) >= 1.0f)
         {
-            angles.Y = (float)Math.CopySign(Math.PI / 2, sinp);
+            angles.Y = MathF.CopySign(MathF.PI / 2.0f, sinp);
         }
         else
         {
-            angles.Y = (float)Math.Asin(sinp);
+            angles.Y = MathF.Asin(sinp);
         }
 
         // yaw / z
-        double siny_cosp = 2 * (rotation.W * rotation.Z + rotation.X * rotation.Y);
-        double cosy_cosp = 1 - 2 * (rotation.Y * rotation.Y + rotation.Z * rotation.Z);
-        angles.Z = (float)Math.Atan2(siny_cosp, cosy_cosp);
+        float siny_cosp = 2.0f * (rotation.W * rotation.Z + rotation.X * rotation.Y);
+        float cosy_cosp = 1.0f - 2.0f * (rotation.Y * rotation.Y + rotation.Z * rotation.Z);
+        angles.Z = MathF.Atan2(siny_cosp, cosy_cosp);
 
         return angles;
     }
 
     public static Quaternion<float> ToQuaternion(this Vector3D<float> eulerAngles)
     {
-        float cy = (float)Math.Cos(eulerAngles.Z * 0.5);
-        float sy = (float)Math.Sin(eulerAngles.Z * 0.5);
-        float cp = (float)Math.Cos(eulerAngles.Y * 0.5);
-        float sp = (float)Math.Sin(eulerAngles.Y * 0.5);
-        float cr = (float)Math.Cos(eulerAngles.X * 0.5);
-        float sr = (float)Math.Sin(eulerAngles.X * 0.5);
+        float cy = MathF.Cos(eulerAngles.Z * 0.5f);
+        float sy = MathF.Sin(eulerAngles.Z * 0.5f);
+        float cp = MathF.Cos(eulerAngles.Y * 0.5f);
+        float sp = MathF.Sin(eulerAngles.Y * 0.5f);
+        float cr = MathF.Cos(eulerAngles.X * 0.5f);
+        float sr = MathF.Sin(eulerAngles.X * 0.5f);
 
         return new Quaternion<float>
         {
-            W = (cr * cp * cy + sr * sp * sy),
-            X = (sr * cp * cy - cr * sp * sy),
-            Y = (cr * sp * cy + sr * cp * sy),
-            Z = (cr * cp * sy - sr * sp * cy)
+            W = (cr * cp * cy) + (sr * sp * sy),
+            X = (sr * cp * cy) - (cr * sp * sy),
+            Y = (cr * sp * cy) + (sr * cp * sy),
+            Z = (cr * cp * sy) - (sr * sp * cy)
         };
-    }
-
-    public static Vector3D<float> NormalizeEulerAngleDegrees(this Vector3D<float> angle)
-    {
-        float normalizedX = angle.X % 360.0f;
-        float normalizedY = angle.Y % 360.0f;
-        float normalizedZ = angle.Z % 360.0f;
-
-        if (normalizedX < 0)
-        {
-            normalizedX += 360.0f;
-        }
-
-        if (normalizedY < 0)
-        {
-            normalizedY += 360.0f;
-        }
-
-        if (normalizedZ < 0)
-        {
-            normalizedZ += 360.0f;
-        }
-
-        return new(normalizedX, normalizedY, normalizedZ);
     }
 }
