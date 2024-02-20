@@ -106,7 +106,7 @@ public class TrScene : TrGraphics<TrContext>
                     float deltaX = vector.X - lastPos.X;
                     float deltaY = vector.Y - lastPos.Y;
 
-                    Camera.Transform.EulerAngles += new Vector3D<float>(-deltaY * CameraSensitivity, -deltaX * CameraSensitivity, 0.0f);
+                    Camera.Transform.LocalEulerAngles += new Vector3D<float>(-deltaY * CameraSensitivity, -deltaX * CameraSensitivity, 0.0f);
 
                     lastPos = vector;
                 }

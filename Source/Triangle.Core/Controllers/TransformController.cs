@@ -47,7 +47,7 @@ public class TransformController
 
         if (rotation != null)
         {
-            transform.EulerAngles = rotation.Value;
+            transform.LocalEulerAngles = rotation.Value;
         }
 
         if (scale != null)
@@ -63,7 +63,7 @@ public class TransformController
         TrTransform transform = this[name];
 
         transform.Position = translation;
-        transform.Rotation = rotation;
+        transform.LocalRotation = rotation;
         transform.Scale = scale;
     }
 
@@ -77,7 +77,7 @@ public class TransformController
                 TrTransform transform = this[name];
 
                 Vector3 t = transform.Position.ToSystem();
-                Vector3 r = transform.EulerAngles.ToSystem();
+                Vector3 r = transform.LocalEulerAngles.ToSystem();
                 Vector3 s = transform.Scale.ToSystem();
 
                 ImGui.DragFloat3("Translation", ref t, 0.01f);

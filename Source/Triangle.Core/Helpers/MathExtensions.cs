@@ -48,7 +48,11 @@ public static class MathExtensions
 
     public static Quaternion<float> ToQuaternion(this Vector3D<float> eulerAngles)
     {
-        return Quaternion<float>.CreateFromYawPitchRoll(eulerAngles.Y, eulerAngles.X, eulerAngles.Z);
+        Quaternion<float> x = Quaternion<float>.CreateFromAxisAngle(Vector3D<float>.UnitX, eulerAngles.X);
+        Quaternion<float> y = Quaternion<float>.CreateFromAxisAngle(Vector3D<float>.UnitY, eulerAngles.Y);
+        Quaternion<float> z = Quaternion<float>.CreateFromAxisAngle(Vector3D<float>.UnitZ, eulerAngles.Z);
+
+        return x * y * z;
     }
 
     public static Vector3D<float> NormalizeEulerAngleDegrees(this Vector3D<float> angle)

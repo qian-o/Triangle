@@ -33,6 +33,6 @@ public class TrCamera(string name) : TrGameObject(name)
         Matrix4X4.Decompose(view.Invert(), out Vector3D<float> _, out Quaternion<float> rotation, out Vector3D<float> position);
 
         Transform.Position = position;
-        Transform.Rotation = rotation;
+        Transform.LocalRotation = rotation;
     }
 }
