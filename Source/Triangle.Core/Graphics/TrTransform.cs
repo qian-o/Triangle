@@ -9,7 +9,9 @@ public class TrTransform
     private Vector3D<float> position = Vector3D<float>.Zero;
     private Vector3D<float> scale = Vector3D<float>.One;
     private Quaternion<float> rotation = Quaternion<float>.Identity;
+    private Vector3D<float> eulerAngles = Vector3D<float>.Zero;
     private Quaternion<float> localRotation = Quaternion<float>.Identity;
+    private Vector3D<float> localEulerAngles = Vector3D<float>.Zero;
 
     public Vector3D<float> Position
     {
@@ -31,8 +33,8 @@ public class TrTransform
 
     public Vector3D<float> EulerAngles
     {
-        get => rotation.ToRotation().RadianToDegree().NormalizeEulerAngleDegrees();
-        set => rotation = value.NormalizeEulerAngleDegrees().DegreeToRadian().ToQuaternion();
+        get => eulerAngles;
+        set { eulerAngles = value; rotation = value.DegreeToRadian().ToQuaternion(); }
     }
 
     public Quaternion<float> LocalRotation
@@ -43,8 +45,8 @@ public class TrTransform
 
     public Vector3D<float> LocalEulerAngles
     {
-        get => localRotation.ToRotation().RadianToDegree().NormalizeEulerAngleDegrees();
-        set => localRotation = value.NormalizeEulerAngleDegrees().DegreeToRadian().ToQuaternion();
+        get => localEulerAngles;
+        set { localEulerAngles = value; localRotation = value.DegreeToRadian().ToQuaternion(); }
     }
 
     public Vector3D<float> Right => Vector3D.Transform(TrContext.Right, localRotation);
