@@ -78,7 +78,10 @@ public abstract class BaseTutorial : ITutorial
 
             ImGuizmo.Manipulate(ref view[0], ref projection[0], currentGizmoOperation, ImGuizmoMode.Local, ref transform[0]);
 
-            model.SetTransform(transform.ToMatrix());
+            if (ImGuizmo.IsUsing())
+            {
+                model.SetTransform(transform.ToMatrix());
+            }
         }
     }
 
