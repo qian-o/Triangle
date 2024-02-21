@@ -46,9 +46,9 @@ public class Tutorial02(IInputContext input, TrContext context) : BaseTutorial(i
         goldStar3 = new("Gold Star 3", goldStarMeshes, halfLambertMat);
         goldStar3.Transform.Translate(new Vector3D<float>(2.0f, 0.0f, 0.0f));
 
-        PickupController.Add(goldStar1);
-        PickupController.Add(goldStar2);
-        PickupController.Add(goldStar3);
+        SceneController.Add(goldStar1);
+        SceneController.Add(goldStar2);
+        SceneController.Add(goldStar3);
     }
 
     protected override void UpdateScene(double deltaSeconds)

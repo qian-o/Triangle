@@ -11,6 +11,16 @@ public static class MathExtensions
         return result;
     }
 
+    public static Vector4D<byte> ToByte(this Vector4D<float> value)
+    {
+        return new Vector4D<byte>((byte)(value.X * 255), (byte)(value.Y * 255), (byte)(value.Z * 255), (byte)(value.W * 255));
+    }
+
+    public static Vector4D<float> ToSingle(this Vector4D<byte> value)
+    {
+        return new Vector4D<float>(value.X / 255.0f, value.Y / 255.0f, value.Z / 255.0f, value.W / 255.0f);
+    }
+
     public static Vector3D<float> RadianToDegree(this Vector3D<float> value)
     {
         return value * 180.0f / MathF.PI;

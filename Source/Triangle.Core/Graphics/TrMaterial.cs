@@ -3,16 +3,11 @@ using Triangle.Core.Contracts.Graphics;
 
 namespace Triangle.Core.Graphics;
 
-public abstract class TrMaterial : TrGraphics<TrContext>
+public abstract class TrMaterial(TrContext context, string name) : TrGraphics<TrContext>(context)
 {
     private TrRenderPass? renderPass;
 
-    protected TrMaterial(TrContext context, string name) : base(context)
-    {
-        Name = name;
-    }
-
-    public string Name { get; }
+    public string Name => name;
 
     public TrRenderPass RenderPass => renderPass ??= CreateRenderPass();
 

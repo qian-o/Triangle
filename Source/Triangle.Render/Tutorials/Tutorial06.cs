@@ -36,7 +36,7 @@ public class Tutorial06(IInputContext input, TrContext context) : BaseTutorial(i
         knot.Transform.Rotate(new Vector3D<float>(90.0f, 180.0f, 0));
         knot.Transform.Scaled(new Vector3D<float>(0.05f, 0.05f, 0.05f));
 
-        PickupController.Add(knot);
+        SceneController.Add(knot);
     }
 
     protected override void UpdateScene(double deltaSeconds)

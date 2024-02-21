@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGuizmo;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
@@ -28,7 +27,6 @@ public abstract class BaseTutorial : ITutorial
     private readonly MeshModel _grid;
     #endregion
 
-    private ImGuizmoOperation currentGizmoOperation = ImGuizmoOperation.Translate;
     private bool disposedValue;
 
     protected BaseTutorial(IInputContext input, TrContext context)
@@ -36,11 +34,10 @@ public abstract class BaseTutorial : ITutorial
         Input = input;
         Context = context;
         Scene = new TrScene(input, context, GetType().GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? GetType().Name);
-        Scene.DrawContentInWindow += Scene_DrawContentInWindow;
 
-        TransformController = new();
+        SceneController = new(Scene);
         LightingController = new();
-        PickupController = new(Context, Scene);
+        PickupController = new(Context, Scene, SceneController);
 
         _gridMeshes = [Context.CreateGrid()];
 
@@ -62,28 +59,11 @@ public abstract class BaseTutorial : ITutorial
 
     public TrScene Scene { get; }
 
-    public TransformController TransformController { get; }
+    public SceneController SceneController { get; }
 
     public LightingController LightingController { get; }
 
-    public SceneController PickupController { get; }
-
-    private void Scene_DrawContentInWindow()
-    {
-        foreach (MeshModel model in PickupController.PickupModels)
-        {
-            float[] view = Scene.Camera.View.ToArray();
-            float[] projection = Scene.Camera.Projection.ToArray();
-            float[] transform = model.Transform.Model.ToArray();
-
-            ImGuizmo.Manipulate(ref view[0], ref projection[0], currentGizmoOperation, ImGuizmoMode.Local, ref transform[0]);
-
-            if (ImGuizmo.IsUsing())
-            {
-                model.Transform.Matrix(transform.ToMatrix());
-            }
-        }
-    }
+    public PickupController PickupController { get; }
 
     public void Update(double deltaSeconds)
     {
@@ -118,7 +98,7 @@ public abstract class BaseTutorial : ITutorial
 
     public virtual void ImGuiRender()
     {
-        PickupController.Controller();
+        SceneController.Controller();
 
         if (ImGui.Begin("Properties"))
         {
@@ -147,33 +127,6 @@ public abstract class BaseTutorial : ITutorial
             }
 
             LightingController.Controller();
-
-            if (PickupController.PickupModels.Count != 0)
-            {
-                if (ImGui.RadioButton("Translate", currentGizmoOperation == ImGuizmoOperation.Translate))
-                {
-                    currentGizmoOperation = ImGuizmoOperation.Translate;
-                }
-
-                ImGui.SameLine();
-
-                if (ImGui.RadioButton("Rotate", currentGizmoOperation == ImGuizmoOperation.Rotate))
-                {
-                    currentGizmoOperation = ImGuizmoOperation.Rotate;
-                }
-
-                ImGui.SameLine();
-
-                if (ImGui.RadioButton("Scale", currentGizmoOperation == ImGuizmoOperation.Scale))
-                {
-                    currentGizmoOperation = ImGuizmoOperation.Scale;
-                }
-            }
-
-            foreach (MeshModel model in PickupController.PickupModels)
-            {
-                model.Controller();
-            }
 
             EditProperties();
         }

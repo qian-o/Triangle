@@ -46,9 +46,9 @@ public class Tutorial03(IInputContext input, TrContext context) : BaseTutorial(i
         capsule3 = new("Capsule 3", capsuleMeshes, blinnPhongMat);
         capsule3.Transform.Translate(new Vector3D<float>(3.0f, 0.0f, 0.0f));
 
-        PickupController.Add(capsule1);
-        PickupController.Add(capsule2);
-        PickupController.Add(capsule3);
+        SceneController.Add(capsule1);
+        SceneController.Add(capsule2);
+        SceneController.Add(capsule3);
     }
 
     protected override void UpdateScene(double deltaSeconds)

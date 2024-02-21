@@ -52,10 +52,10 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
         capsule4 = new("Capsule 4", capsuleMeshes, maskTextureMat);
         capsule4.Transform.Translate(new Vector3D<float>(4.5f, 0.0f, 0.0f));
 
-        PickupController.Add(capsule1);
-        PickupController.Add(capsule2);
-        PickupController.Add(capsule3);
-        PickupController.Add(capsule4);
+        SceneController.Add(capsule1);
+        SceneController.Add(capsule2);
+        SceneController.Add(capsule3);
+        SceneController.Add(capsule4);
     }
 
     protected override void UpdateScene(double deltaSeconds)
