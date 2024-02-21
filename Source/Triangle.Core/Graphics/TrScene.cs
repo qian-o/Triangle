@@ -63,6 +63,8 @@ public class TrScene : TrGraphics<TrContext>
 
     public bool IsRightClicked { get; private set; }
 
+    public bool IsMiddleClicked { get; private set; }
+
     public Vector4D<float> Mouse { get; private set; }
 
     public Vector4D<float> Date { get; private set; }
@@ -78,10 +80,6 @@ public class TrScene : TrGraphics<TrContext>
     public bool IsClosed { get; private set; }
 
     public int Samples { get; set; } = 4;
-
-    public float CameraSpeed { get; set; } = 2.0f;
-
-    public float CameraSensitivity { get; set; } = 0.1f;
 
     public bool IsShowAxis { get; set; } = true;
 
@@ -106,7 +104,7 @@ public class TrScene : TrGraphics<TrContext>
                     float deltaX = vector.X - lastPos.X;
                     float deltaY = vector.Y - lastPos.Y;
 
-                    Camera.Transform.EulerAngles += new Vector3D<float>(-deltaY * CameraSensitivity, -deltaX * CameraSensitivity, 0.0f);
+                    Camera.Transform.EulerAngles += new Vector3D<float>(-deltaY * Camera.Sensitivity, -deltaX * Camera.Sensitivity, 0.0f);
 
                     lastPos = vector;
                 }
@@ -118,32 +116,32 @@ public class TrScene : TrGraphics<TrContext>
 
             if (KeyPressed(Key.W))
             {
-                Camera.Transform.Translate(CameraSpeed * (float)deltaSeconds * TrContext.Forward);
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Forward);
             }
 
             if (KeyPressed(Key.A))
             {
-                Camera.Transform.Translate(CameraSpeed * (float)deltaSeconds * TrContext.Left);
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Left);
             }
 
             if (KeyPressed(Key.S))
             {
-                Camera.Transform.Translate(CameraSpeed * (float)deltaSeconds * TrContext.Backward);
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Backward);
             }
 
             if (KeyPressed(Key.D))
             {
-                Camera.Transform.Translate(CameraSpeed * (float)deltaSeconds * TrContext.Right);
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Right);
             }
 
             if (KeyPressed(Key.Q))
             {
-                Camera.Transform.Translate(CameraSpeed * (float)deltaSeconds * TrContext.Down);
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Down);
             }
 
             if (KeyPressed(Key.E))
             {
-                Camera.Transform.Translate(CameraSpeed * (float)deltaSeconds * TrContext.Up);
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Up);
             }
         }
 
@@ -189,6 +187,7 @@ public class TrScene : TrGraphics<TrContext>
                 IsFocused = ImGui.IsWindowFocused();
                 IsLeftClicked = ImGui.IsMouseClicked(ImGuiMouseButton.Left);
                 IsRightClicked = ImGui.IsMouseClicked(ImGuiMouseButton.Right);
+                IsMiddleClicked = ImGui.IsMouseClicked(ImGuiMouseButton.Middle);
                 Mouse = IsFocused ? new Vector4D<float>(pos.X, pos.Y, Convert.ToSingle(isLeftDown), Convert.ToSingle(isRightDown)) : Vector4D<float>.Zero;
 
                 Date = new Vector4D<float>(now.Year, now.Month, now.Day, seconds);

@@ -42,10 +42,6 @@ public class Tutorial01(IInputContext input, TrContext context) : BaseTutorial(i
         sphere.Render(GetSceneParameters());
     }
 
-    protected override void EditProperties()
-    {
-    }
-
     protected override void Destroy(bool disposing = false)
     {
         simpleMat.Dispose();

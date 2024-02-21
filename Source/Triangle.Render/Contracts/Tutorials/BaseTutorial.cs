@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
-using Hexa.NET.ImGui;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
@@ -100,36 +99,7 @@ public abstract class BaseTutorial : ITutorial
     {
         SceneController.Controller();
 
-        if (ImGui.Begin("Properties"))
-        {
-            if (ImGui.TreeNode("Scene"))
-            {
-                int samples = Scene.Samples;
-                ImGui.SliderInt("Samples", ref samples, 1, 16);
-                Scene.Samples = samples;
-
-                _gridMat.Controller();
-
-                ImGui.TreePop();
-            }
-
-            if (ImGui.TreeNode("Camera"))
-            {
-                float cameraSpeed = Scene.CameraSpeed;
-                ImGui.SliderFloat("Speed", ref cameraSpeed, 0.1f, 10.0f);
-                Scene.CameraSpeed = cameraSpeed;
-
-                float cameraSensitivity = Scene.CameraSensitivity;
-                ImGui.SliderFloat("Sensitivity", ref cameraSensitivity, 0.1f, 1.0f);
-                Scene.CameraSensitivity = cameraSensitivity;
-
-                ImGui.TreePop();
-            }
-
-            LightingController.Controller();
-
-            EditProperties();
-        }
+        SceneController.PropertyEditor();
     }
 
     protected abstract void Loaded();
@@ -137,8 +107,6 @@ public abstract class BaseTutorial : ITutorial
     protected abstract void UpdateScene(double deltaSeconds);
 
     protected abstract void RenderScene(double deltaSeconds);
-
-    protected abstract void EditProperties();
 
     protected GlobalParameters GetSceneParameters()
     {

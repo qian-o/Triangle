@@ -48,10 +48,6 @@ public class Tutorial06(IInputContext input, TrContext context) : BaseTutorial(i
         knot.Render(GetSceneParameters());
     }
 
-    protected override void EditProperties()
-    {
-    }
-
     protected override void Destroy(bool disposing = false)
     {
         rampTextureMat.Dispose();

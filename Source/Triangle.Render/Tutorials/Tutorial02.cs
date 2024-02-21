@@ -62,10 +62,6 @@ public class Tutorial02(IInputContext input, TrContext context) : BaseTutorial(i
         goldStar3.Render(GetSceneParameters());
     }
 
-    protected override void EditProperties()
-    {
-    }
-
     protected override void Destroy(bool disposing = false)
     {
         halfLambertMat.Dispose();

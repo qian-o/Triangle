@@ -24,6 +24,10 @@ public class TrCamera(string name) : TrGameObject(name)
 
     public float Far { get; set; } = 1000.0f;
 
+    public float Speed { get; set; } = 2.0f;
+
+    public float Sensitivity { get; set; } = 0.1f;
+
     public Matrix4X4<float> View => Matrix4X4.CreateLookAt(Transform.Position, Transform.Position + Transform.Forward, Transform.Up);
 
     public Matrix4X4<float> Projection => Matrix4X4.CreatePerspectiveFieldOfView(fov, (float)Width / Height, Near, Far);

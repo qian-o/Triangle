@@ -70,10 +70,6 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
         capsule4.Render(GetSceneParameters());
     }
 
-    protected override void EditProperties()
-    {
-    }
-
     protected override void Destroy(bool disposing = false)
     {
         singleTextureMat.Dispose();

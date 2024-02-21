@@ -62,10 +62,6 @@ public class Tutorial03(IInputContext input, TrContext context) : BaseTutorial(i
         capsule3.Render(GetSceneParameters());
     }
 
-    protected override void EditProperties()
-    {
-    }
-
     protected override void Destroy(bool disposing = false)
     {
         blinnPhongMat.Dispose();

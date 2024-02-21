@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using Hexa.NET.ImGui;
 using Silk.NET.Input;
 using Triangle.Core;
 using Triangle.Core.Graphics;
@@ -11,7 +10,7 @@ using Triangle.Render.Materials.Shadertoy;
 namespace Triangle.Render.Tutorials;
 
 [DisplayName("Shadertoy")]
-[Description("从 Shadertoy 上移植的着色器。")]
+[Description("从 Shadertoy 上移植的着色器, 鼠标中键按下切换着色器。")]
 public class Tutorial05(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     #region Meshes
@@ -39,21 +38,15 @@ public class Tutorial05(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void UpdateScene(double deltaSeconds)
     {
+        if (Scene.IsMiddleClicked)
+        {
+            materialIndex = (materialIndex + 1) % mats.Length;
+        }
     }
 
     protected override void RenderScene(double deltaSeconds)
     {
         mats[materialIndex].Draw(canvas, GetSceneParameters());
-    }
-
-    protected override void EditProperties()
-    {
-        if (ImGui.TreeNode("Material"))
-        {
-            ImGui.Combo("##Material", ref materialIndex, mats.Select(item => item.Name).ToArray(), mats.Length);
-
-            ImGui.TreePop();
-        }
     }
 
     protected override void Destroy(bool disposing = false)

@@ -11,6 +11,13 @@ using Triangle.Render.Models;
 
 namespace Triangle.Render.Controllers;
 
+/// <summary>
+/// 拾取控制器。
+/// 基于场景控制器进行拾取。
+/// </summary>
+/// <param name="context">context</param>
+/// <param name="scene">scene</param>
+/// <param name="sceneController">sceneController</param>
 public class PickupController(TrContext context, TrScene scene, SceneController sceneController) : Disposable
 {
     // 选中的颜色。

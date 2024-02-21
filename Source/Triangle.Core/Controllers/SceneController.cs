@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
+using System.Numerics;
 using Hexa.NET.ImGui;
 using Silk.NET.Input;
+using Silk.NET.Maths;
 using Triangle.Core.Graphics;
 
 namespace Triangle.Core.Controllers;
@@ -60,8 +62,6 @@ public class SceneController
 
             if (ImGui.TreeNode("Collection"))
             {
-                ImGui.TreePush("Collection");
-
                 bool isMultiSelect = _scene.KeyPressed(Key.ControlLeft) || _scene.KeyPressed(Key.ControlRight);
 
                 foreach (string name in _cache.Keys)
@@ -91,6 +91,52 @@ public class SceneController
                 }
 
                 ImGui.TreePop();
+            }
+
+            ImGui.End();
+        }
+    }
+
+    public void PropertyEditor()
+    {
+        if (ImGui.Begin("Property Editor"))
+        {
+            if (SelectedObjects.LastOrDefault() is TrGameObject gameObject)
+            {
+                ImGui.PushID(gameObject.GetHashCode());
+                {
+                    ImGui.Text(gameObject.Name);
+                    ImGui.Separator();
+
+                    TrTransform transform = gameObject.Transform;
+
+                    Vector3 t = transform.Position.ToSystem();
+                    Vector3 r = transform.EulerAngles.ToSystem();
+                    Vector3 s = transform.Scale.ToSystem();
+
+                    ImGui.DragFloat3("Translation", ref t, 0.01f);
+                    ImGui.SliderFloat3("Rotation", ref r, -360.0f, 360.0f);
+                    ImGui.DragFloat3("Scale", ref s, 0.01f);
+
+                    transform.Position = t.ToGeneric();
+                    transform.EulerAngles = r.ToGeneric();
+                    transform.Scale = s.ToGeneric();
+
+                    if (gameObject is TrCamera camera)
+                    {
+                        ImGui.Text("Camera");
+                        ImGui.Separator();
+
+                        float cameraSpeed = camera.Speed;
+                        ImGui.SliderFloat("Speed", ref cameraSpeed, 0.1f, 10.0f);
+                        camera.Speed = cameraSpeed;
+
+                        float cameraSensitivity = camera.Sensitivity;
+                        ImGui.SliderFloat("Sensitivity", ref cameraSensitivity, 0.1f, 1.0f);
+                        camera.Sensitivity = cameraSensitivity;
+                    }
+                }
+                ImGui.PopID();
             }
 
             ImGui.End();

@@ -39,6 +39,7 @@ public unsafe class RenderHost<TApplication> : Disposable where TApplication : I
         windowOptions.Title = title;
         windowOptions.API = new GraphicsAPI(ContextAPI.OpenGL, ContextProfile.Core, ContextFlags.ForwardCompatible, new APIVersion(4, 6));
         windowOptions.Size = new Vector2D<int>(1280, 720);
+        windowOptions.WindowState = WindowState.Maximized;
         windowOptions.Samples = 8;
         windowOptions.VSync = false;
         windowOptions.PreferredDepthBufferBits = 32;
