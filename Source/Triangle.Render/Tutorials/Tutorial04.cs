@@ -40,17 +40,17 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
         normalMapTangentSpaceMat = new(Context);
         maskTextureMat = new(Context);
 
-        capsule1 = new(TransformController, "Capsule 1", capsuleMeshes, singleTextureMat);
-        capsule1.SetTranslation(new Vector3D<float>(-4.5f, 0.0f, 0.0f));
+        capsule1 = new("Capsule 1", capsuleMeshes, singleTextureMat);
+        capsule1.Transform.Translate(new Vector3D<float>(-4.5f, 0.0f, 0.0f));
 
-        capsule2 = new(TransformController, "Capsule 2", capsuleMeshes, normalMapWorldSpaceMat);
-        capsule2.SetTranslation(new Vector3D<float>(-1.5f, 0.0f, 0.0f));
+        capsule2 = new("Capsule 2", capsuleMeshes, normalMapWorldSpaceMat);
+        capsule2.Transform.Translate(new Vector3D<float>(-1.5f, 0.0f, 0.0f));
 
-        capsule3 = new(TransformController, "Capsule 3", capsuleMeshes, normalMapTangentSpaceMat);
-        capsule3.SetTranslation(new Vector3D<float>(1.5f, 0.0f, 0.0f));
+        capsule3 = new("Capsule 3", capsuleMeshes, normalMapTangentSpaceMat);
+        capsule3.Transform.Translate(new Vector3D<float>(1.5f, 0.0f, 0.0f));
 
-        capsule4 = new(TransformController, "Capsule 4", capsuleMeshes, maskTextureMat);
-        capsule4.SetTranslation(new Vector3D<float>(4.5f, 0.0f, 0.0f));
+        capsule4 = new("Capsule 4", capsuleMeshes, maskTextureMat);
+        capsule4.Transform.Translate(new Vector3D<float>(4.5f, 0.0f, 0.0f));
 
         PickupController.Add(capsule1);
         PickupController.Add(capsule2);

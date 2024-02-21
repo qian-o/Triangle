@@ -31,10 +31,10 @@ public class Tutorial06(IInputContext input, TrContext context) : BaseTutorial(i
 
         rampTextureMat = new(Context);
 
-        knot = new(TransformController, "Knot", knotMeshes, rampTextureMat);
-        knot.SetTranslation(new Vector3D<float>(0, 2.0f, 0));
-        knot.SetRotationByDegree(new Vector3D<float>(90.0f, 180.0f, 0));
-        knot.SetScale(new Vector3D<float>(0.05f, 0.05f, 0.05f));
+        knot = new("Knot", knotMeshes, rampTextureMat);
+        knot.Transform.Translate(new Vector3D<float>(0, 2.0f, 0));
+        knot.Transform.Rotate(new Vector3D<float>(90.0f, 180.0f, 0));
+        knot.Transform.Scaled(new Vector3D<float>(0.05f, 0.05f, 0.05f));
 
         PickupController.Add(knot);
     }

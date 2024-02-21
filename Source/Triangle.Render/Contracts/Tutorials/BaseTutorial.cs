@@ -46,7 +46,7 @@ public abstract class BaseTutorial : ITutorial
 
         _gridMat = new(Context);
 
-        _grid = new(TransformController, "Grid", _gridMeshes, _gridMat);
+        _grid = new("Grid", _gridMeshes, _gridMat);
 
         Loaded();
     }
@@ -66,7 +66,7 @@ public abstract class BaseTutorial : ITutorial
 
     public LightingController LightingController { get; }
 
-    public PickupController PickupController { get; }
+    public SceneController PickupController { get; }
 
     private void Scene_DrawContentInWindow()
     {
@@ -80,7 +80,7 @@ public abstract class BaseTutorial : ITutorial
 
             if (ImGuizmo.IsUsing())
             {
-                model.SetTransform(transform.ToMatrix());
+                model.Transform.Matrix(transform.ToMatrix());
             }
         }
     }

@@ -1,8 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using Hexa.NET.ImGui;
-using Silk.NET.Maths;
-using Triangle.Core.Controllers;
-using Triangle.Core.Helpers;
 using Triangle.Render.Contracts.Materials;
 using Triangle.Render.Models;
 
@@ -10,22 +7,18 @@ namespace Triangle.Core.Graphics;
 
 public class MeshModel : TrGameObject
 {
-    private readonly TransformController _transformController;
     private readonly TrMesh[] _meshes;
     private readonly GlobalMat[] _materials;
     private readonly Dictionary<TrMesh, GlobalMat> _indexer;
 
-    private MeshModel(TransformController transformController, string name) : base(name)
+    private MeshModel(string name) : base(name)
     {
-        _transformController = transformController;
         _meshes = [];
         _materials = [];
         _indexer = [];
-
-        _transformController.Add(this);
     }
 
-    public MeshModel(TransformController transformController, string name, TrMesh[] meshes, GlobalMat materials) : this(transformController, name)
+    public MeshModel(string name, TrMesh[] meshes, GlobalMat materials) : this(name)
     {
         _meshes = meshes;
         _materials = new GlobalMat[meshes.Length];
@@ -37,7 +30,7 @@ public class MeshModel : TrGameObject
         }
     }
 
-    public MeshModel(TransformController transformController, string name, TrMesh[] meshes, GlobalMat[] materials) : this(transformController, name)
+    public MeshModel(string name, TrMesh[] meshes, GlobalMat[] materials) : this(name)
     {
         if (meshes.Length != materials.Length)
         {
@@ -53,7 +46,7 @@ public class MeshModel : TrGameObject
         }
     }
 
-    public MeshModel(TransformController transformController, string name, TrMesh[] meshes, GlobalMat[] materials, Dictionary<TrMesh, GlobalMat> indexer) : this(transformController, name)
+    public MeshModel(string name, TrMesh[] meshes, GlobalMat[] materials, Dictionary<TrMesh, GlobalMat> indexer) : this(name)
     {
         if (meshes.Length != materials.Length && meshes.Length != indexer.Count)
         {
@@ -66,31 +59,6 @@ public class MeshModel : TrGameObject
     }
 
     public ReadOnlyCollection<TrMesh> Meshes => new(_meshes);
-
-    public void SetTranslation(Vector3D<float> translation)
-    {
-        _transformController.SetTransform(Name, translation: translation);
-    }
-
-    public void SetRotation(Vector3D<float> rotation)
-    {
-        _transformController.SetTransform(Name, rotation: rotation);
-    }
-
-    public void SetRotationByDegree(Vector3D<float> rotationDegree)
-    {
-        _transformController.SetTransform(Name, rotation: rotationDegree.DegreeToRadian());
-    }
-
-    public void SetScale(Vector3D<float> scale)
-    {
-        _transformController.SetTransform(Name, scale: scale);
-    }
-
-    public void SetTransform(Matrix4X4<float> transform)
-    {
-        _transformController.SetTransform(Name, transform);
-    }
 
     /// <summary>
     /// 绘制所有网格。
@@ -132,8 +100,6 @@ public class MeshModel : TrGameObject
         {
             ImGui.PushID(Name);
             {
-                _transformController.Controller(Name);
-
                 for (int i = 0; i < _materials.Length; i++)
                 {
                     _materials[i].Controller($"Material {i}");

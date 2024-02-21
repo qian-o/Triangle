@@ -52,6 +52,20 @@ public class TrTransform
         Rotation *= Quaternion<float>.Inverse(Rotation) * quaternion * Rotation;
     }
 
+    public void Scaled(Vector3D<float> scale)
+    {
+        Scale *= scale;
+    }
+
+    public void Matrix(Matrix4X4<float> matrix)
+    {
+        Matrix4X4.Decompose(matrix, out Vector3D<float> scale, out Quaternion<float> rotation, out Vector3D<float> translation);
+
+        Scale = scale;
+        Rotation = rotation;
+        Position = translation;
+    }
+
     public Vector3D<float> TransformDirection(Vector3D<float> translation)
     {
         return Vector3D.Transform(translation, Rotation);

@@ -30,7 +30,7 @@ public class Tutorial01(IInputContext input, TrContext context) : BaseTutorial(i
 
         simpleMat = new(Context);
 
-        PickupController.Add(sphere = new(TransformController, "Sphere", sphereMeshes, simpleMat));
+        PickupController.Add(sphere = new("Sphere", sphereMeshes, simpleMat));
     }
 
     protected override void UpdateScene(double deltaSeconds)

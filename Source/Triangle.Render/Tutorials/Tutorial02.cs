@@ -37,14 +37,14 @@ public class Tutorial02(IInputContext input, TrContext context) : BaseTutorial(i
         diffusePixelLevelMat = new(Context);
         halfLambertMat = new(Context);
 
-        goldStar1 = new(TransformController, "Gold Star 1", goldStarMeshes, diffuseVertexLevelMat);
-        goldStar1.SetTranslation(new Vector3D<float>(-2.0f, 0.0f, 0.0f));
+        goldStar1 = new("Gold Star 1", goldStarMeshes, diffuseVertexLevelMat);
+        goldStar1.Transform.Translate(new Vector3D<float>(-2.0f, 0.0f, 0.0f));
 
-        goldStar2 = new(TransformController, "Gold Star 2", goldStarMeshes, diffusePixelLevelMat);
-        goldStar2.SetTranslation(new Vector3D<float>(0.0f, 0.0f, 0.0f));
+        goldStar2 = new("Gold Star 2", goldStarMeshes, diffusePixelLevelMat);
+        goldStar2.Transform.Translate(new Vector3D<float>(0.0f, 0.0f, 0.0f));
 
-        goldStar3 = new(TransformController, "Gold Star 3", goldStarMeshes, halfLambertMat);
-        goldStar3.SetTranslation(new Vector3D<float>(2.0f, 0.0f, 0.0f));
+        goldStar3 = new("Gold Star 3", goldStarMeshes, halfLambertMat);
+        goldStar3.Transform.Translate(new Vector3D<float>(2.0f, 0.0f, 0.0f));
 
         PickupController.Add(goldStar1);
         PickupController.Add(goldStar2);

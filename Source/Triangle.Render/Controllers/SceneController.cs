@@ -11,7 +11,7 @@ using Triangle.Render.Models;
 
 namespace Triangle.Render.Controllers;
 
-public class PickupController(TrContext context, TrScene scene) : Disposable
+public class SceneController(TrContext context, TrScene scene) : Disposable
 {
     public static readonly Vector4D<byte> PickupColor = new(255, 255, 255, 255);
 
