@@ -60,6 +60,22 @@ public class MeshModel : TrGameObject
 
     public ReadOnlyCollection<TrMesh> Meshes => new(_meshes);
 
+    protected override void OtherPropertyEditor()
+    {
+        ImGui.Text("Materials");
+        ImGui.Separator();
+
+        for (int i = 0; i < _materials.Length; i++)
+        {
+            if (i == 0)
+            {
+                ImGui.SetNextItemOpen(true, ImGuiCond.Once);
+            }
+
+            _materials[i].Controller($"Material {i}");
+        }
+    }
+
     /// <summary>
     /// 绘制所有网格。
     /// 用于 GlobalParameters 为引用类型，所以内部在使用的时候会进行Copy，不需要担心参数被修改。
@@ -90,24 +106,6 @@ public class MeshModel : TrGameObject
         foreach (TrMesh mesh in Meshes)
         {
             material.Draw(mesh, temp);
-        }
-    }
-
-    public void Controller()
-    {
-        ImGui.SetNextItemOpen(true, ImGuiCond.Once);
-        if (ImGui.TreeNode($"{Name} - Properties"))
-        {
-            ImGui.PushID(Name);
-            {
-                for (int i = 0; i < _materials.Length; i++)
-                {
-                    _materials[i].Controller($"Material {i}");
-                }
-            }
-            ImGui.PopID();
-
-            ImGui.TreePop();
         }
     }
 }

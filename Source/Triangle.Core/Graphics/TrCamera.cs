@@ -1,4 +1,5 @@
-﻿using Silk.NET.Maths;
+﻿using Hexa.NET.ImGui;
+using Silk.NET.Maths;
 using Triangle.Core.Helpers;
 
 namespace Triangle.Core.Graphics;
@@ -31,6 +32,20 @@ public class TrCamera(string name) : TrGameObject(name)
     public Matrix4X4<float> View => Matrix4X4.CreateLookAt(Transform.Position, Transform.Position + Transform.Forward, Transform.Up);
 
     public Matrix4X4<float> Projection => Matrix4X4.CreatePerspectiveFieldOfView(fov, (float)Width / Height, Near, Far);
+
+    protected override void OtherPropertyEditor()
+    {
+        ImGui.Text("Camera");
+        ImGui.Separator();
+
+        float cameraSpeed = Speed;
+        ImGui.SliderFloat("Speed", ref cameraSpeed, 0.1f, 10.0f);
+        Speed = cameraSpeed;
+
+        float cameraSensitivity = Sensitivity;
+        ImGui.SliderFloat("Sensitivity", ref cameraSensitivity, 0.1f, 1.0f);
+        Sensitivity = cameraSensitivity;
+    }
 
     public void DecomposeView(Matrix4X4<float> view)
     {

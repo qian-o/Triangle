@@ -1,4 +1,6 @@
-﻿using Silk.NET.Maths;
+﻿using System.Numerics;
+using Hexa.NET.ImGui;
+using Silk.NET.Maths;
 
 namespace Triangle.Core.Graphics;
 
@@ -26,5 +28,33 @@ public abstract class TrGameObject(string name)
         byte b = (byte)(bytes[2] ^ bytes[6] ^ bytes[10] ^ bytes[14]);
 
         return new Vector4D<byte>(r, g, b, 255);
+    }
+
+    public void PropertyEditor()
+    {
+        ImGui.PushID(GetHashCode());
+        {
+            ImGui.Text(Name);
+            ImGui.Separator();
+
+            Vector3 t = Transform.Position.ToSystem();
+            Vector3 r = Transform.EulerAngles.ToSystem();
+            Vector3 s = Transform.Scale.ToSystem();
+
+            ImGui.DragFloat3("Translation", ref t, 0.01f);
+            ImGui.SliderFloat3("Rotation", ref r, -360.0f, 360.0f);
+            ImGui.DragFloat3("Scale", ref s, 0.01f);
+
+            Transform.Position = t.ToGeneric();
+            Transform.EulerAngles = r.ToGeneric();
+            Transform.Scale = s.ToGeneric();
+
+            OtherPropertyEditor();
+        }
+        ImGui.PopID();
+    }
+
+    protected virtual void OtherPropertyEditor()
+    {
     }
 }
