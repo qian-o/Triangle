@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-using System.Runtime.InteropServices;
-using Hexa.NET.ImGui;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Enums;
@@ -59,9 +57,9 @@ public class SimpleMat(TrContext context) : GlobalMat(context, "Simple")
 
     protected override void ControllerCore()
     {
-        Vector4 color = Color.ToSystem();
-        ImGui.ColorEdit4("Color", ref color);
-        Color = color.ToGeneric();
+        Vector4D<float> color = Color;
+        ImGuiHelper.ColorEdit4("Color", ref color);
+        Color = color;
     }
 
     protected override void DestroyCore(bool disposing = false)

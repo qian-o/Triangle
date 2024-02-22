@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-using System.Runtime.InteropServices;
-using Hexa.NET.ImGui;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Enums;
@@ -71,18 +69,18 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
 
     protected override void ControllerCore()
     {
-        Vector4 color = Color.ToSystem();
-        ImGui.ColorEdit4("Color", ref color);
-        Color = color.ToGeneric();
+        Vector4D<float> color = Color;
+        ImGuiHelper.ColorEdit4("Color", ref color);
+        Color = color;
 
         AdjustChannel("Texture", 0);
 
-        Vector4 specular = Specular.ToSystem();
-        ImGui.ColorEdit4("Specular", ref specular);
-        Specular = specular.ToGeneric();
+        Vector4D<float> specular = Specular;
+        ImGuiHelper.ColorEdit4("Specular", ref specular);
+        Specular = specular;
 
         float gloss = Gloss;
-        ImGui.SliderFloat("Gloss", ref gloss, 8.0f, 256.0f);
+        ImGuiHelper.SliderFloat("Gloss", ref gloss, 8.0f, 256.0f);
         Gloss = gloss;
     }
 

@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using Hexa.NET.ImGui;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
@@ -92,7 +91,7 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
     protected override void ControllerCore()
     {
         float distance = Distance;
-        ImGui.SliderFloat("Distance", ref distance, 0.0f, 10.0f);
+        ImGuiHelper.SliderFloat("Distance", ref distance, 0.0f, 10.0f);
         Distance = distance;
     }
 

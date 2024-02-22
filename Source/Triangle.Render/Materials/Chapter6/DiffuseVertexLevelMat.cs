@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-using System.Runtime.InteropServices;
-using Hexa.NET.ImGui;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Enums;
@@ -59,9 +57,9 @@ public class DiffuseVertexLevelMat(TrContext context) : GlobalMat(context, "Diff
 
     protected override void ControllerCore()
     {
-        Vector4 diffuse = Diffuse.ToSystem();
-        ImGui.ColorEdit4("Diffuse", ref diffuse);
-        Diffuse = diffuse.ToGeneric();
+        Vector4D<float> diffuse = Diffuse;
+        ImGuiHelper.ColorEdit4("Diffuse", ref diffuse);
+        Diffuse = diffuse;
     }
 
     protected override void DestroyCore(bool disposing = false)

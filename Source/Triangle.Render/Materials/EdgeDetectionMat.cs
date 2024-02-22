@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-using System.Runtime.InteropServices;
-using Hexa.NET.ImGui;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Enums;
@@ -59,9 +57,9 @@ public class EdgeDetectionMat(TrContext context) : GlobalMat(context, "EdgeDetec
 
     protected override void ControllerCore()
     {
-        Vector4 color = EdgeColor.ToSystem();
-        ImGui.ColorEdit4("EdgeColor", ref color);
-        EdgeColor = color.ToGeneric();
+        Vector4D<float> color = EdgeColor;
+        ImGuiHelper.ColorEdit4("EdgeColor", ref color);
+        EdgeColor = color;
     }
 
     protected override void DestroyCore(bool disposing = false)

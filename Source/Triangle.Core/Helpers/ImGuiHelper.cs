@@ -323,4 +323,136 @@ public static class ImGuiHelper
         ImGui.SetCursorPos(ImGui.GetCursorPos() + offset.ToSystem());
         ImGui.Image(frame != null ? (nint)frame.Texture.Handle : 0, size.ToSystem(), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
     }
+
+    public static void DragFloat(string label, ref float value, float speed = 1.0f, float min = float.MinValue, float max = float.MaxValue)
+    {
+        BeginLeftTextRightContent(label);
+
+        ImGui.DragFloat($"##{label}", ref value, speed, min, max);
+
+        EndLeftTextRightContent();
+    }
+
+    public static void DragFloat2(string label, ref Vector2D<float> value, float speed = 1.0f, float min = float.MinValue, float max = float.MaxValue)
+    {
+        BeginLeftTextRightContent(label);
+
+        Vector2 sys = value.ToSystem();
+        ImGui.DragFloat2($"##{label}", ref sys, speed, min, max);
+        value = sys.ToGeneric();
+
+        EndLeftTextRightContent();
+    }
+
+    public static void DragFloat3(string label, ref Vector3D<float> value, float speed = 1.0f, float min = float.MinValue, float max = float.MaxValue)
+    {
+        BeginLeftTextRightContent(label);
+
+        Vector3 sys = value.ToSystem();
+        ImGui.DragFloat3($"##{label}", ref sys, speed, min, max);
+        value = sys.ToGeneric();
+
+        EndLeftTextRightContent();
+    }
+
+    public static void DragFloat4(string label, ref Vector4D<float> value, float speed = 1.0f, float min = float.MinValue, float max = float.MaxValue)
+    {
+        BeginLeftTextRightContent(label);
+
+        Vector4 sys = value.ToSystem();
+        ImGui.DragFloat4($"##{label}", ref sys, speed, min, max);
+        value = sys.ToGeneric();
+
+        EndLeftTextRightContent();
+    }
+
+    public static void SliderFloat(string label, ref float value, float min, float max)
+    {
+        BeginLeftTextRightContent(label);
+
+        ImGui.SliderFloat($"##{label}", ref value, min, max);
+
+        EndLeftTextRightContent();
+    }
+
+    public static void SliderFloat2(string label, ref Vector2D<float> value, float min, float max)
+    {
+        BeginLeftTextRightContent(label);
+
+        Vector2 sys = value.ToSystem();
+        ImGui.SliderFloat2($"##{label}", ref sys, min, max);
+        value = sys.ToGeneric();
+
+        EndLeftTextRightContent();
+    }
+
+    public static void SliderFloat3(string label, ref Vector3D<float> value, float min, float max)
+    {
+        BeginLeftTextRightContent(label);
+
+        Vector3 sys = value.ToSystem();
+        ImGui.SliderFloat3($"##{label}", ref sys, min, max);
+        value = sys.ToGeneric();
+
+        EndLeftTextRightContent();
+    }
+
+    public static void SliderFloat4(string label, ref Vector4D<float> value, float min, float max)
+    {
+        BeginLeftTextRightContent(label);
+
+        Vector4 sys = value.ToSystem();
+        ImGui.SliderFloat4($"##{label}", ref sys, min, max);
+        value = sys.ToGeneric();
+
+        EndLeftTextRightContent();
+    }
+
+    public static void ColorEdit3(string label, ref Vector3D<float> value)
+    {
+        BeginLeftTextRightContent(label);
+
+        Vector3 sys = value.ToSystem();
+        ImGui.ColorEdit3($"##{label}", ref sys);
+        value = sys.ToGeneric();
+
+        EndLeftTextRightContent();
+    }
+
+    public static void ColorEdit4(string label, ref Vector4D<float> value)
+    {
+        BeginLeftTextRightContent(label);
+
+        Vector4 sys = value.ToSystem();
+        ImGui.ColorEdit4($"##{label}", ref sys);
+        value = sys.ToGeneric();
+
+        EndLeftTextRightContent();
+    }
+
+    private static void BeginLeftTextRightContent(string label)
+    {
+        float spacing = ImGui.GetStyle().ItemSpacing.X;
+        float width = ImGui.GetContentRegionAvail().X - ImGui.GetCursorPosX();
+        float leftWidth = width * 0.3f;
+        float rightWidth = width * 0.7f;
+
+        ImGui.Columns(2, false);
+        ImGui.SetColumnWidth(0, leftWidth);
+        ImGui.SetColumnWidth(1, rightWidth);
+
+        ImGui.Text(label);
+
+        ImGui.NextColumn();
+
+        ImGui.PushItemWidth(rightWidth - spacing - 1.0f);
+
+        ImGui.SetCursorPosX(ImGui.GetCursorPosX() + 1.0f);
+    }
+
+    private static void EndLeftTextRightContent()
+    {
+        ImGui.PopItemWidth();
+        ImGui.Columns(1);
+    }
 }

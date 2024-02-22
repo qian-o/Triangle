@@ -1,6 +1,6 @@
-﻿using System.Numerics;
-using Hexa.NET.ImGui;
+﻿using Hexa.NET.ImGui;
 using Silk.NET.Maths;
+using Triangle.Core.Helpers;
 
 namespace Triangle.Core.Graphics;
 
@@ -37,17 +37,17 @@ public abstract class TrGameObject(string name)
             ImGui.Text(Name);
             ImGui.Separator();
 
-            Vector3 t = Transform.Position.ToSystem();
-            Vector3 r = Transform.EulerAngles.ToSystem();
-            Vector3 s = Transform.Scale.ToSystem();
+            Vector3D<float> t = Transform.Position;
+            Vector3D<float> r = Transform.EulerAngles;
+            Vector3D<float> s = Transform.Scale;
 
-            ImGui.DragFloat3("Translation", ref t, 0.01f);
-            ImGui.SliderFloat3("Rotation", ref r, -360.0f, 360.0f);
-            ImGui.DragFloat3("Scale", ref s, 0.01f);
+            ImGuiHelper.DragFloat3("Translation", ref t, 0.01f);
+            ImGuiHelper.SliderFloat3("Rotation", ref r, -360.0f, 360.0f);
+            ImGuiHelper.DragFloat3("Scale", ref s, 0.01f);
 
-            Transform.Position = t.ToGeneric();
-            Transform.EulerAngles = r.ToGeneric();
-            Transform.Scale = s.ToGeneric();
+            Transform.Position = t;
+            Transform.EulerAngles = r;
+            Transform.Scale = s;
 
             OtherPropertyEditor();
         }

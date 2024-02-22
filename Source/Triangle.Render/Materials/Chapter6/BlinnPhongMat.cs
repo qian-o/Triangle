@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-using System.Runtime.InteropServices;
-using Hexa.NET.ImGui;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Enums;
@@ -71,16 +69,16 @@ public class BlinnPhongMat(TrContext context) : GlobalMat(context, "BlinnPhong")
 
     protected override void ControllerCore()
     {
-        Vector4 diffuse = Diffuse.ToSystem();
-        ImGui.ColorEdit4("Diffuse", ref diffuse);
-        Diffuse = diffuse.ToGeneric();
+        Vector4D<float> diffuse = Diffuse;
+        ImGuiHelper.ColorEdit4("Diffuse", ref diffuse);
+        Diffuse = diffuse;
 
-        Vector4 specular = Specular.ToSystem();
-        ImGui.ColorEdit4("Specular", ref specular);
-        Specular = specular.ToGeneric();
+        Vector4D<float> specular = Specular;
+        ImGuiHelper.ColorEdit4("Specular", ref specular);
+        Specular = specular;
 
         float gloss = Gloss;
-        ImGui.DragFloat("Gloss", ref gloss, 0.1f, 8.0f, 256f);
+        ImGuiHelper.DragFloat("Gloss", ref gloss, 0.1f, 8.0f, 256f);
         Gloss = gloss;
     }
 
