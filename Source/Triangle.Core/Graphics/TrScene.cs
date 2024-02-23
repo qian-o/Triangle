@@ -79,6 +79,8 @@ public class TrScene : TrGraphics<TrContext>
 
     public bool IsClosed { get; private set; }
 
+    public bool IsOperationTools { get; private set; }
+
     public int Samples { get; set; } = 4;
 
     public bool UseTools { get; set; } = true;
@@ -273,6 +275,8 @@ public class TrScene : TrGraphics<TrContext>
                                             ImGui.GetColorU32(Vector4.Zero));
 
                     Camera.DecomposeView(view.ToMatrix());
+
+                    IsOperationTools = ImGui.IsItemActivated() || ImGuizmo.IsOver();
                 }
 
                 DrawContentInWindow?.Invoke();

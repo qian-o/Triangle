@@ -1,7 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGuizmo;
 using Silk.NET.Input;
+using Silk.NET.Maths;
 using Triangle.Core.Graphics;
+using Triangle.Core.Helpers;
 
 namespace Triangle.Core.Controllers;
 
@@ -18,6 +21,13 @@ public class SceneController
         _selectedObjects = [];
 
         Add(_scene.Camera);
+
+        _scene.DrawContentInWindow += Scene_DrawContentInWindow;
+    }
+
+    ~SceneController()
+    {
+        _scene.DrawContentInWindow -= Scene_DrawContentInWindow;
     }
 
     public TrGameObject this[string name] => _cache[name];
@@ -105,6 +115,32 @@ public class SceneController
             }
 
             ImGui.End();
+        }
+    }
+
+    private void Scene_DrawContentInWindow()
+    {
+        ReadOnlyCollection<TrGameObject> selectedObjects = SelectedObjects;
+
+        if (selectedObjects.Count == 0)
+        {
+            return;
+        }
+
+        Vector3D<float> center = selectedObjects.Select(x => x.Transform.Position).Aggregate((x, y) => x + y) / selectedObjects.Count;
+
+        Matrix4X4<float> showMatrix = Matrix4X4.CreateTranslation(center);
+        if (selectedObjects.Count == 1)
+        {
+            showMatrix = selectedObjects.First().Transform.Model;
+        }
+
+        float[] viewArray = _scene.Camera.View.ToArray();
+        float[] projectionArray = _scene.Camera.Projection.ToArray();
+        float[] showMatrixArray = showMatrix.ToArray();
+        if (ImGuizmo.Manipulate(ref viewArray[0], ref projectionArray[0], _scene.GizmosOperation, _scene.GizmosSpace, ref showMatrixArray[0]))
+        {
+
         }
     }
 }
