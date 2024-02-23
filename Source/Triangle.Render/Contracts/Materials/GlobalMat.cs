@@ -299,6 +299,8 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
 
                 ImGui.BeginGroup();
                 {
+                    ImGui.PushItemWidth(-1.0f);
+
                     ImGui.Text(label);
 
                     ImGui.Indent();
@@ -314,13 +316,19 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
                         channelST = new(s.X, s.Y, t.X, t.Y);
                     }
                     ImGui.Unindent();
+
+                    ImGui.PopItemWidth();
                 }
                 ImGui.EndGroup();
 
                 ImGui.NextColumn();
 
-                Vector2 imageSize = ImGui.GetItemRectSize();
-                TrTextureManager.TextureSelection(label, imageSize.ToGeneric(), ref channel);
+                Vector2D<float> imageSize = new(ImGui.GetItemRectSize().Y);
+                float offsetX = width - (width * 0.6f) - imageSize.X;
+
+                ImGui.SetCursorPosX(ImGui.GetCursorPosX() + offsetX + 1.0f);
+
+                TrTextureManager.TextureSelection(label, imageSize, ref channel);
 
                 ImGui.Columns(1);
             }
