@@ -293,9 +293,10 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
             ImGui.Dummy(new Vector2(0.0f, 2.0f));
             {
                 float width = ImGui.GetContentRegionAvail().X - ImGui.GetCursorPosX();
+                float stWidth = width * 0.6f;
 
                 ImGui.Columns(2, false);
-                ImGui.SetColumnWidth(0, width * 0.6f);
+                ImGui.SetColumnWidth(0, stWidth);
 
                 ImGui.BeginGroup();
                 {
@@ -324,7 +325,7 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
                 ImGui.NextColumn();
 
                 Vector2D<float> imageSize = new(ImGui.GetItemRectSize().Y);
-                float offsetX = width - (width * 0.6f) - imageSize.X;
+                float offsetX = width - stWidth - imageSize.X;
 
                 ImGui.SetCursorPosX(ImGui.GetCursorPosX() + offsetX + 1.0f);
 
