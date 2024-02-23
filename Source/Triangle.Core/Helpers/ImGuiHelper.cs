@@ -432,22 +432,18 @@ public static class ImGuiHelper
 
     private static void BeginLeftTextRightContent(string label)
     {
-        float spacing = ImGui.GetStyle().ItemSpacing.X;
         float width = ImGui.GetContentRegionAvail().X - ImGui.GetCursorPosX();
-        float leftWidth = width * 0.3f;
-        float rightWidth = width * 0.7f;
 
         ImGui.Columns(2, false);
-        ImGui.SetColumnWidth(0, leftWidth);
-        ImGui.SetColumnWidth(1, rightWidth);
+        ImGui.SetColumnWidth(0, width * 0.3f);
 
         ImGui.Text(label);
 
         ImGui.NextColumn();
 
-        ImGui.PushItemWidth(rightWidth - spacing - 1.0f);
-
         ImGui.SetCursorPosX(ImGui.GetCursorPosX() + 1.0f);
+
+        ImGui.PushItemWidth(-1.0f);
     }
 
     private static void EndLeftTextRightContent()
