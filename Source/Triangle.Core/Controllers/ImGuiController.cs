@@ -9,6 +9,7 @@ using Silk.NET.Windowing;
 using Triangle.Core.Contracts;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
+using Triangle.Core.Helpers;
 using Triangle.Core.Structs;
 
 namespace Triangle.Core.Controllers;
@@ -108,6 +109,9 @@ public unsafe class ImGuiController : Disposable
         {
             nint glyph_ranges = imGuiFontConfig.Value.GetGlyphRange?.Invoke(iO) ?? 0;
             iO.Fonts.AddFontFromFileTTF(imGuiFontConfig.Value.FontPath, imGuiFontConfig.Value.FontSize, null, (char*)glyph_ranges);
+
+            AddResourceFont(FontAwesome6.FontIconFileNameFAR, FontAwesome6.IconMin, FontAwesome6.IconMax);
+            AddResourceFont(FontAwesome6.FontIconFileNameFAS, FontAwesome6.IconMin, FontAwesome6.IconMax);
         }
 
         onConfigureIO?.Invoke();
@@ -292,6 +296,24 @@ public unsafe class ImGuiController : Disposable
         iO.KeyMap[569] = 88;
         iO.KeyMap[570] = 89;
         iO.KeyMap[571] = 90;
+    }
+
+    /// <summary>
+    /// Add a font to the ImGui context from a file in the Resources/Fonts directory.
+    /// </summary>
+    /// <param name="fontName">fontName</param>
+    /// <param name="min">min</param>
+    /// <param name="max">max</param>
+    /// <param name="fontSize">fontSize</param>
+    private static void AddResourceFont(string fontName, int min, int max, float fontSize = 17 * 2.0f / 3.0f)
+    {
+        ImFontConfigPtr fontConfig = ImGui.ImFontConfig();
+        fontConfig.MergeMode = true;
+        fontConfig.PixelSnapH = true;
+        fontConfig.GlyphMinAdvanceX = fontSize;
+        char[] ranges = [(char)min, (char)max];
+
+        ImGui.GetIO().Fonts.AddFontFromFileTTF(Path.Combine("Resources", "Fonts", fontName), fontSize, fontConfig, ref ranges[0]);
     }
 
     private unsafe void SetupRenderState(ImDrawDataPtr drawDataPtr)
