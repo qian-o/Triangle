@@ -24,7 +24,7 @@ public class Tutorial05(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Loaded()
     {
-        Scene.IsShowAxis = false;
+        Scene.UseTools = false;
 
         canvas = Context.CreateCanvas();
 

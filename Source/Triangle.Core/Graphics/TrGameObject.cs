@@ -42,7 +42,7 @@ public abstract class TrGameObject(string name)
             Vector3D<float> s = Transform.Scale;
 
             ImGuiHelper.DragFloat3("Translation", ref t, 0.01f);
-            ImGuiHelper.SliderFloat3("Rotation", ref r, -360.0f, 360.0f);
+            ImGuiHelper.DragFloat3("Rotation", ref r, 0.01f);
             ImGuiHelper.DragFloat3("Scale", ref s, 0.01f);
 
             Transform.Position = t;

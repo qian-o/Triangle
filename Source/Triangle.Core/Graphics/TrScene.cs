@@ -81,7 +81,11 @@ public class TrScene : TrGraphics<TrContext>
 
     public int Samples { get; set; } = 4;
 
-    public bool IsShowAxis { get; set; } = true;
+    public bool UseTools { get; set; } = true;
+
+    public ImGuizmoOperation GizmosOperation { get; set; } = ImGuizmoOperation.Translate;
+
+    public ImGuizmoMode GizmosSpace { get; set; } = ImGuizmoMode.Local;
 
     public TrSceneData SceneData => new(new Vector2D<float>(Width, Height), Mouse, Date, Time, DeltaTime, FrameRate, FrameCount);
 
@@ -227,10 +231,36 @@ public class TrScene : TrGraphics<TrContext>
                     }
                 }
 
+                Vector2 startPos = ImGui.GetCursorPos();
+
                 ImGuiHelper.Frame(_frame);
 
-                if (IsShowAxis)
+                // 窗口小部件。
+                if (UseTools)
                 {
+                    ImGui.SetCursorPos(startPos + new Vector2(8.0f, 8.0f));
+                    ImGuiHelper.ButtonSelected($"{FontAwesome6.IconArrowsUpDownLeftRight}", () => GizmosOperation = ImGuizmoOperation.Translate, GizmosOperation == ImGuizmoOperation.Translate);
+                    ImGuiHelper.ShowHelpMarker(ImGuizmoOperation.Translate.ToString());
+
+                    ImGui.SetCursorPos(startPos + new Vector2(8.0f + 30.0f, 8.0f));
+                    ImGuiHelper.ButtonSelected($"{FontAwesome6.IconArrowsSpin}", () => GizmosOperation = ImGuizmoOperation.Rotate, GizmosOperation == ImGuizmoOperation.Rotate);
+                    ImGuiHelper.ShowHelpMarker(ImGuizmoOperation.Rotate.ToString());
+
+                    ImGui.SetCursorPos(startPos + new Vector2(8.0f + 60.0f, 8.0f));
+                    ImGuiHelper.ButtonSelected($"{FontAwesome6.IconGroupArrowsRotate}", () => GizmosOperation = ImGuizmoOperation.Scale, GizmosOperation == ImGuizmoOperation.Scale);
+                    ImGuiHelper.ShowHelpMarker(ImGuizmoOperation.Scale.ToString());
+
+                    ImGui.SetCursorPos(startPos + new Vector2(8.0f + 90.0f, 8.0f));
+                    if (GizmosSpace == ImGuizmoMode.Local)
+                    {
+                        ImGuiHelper.Button($"{FontAwesome6.IconCube}", () => GizmosSpace = ImGuizmoMode.World);
+                    }
+                    else if (GizmosSpace == ImGuizmoMode.World)
+                    {
+                        ImGuiHelper.Button($"{FontAwesome6.IconGlobe}", () => GizmosSpace = ImGuizmoMode.Local);
+                    }
+                    ImGuiHelper.ShowHelpMarker(GizmosSpace.ToString());
+
                     ImGuizmo.SetDrawlist();
                     ImGuizmo.SetRect(Left, Top, Width, Height);
 
@@ -238,8 +268,8 @@ public class TrScene : TrGraphics<TrContext>
 
                     ImGuizmo.ViewManipulate(ref view[0],
                                             1.0f,
-                                            new Vector2(Left + Width - 128.0f, Top),
-                                            new Vector2(128.0f, 128.0f),
+                                            new Vector2(Left + Width - 64.0f, Top),
+                                            new Vector2(64.0f, 64.0f),
                                             ImGui.GetColorU32(Vector4.Zero));
 
                     Camera.DecomposeView(view.ToMatrix());

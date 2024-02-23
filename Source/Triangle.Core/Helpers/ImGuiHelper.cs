@@ -16,9 +16,9 @@ public static class ImGuiHelper
 
     public static Vector4D<float> SelectedTextColor => new(1.0f, 1.0f, 1.0f, 1.0f);
 
-    public static Vector4D<float> UnselectedFillColor => new(0.0f, 0.0f, 0.0f, 0.0f);
+    public static Vector4D<float> UnselectedFillColor => new(0.24f, 0.24f, 0.25f, 1.00f);
 
-    public static Vector4D<float> UnselectedTextColor => new(0.0f, 0.0f, 0.0f, 1.0f);
+    public static Vector4D<float> UnselectedTextColor => new(0.50f, 0.50f, 0.50f, 1.00f);
 
     /// <summary>
     /// 设置ImGui主题，主题风格参考Prowl。
