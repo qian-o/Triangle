@@ -32,8 +32,8 @@ public class Tutorial06(IInputContext input, TrContext context) : BaseTutorial(i
         rampTextureMat = new(Context);
 
         knot = new("Knot", knotMeshes, rampTextureMat);
-        knot.Transform.Translate(new Vector3D<float>(0, 2.0f, 0));
-        knot.Transform.Rotate(new Vector3D<float>(90.0f, 180.0f, 0));
+        knot.Transform.Translate(new Vector3D<float>(0.0f, 2.0f, 0.0f));
+        knot.Transform.Rotate(new Vector3D<float>(90.0f, 180.0f, 0.0f));
         knot.Transform.Scaled(new Vector3D<float>(0.05f, 0.05f, 0.05f));
 
         SceneController.Add(knot);

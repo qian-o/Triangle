@@ -47,9 +47,12 @@ public class TrTransform
 
     public void Rotate(Vector3D<float> eulerAngles)
     {
-        Quaternion<float> quaternion = eulerAngles.DegreeToRadian().ToQuaternion();
+        EulerAngles += eulerAngles;
+    }
 
-        Rotation *= Quaternion<float>.Inverse(Rotation) * quaternion * Rotation;
+    public void Rotate(Quaternion<float> rotation)
+    {
+        Rotation *= rotation;
     }
 
     public void Scaled(Vector3D<float> scale)
