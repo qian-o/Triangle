@@ -114,40 +114,55 @@ public class TrScene : TrGraphics<TrContext>
 
                     lastPos = vector;
                 }
+
+                if (KeyPressed(Key.W))
+                {
+                    Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Forward);
+                }
+
+                if (KeyPressed(Key.A))
+                {
+                    Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Left);
+                }
+
+                if (KeyPressed(Key.S))
+                {
+                    Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Backward);
+                }
+
+                if (KeyPressed(Key.D))
+                {
+                    Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Right);
+                }
+
+                if (KeyPressed(Key.Q))
+                {
+                    Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Down);
+                }
+
+                if (KeyPressed(Key.E))
+                {
+                    Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Up);
+                }
             }
             else
             {
                 firstMove = true;
-            }
 
-            if (KeyPressed(Key.W))
-            {
-                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Forward);
-            }
+                if (KeyPressed(Key.Q))
+                {
+                    GizmosOperation = ImGuizmoOperation.Translate;
+                }
 
-            if (KeyPressed(Key.A))
-            {
-                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Left);
-            }
+                if (KeyPressed(Key.W))
+                {
+                    GizmosOperation = ImGuizmoOperation.Rotate;
+                }
 
-            if (KeyPressed(Key.S))
-            {
-                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Backward);
-            }
-
-            if (KeyPressed(Key.D))
-            {
-                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Right);
-            }
-
-            if (KeyPressed(Key.Q))
-            {
-                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Down);
-            }
-
-            if (KeyPressed(Key.E))
-            {
-                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Up);
+                if (KeyPressed(Key.E))
+                {
+                    GizmosOperation = ImGuizmoOperation.Scale;
+                }
             }
         }
 
@@ -179,6 +194,9 @@ public class TrScene : TrGraphics<TrContext>
             bool isOpen = true;
             if (IsVisible = ImGui.Begin(HostName, ref isOpen, ImGuiWindowFlags.NoSavedSettings | gizmoWindowFlags))
             {
+                ImGuizmo.SetDrawlist();
+                ImGuizmo.SetRect(Left, Top, Width, Height);
+
                 // 鼠标在窗口中的位置。
                 Vector2 pos = ImGui.GetMousePos() - ImGui.GetCursorScreenPos();
                 bool isLeftDown = ImGui.IsMouseDown(ImGuiMouseButton.Left);
@@ -240,17 +258,22 @@ public class TrScene : TrGraphics<TrContext>
                 // 窗口小部件。
                 if (UseTools)
                 {
+                    IsOperationTools = false;
+
                     ImGui.SetCursorPos(startPos + new Vector2(8.0f, 8.0f));
                     ImGuiHelper.ButtonSelected($"{FontAwesome6.IconArrowsUpDownLeftRight}", () => GizmosOperation = ImGuizmoOperation.Translate, GizmosOperation == ImGuizmoOperation.Translate);
                     ImGuiHelper.ShowHelpMarker(ImGuizmoOperation.Translate.ToString());
+                    IsOperationTools |= ImGui.IsItemClicked();
 
                     ImGui.SetCursorPos(startPos + new Vector2(8.0f + 30.0f, 8.0f));
                     ImGuiHelper.ButtonSelected($"{FontAwesome6.IconArrowsSpin}", () => GizmosOperation = ImGuizmoOperation.Rotate, GizmosOperation == ImGuizmoOperation.Rotate);
                     ImGuiHelper.ShowHelpMarker(ImGuizmoOperation.Rotate.ToString());
+                    IsOperationTools |= ImGui.IsItemClicked();
 
                     ImGui.SetCursorPos(startPos + new Vector2(8.0f + 60.0f, 8.0f));
                     ImGuiHelper.ButtonSelected($"{FontAwesome6.IconGroupArrowsRotate}", () => GizmosOperation = ImGuizmoOperation.Scale, GizmosOperation == ImGuizmoOperation.Scale);
                     ImGuiHelper.ShowHelpMarker(ImGuizmoOperation.Scale.ToString());
+                    IsOperationTools |= ImGui.IsItemClicked();
 
                     ImGui.SetCursorPos(startPos + new Vector2(8.0f + 90.0f, 8.0f));
                     if (GizmosSpace == ImGuizmoMode.Local)
@@ -262,21 +285,19 @@ public class TrScene : TrGraphics<TrContext>
                         ImGuiHelper.Button($"{FontAwesome6.IconGlobe}", () => GizmosSpace = ImGuizmoMode.Local);
                     }
                     ImGuiHelper.ShowHelpMarker(GizmosSpace.ToString());
-
-                    ImGuizmo.SetDrawlist();
-                    ImGuizmo.SetRect(Left, Top, Width, Height);
+                    IsOperationTools |= ImGui.IsItemClicked();
 
                     float[] view = Camera.View.ToArray();
 
                     ImGuizmo.ViewManipulate(ref view[0],
-                                            1.0f,
+                                            Camera.Transform.Position.Length,
                                             new Vector2(Left + Width - 64.0f, Top),
                                             new Vector2(64.0f, 64.0f),
                                             ImGui.GetColorU32(Vector4.Zero));
 
                     Camera.DecomposeView(view.ToMatrix());
 
-                    IsOperationTools = ImGui.IsItemActivated() || ImGuizmo.IsOver();
+                    IsOperationTools |= ImGuizmo.IsOver();
                 }
 
                 DrawContentInWindow?.Invoke();
