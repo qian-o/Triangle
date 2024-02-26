@@ -114,55 +114,55 @@ public class TrScene : TrGraphics<TrContext>
 
                     lastPos = vector;
                 }
-
-                if (KeyPressed(Key.W))
-                {
-                    Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Forward);
-                }
-
-                if (KeyPressed(Key.A))
-                {
-                    Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Left);
-                }
-
-                if (KeyPressed(Key.S))
-                {
-                    Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Backward);
-                }
-
-                if (KeyPressed(Key.D))
-                {
-                    Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Right);
-                }
-
-                if (KeyPressed(Key.Q))
-                {
-                    Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Down);
-                }
-
-                if (KeyPressed(Key.E))
-                {
-                    Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Up);
-                }
             }
             else
             {
                 firstMove = true;
+            }
 
-                if (KeyPressed(Key.Q))
-                {
-                    GizmosOperation = ImGuizmoOperation.Translate;
-                }
+            if (KeyPressed(Key.W))
+            {
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Forward);
+            }
 
-                if (KeyPressed(Key.W))
-                {
-                    GizmosOperation = ImGuizmoOperation.Rotate;
-                }
+            if (KeyPressed(Key.A))
+            {
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Left);
+            }
 
-                if (KeyPressed(Key.E))
-                {
-                    GizmosOperation = ImGuizmoOperation.Scale;
-                }
+            if (KeyPressed(Key.S))
+            {
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Backward);
+            }
+
+            if (KeyPressed(Key.D))
+            {
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Right);
+            }
+
+            if (KeyPressed(Key.Q))
+            {
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Down);
+            }
+
+            if (KeyPressed(Key.E))
+            {
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Up);
+            }
+
+            if (KeyPressed(Key.Number1))
+            {
+                GizmosOperation = ImGuizmoOperation.Translate;
+            }
+
+            if (KeyPressed(Key.Number2))
+            {
+                GizmosOperation = ImGuizmoOperation.Rotate;
+            }
+
+            if (KeyPressed(Key.Number3))
+            {
+                GizmosOperation = ImGuizmoOperation.Scale;
             }
         }
 
