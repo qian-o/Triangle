@@ -60,13 +60,4 @@ public static class MatrixExtensions
 
         return transpose ? Matrix4X4.Transpose(matrix) : matrix;
     }
-
-    public static void DecomposeLookAt(this Matrix4X4<float> matrix, out Vector3D<float> cameraPosition, out Vector3D<float> cameraTarget, out Vector3D<float> cameraUpVector)
-    {
-        Matrix4X4.Invert(matrix, out Matrix4X4<float> inverseMatrix);
-
-        cameraPosition = new Vector3D<float>(inverseMatrix.M41, inverseMatrix.M42, inverseMatrix.M43);
-        cameraTarget = cameraPosition - new Vector3D<float>(inverseMatrix.M31, inverseMatrix.M32, inverseMatrix.M33);
-        cameraUpVector = new Vector3D<float>(inverseMatrix.M21, inverseMatrix.M22, inverseMatrix.M23);
-    }
 }

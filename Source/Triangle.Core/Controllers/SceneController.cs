@@ -140,7 +140,30 @@ public class SceneController
         float[] showMatrixArray = showMatrix.ToArray();
         if (ImGuizmo.Manipulate(ref viewArray[0], ref projectionArray[0], _scene.GizmosOperation, _scene.GizmosSpace, ref showMatrixArray[0]))
         {
+            Matrix4X4.Decompose(showMatrixArray.ToMatrix(), out Vector3D<float> scale, out Quaternion<float> rotation, out Vector3D<float> translation);
 
+            if (selectedObjects.Count == 1)
+            {
+                TrGameObject gameObject = selectedObjects.First();
+
+                gameObject.Transform.Position = translation;
+                gameObject.Transform.Rotation = rotation;
+                gameObject.Transform.Scale = scale;
+            }
+            else
+            {
+                Vector3D<float> deltaScale = scale - Vector3D<float>.One;
+
+                foreach (TrGameObject gameObject in selectedObjects)
+                {
+                    Vector3D<float> offset = gameObject.Transform.Position - center;
+                    offset = Vector3D.Transform(offset, rotation);
+
+                    gameObject.Transform.Position = translation + (offset * scale);
+                    gameObject.Transform.Rotation *= rotation;
+                    gameObject.Transform.Scale += deltaScale;
+                }
+            }
         }
     }
 }
