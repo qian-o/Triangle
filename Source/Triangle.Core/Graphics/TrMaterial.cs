@@ -13,7 +13,7 @@ public abstract class TrMaterial(TrContext context, string name) : TrGraphics<Tr
 
     public abstract TrRenderPass CreateRenderPass();
 
-    public abstract void Draw(TrMesh mesh, object[] args);
+    public abstract void Draw(TrMesh mesh, params object[] args);
 
     public void Controller(string name = "")
     {
@@ -35,17 +35,4 @@ public abstract class TrMaterial(TrContext context, string name) : TrGraphics<Tr
     }
 
     protected abstract void ControllerCore();
-}
-
-public abstract class TrMaterial<TParameters>(TrContext context, string name) : TrMaterial(context, name)
-{
-    public override void Draw(TrMesh mesh, object[] args)
-    {
-        if (args.Length == 1 && args[0] is TParameters parameters)
-        {
-            Draw(mesh, parameters);
-        }
-    }
-
-    public abstract void Draw(TrMesh mesh, TParameters parameters);
 }

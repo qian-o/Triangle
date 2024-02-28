@@ -22,7 +22,7 @@ public class Tutorial06(IInputContext input, TrContext context) : BaseTutorial(i
     #endregion
 
     #region Models
-    private MeshModel knot = null!;
+    private TrModel knot = null!;
     #endregion
 
     protected override void Loaded()

@@ -13,7 +13,7 @@ using AttribLocation = uint;
 
 namespace Triangle.Render.Contracts.Materials;
 
-public abstract class GlobalMat : TrMaterial<GlobalParameters>
+public abstract class GlobalMat : TrMaterial
 {
     public const uint UniformBufferBindingStart = 7;
     public const uint UniformSampler2dBindingStart = 4;
@@ -174,8 +174,30 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
 
     public Vector4D<float> Channel3ST { get; set; } = new(1.0f, 1.0f, 0.0f, 0.0f);
 
-    public override void Draw(TrMesh mesh, GlobalParameters parameters)
+    /// <summary>
+    /// Draw the mesh with the material.
+    /// </summary>
+    /// <param name="mesh">mesh</param>
+    /// <param name="args">
+    /// args:
+    /// Matrix4X4<float> model - Model matrix (can be null)
+    /// GlobalParameters parameters - Global parameters
+    /// </param>
+    /// <exception cref="ArgumentException">
+    /// If `GlobalParameters` is not found in the args.
+    /// </exception>
+    public override void Draw(TrMesh mesh, params object[] args)
     {
+        if (args.FirstOrDefault(item => item is Matrix4X4<float>) is not Matrix4X4<float> model)
+        {
+            model = Matrix4X4<float>.Identity;
+        }
+
+        if (args.FirstOrDefault(item => item is GlobalParameters) is not GlobalParameters parameters)
+        {
+            throw new ArgumentException("Invalid arguments.");
+        }
+
         Vector4D<float> channel0Size = Vector4D<float>.Zero;
         Vector4D<float> channel1Size = Vector4D<float>.Zero;
         Vector4D<float> channel2Size = Vector4D<float>.Zero;
@@ -211,12 +233,12 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
 
             _uboTransforms.SetData(new UniTransforms()
             {
-                Model = parameters.Model,
+                Model = model,
                 View = parameters.Camera.View,
                 Projection = parameters.Camera.Projection,
-                ObjectToWorld = parameters.Model,
-                ObjectToClip = parameters.Model * parameters.Camera.View * parameters.Camera.Projection,
-                WorldToObject = parameters.Model.Invert()
+                ObjectToWorld = model,
+                ObjectToClip = model * parameters.Camera.View * parameters.Camera.Projection,
+                WorldToObject = model.Invert()
             });
             _uboVectors.SetData(new UniVectors()
             {

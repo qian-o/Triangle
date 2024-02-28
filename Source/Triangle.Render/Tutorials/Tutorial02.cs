@@ -24,9 +24,9 @@ public class Tutorial02(IInputContext input, TrContext context) : BaseTutorial(i
     #endregion
 
     #region Models
-    private MeshModel goldStar1 = null!;
-    private MeshModel goldStar2 = null!;
-    private MeshModel goldStar3 = null!;
+    private TrModel goldStar1 = null!;
+    private TrModel goldStar2 = null!;
+    private TrModel goldStar3 = null!;
     #endregion
 
     protected override void Loaded()

@@ -60,34 +60,34 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
 
             if (rectangle.Contains(point))
             {
-                MeshModel[] meshModels = _sceneController.Objects.Where(x => x is MeshModel).Cast<MeshModel>().ToArray();
-                List<MeshModel> selectedMeshModels = [.. _sceneController.SelectedObjects.Where(x => x is MeshModel).Cast<MeshModel>()];
+                TrModel[] models = _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>().ToArray();
+                List<TrModel> selectedModels = [.. _sceneController.SelectedObjects.Where(x => x is TrModel).Cast<TrModel>()];
 
                 bool anySelected = false;
                 bool isMultiSelect = _scene.KeyPressed(Key.ControlLeft) || _scene.KeyPressed(Key.ControlRight);
 
                 Vector4D<byte> pickColor = _frame.GetPixel(Convert.ToInt32(point.X), Convert.ToInt32(point.Y));
 
-                foreach (MeshModel meshModel in meshModels)
+                foreach (TrModel model in models)
                 {
-                    if (meshModel.ColorId == pickColor)
+                    if (model.ColorId == pickColor)
                     {
                         anySelected = true;
 
-                        bool isSelected = selectedMeshModels.Contains(meshModel);
+                        bool isSelected = selectedModels.Contains(model);
 
                         if (isMultiSelect)
                         {
-                            selectedMeshModels.Remove(meshModel);
+                            selectedModels.Remove(model);
                         }
                         else
                         {
-                            selectedMeshModels.Clear();
+                            selectedModels.Clear();
                         }
 
                         if (!isMultiSelect || isMultiSelect && !isSelected)
                         {
-                            selectedMeshModels.Add(meshModel);
+                            selectedModels.Add(model);
                         }
 
                         break;
@@ -96,10 +96,10 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
 
                 if (!anySelected)
                 {
-                    selectedMeshModels.Clear();
+                    selectedModels.Clear();
                 }
 
-                _sceneController.SelectObjects(selectedMeshModels.ToArray());
+                _sceneController.SelectObjects(selectedModels.ToArray());
             }
         }
     }
@@ -110,14 +110,14 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
     /// <param name="baseParameters"></param>
     public void Render(GlobalParameters baseParameters)
     {
-        MeshModel[] meshModels = _sceneController.Objects.Where(x => x is MeshModel).Cast<MeshModel>().ToArray();
-        MeshModel[] selectedMeshModels = _sceneController.SelectedObjects.Where(x => x is MeshModel).Cast<MeshModel>().ToArray();
+        TrModel[] models = _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>().ToArray();
+        List<TrModel> selectedModels = [.. _sceneController.SelectedObjects.Where(x => x is TrModel).Cast<TrModel>()];
 
         _frame.Bind();
         {
             _context.Clear();
 
-            foreach (MeshModel model in meshModels)
+            foreach (TrModel model in models)
             {
                 _solidColorMat.Color = model.ColorId.ToSingle();
 
@@ -130,7 +130,7 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
         {
             _context.Clear();
 
-            foreach (MeshModel model in selectedMeshModels)
+            foreach (TrModel model in selectedModels)
             {
                 _solidColorMat.Color = PickupColor.ToSingle();
 

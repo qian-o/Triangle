@@ -1,27 +1,25 @@
 ﻿using System.Collections.ObjectModel;
 using Hexa.NET.ImGui;
-using Triangle.Render.Contracts.Materials;
-using Triangle.Render.Models;
 
 namespace Triangle.Core.Graphics;
 
-public class MeshModel : TrGameObject
+public class TrModel : TrGameObject
 {
     private readonly TrMesh[] _meshes;
-    private readonly GlobalMat[] _materials;
-    private readonly Dictionary<TrMesh, GlobalMat> _indexer;
+    private readonly TrMaterial[] _materials;
+    private readonly Dictionary<TrMesh, TrMaterial> _indexer;
 
-    private MeshModel(string name) : base(name)
+    private TrModel(string name) : base(name)
     {
         _meshes = [];
         _materials = [];
         _indexer = [];
     }
 
-    public MeshModel(string name, TrMesh[] meshes, GlobalMat materials) : this(name)
+    public TrModel(string name, TrMesh[] meshes, TrMaterial materials) : this(name)
     {
         _meshes = meshes;
-        _materials = new GlobalMat[meshes.Length];
+        _materials = new TrMaterial[meshes.Length];
 
         for (int i = 0; i < _meshes.Length; i++)
         {
@@ -30,7 +28,7 @@ public class MeshModel : TrGameObject
         }
     }
 
-    public MeshModel(string name, TrMesh[] meshes, GlobalMat[] materials) : this(name)
+    public TrModel(string name, TrMesh[] meshes, TrMaterial[] materials) : this(name)
     {
         if (meshes.Length != materials.Length)
         {
@@ -46,7 +44,7 @@ public class MeshModel : TrGameObject
         }
     }
 
-    public MeshModel(string name, TrMesh[] meshes, GlobalMat[] materials, Dictionary<TrMesh, GlobalMat> indexer) : this(name)
+    public TrModel(string name, TrMesh[] meshes, TrMaterial[] materials, Dictionary<TrMesh, TrMaterial> indexer) : this(name)
     {
         if (meshes.Length != materials.Length && meshes.Length != indexer.Count)
         {
@@ -76,36 +74,19 @@ public class MeshModel : TrGameObject
         }
     }
 
-    /// <summary>
-    /// 绘制所有网格。
-    /// 用于 GlobalParameters 为引用类型，所以内部在使用的时候会进行Copy，不需要担心参数被修改。
-    /// </summary>
-    /// <param name="baseParameters">baseParameters</param>
-    public void Render(GlobalParameters baseParameters)
+    public void Render(params object[] args)
     {
-        GlobalParameters temp = baseParameters.Copy();
-        temp.Model = Transform.Model;
-
         foreach (TrMesh mesh in Meshes)
         {
-            _indexer[mesh].Draw(mesh, temp);
+            _indexer[mesh].Draw(mesh, [Transform.Model, .. args]);
         }
     }
 
-    /// <summary>
-    /// 使用指定的材质绘制所有网格。
-    /// 关于 GlobalParameters 的使用同上。
-    /// </summary>
-    /// <param name="material">material</param>
-    /// <param name="baseParameters">baseParameters</param>
-    public void Render(GlobalMat material, GlobalParameters baseParameters)
+    public void Render(TrMaterial material, params object[] args)
     {
-        GlobalParameters temp = baseParameters.Copy();
-        temp.Model = Transform.Model;
-
         foreach (TrMesh mesh in Meshes)
         {
-            material.Draw(mesh, temp);
+            material.Draw(mesh, [Transform.Model, .. args]);
         }
     }
 }

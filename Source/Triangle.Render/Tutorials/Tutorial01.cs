@@ -21,7 +21,7 @@ public class Tutorial01(IInputContext input, TrContext context) : BaseTutorial(i
     #endregion
 
     #region Models
-    private MeshModel sphere = null!;
+    private TrModel sphere = null!;
     #endregion
 
     protected override void Loaded()

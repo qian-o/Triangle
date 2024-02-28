@@ -23,7 +23,7 @@ public abstract class BaseTutorial : ITutorial
     #endregion
 
     #region Models
-    private readonly MeshModel _grid;
+    private readonly TrModel _grid;
     #endregion
 
     private bool disposedValue;
@@ -111,7 +111,6 @@ public abstract class BaseTutorial : ITutorial
     protected GlobalParameters GetSceneParameters()
     {
         return new(Scene.Camera,
-                   Matrix4X4<float>.Identity,
                    Scene.SceneData,
                    LightingController.AmbientLight,
                    LightingController.DirectionalLight);

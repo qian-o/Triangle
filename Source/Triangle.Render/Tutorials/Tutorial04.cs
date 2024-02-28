@@ -25,10 +25,10 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
     #endregion
 
     #region Models
-    private MeshModel capsule1 = null!;
-    private MeshModel capsule2 = null!;
-    private MeshModel capsule3 = null!;
-    private MeshModel capsule4 = null!;
+    private TrModel capsule1 = null!;
+    private TrModel capsule2 = null!;
+    private TrModel capsule3 = null!;
+    private TrModel capsule4 = null!;
     #endregion
 
     protected override void Loaded()
