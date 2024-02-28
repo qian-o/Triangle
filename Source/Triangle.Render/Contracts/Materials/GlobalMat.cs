@@ -9,6 +9,7 @@ using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Core.Structs;
 using Triangle.Render.Models;
+using AttribLocation = uint;
 
 namespace Triangle.Render.Contracts.Materials;
 
@@ -16,6 +17,13 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
 {
     public const uint UniformBufferBindingStart = 7;
     public const uint UniformSampler2dBindingStart = 4;
+
+    public const AttribLocation InPosition = 0;
+    public const AttribLocation InNormal = 1;
+    public const AttribLocation InTangent = 2;
+    public const AttribLocation InBitangent = 3;
+    public const AttribLocation InColor = 4;
+    public const AttribLocation InTexCoord = 5;
 
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -194,12 +202,12 @@ public abstract class GlobalMat : TrMaterial<GlobalParameters>
         {
             renderPipeline.Bind();
 
-            mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Position"), 3, nameof(TrVertex.Position));
-            mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Normal"), 3, nameof(TrVertex.Normal));
-            mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Tangent"), 3, nameof(TrVertex.Tangent));
-            mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Bitangent"), 3, nameof(TrVertex.Bitangent));
-            mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_Color"), 4, nameof(TrVertex.Color));
-            mesh.VertexAttributePointer((uint)renderPipeline.GetAttribLocation("In_TexCoord"), 2, nameof(TrVertex.TexCoord));
+            mesh.VertexAttributePointer(InPosition, 3, nameof(TrVertex.Position));
+            mesh.VertexAttributePointer(InNormal, 3, nameof(TrVertex.Normal));
+            mesh.VertexAttributePointer(InTangent, 3, nameof(TrVertex.Tangent));
+            mesh.VertexAttributePointer(InBitangent, 3, nameof(TrVertex.Bitangent));
+            mesh.VertexAttributePointer(InColor, 4, nameof(TrVertex.Color));
+            mesh.VertexAttributePointer(InTexCoord, 2, nameof(TrVertex.TexCoord));
 
             _uboTransforms.SetData(new UniTransforms()
             {
