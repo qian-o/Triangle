@@ -419,6 +419,8 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
         }
 
         gl.PolygonMode(Polygon.Face.ToGL(), Polygon.Mode.ToGL());
+        gl.LineWidth(Polygon.LineWidth);
+        gl.PointSize(Polygon.PointSize);
 
         if (IsMultisample)
         {

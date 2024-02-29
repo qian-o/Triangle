@@ -3,6 +3,7 @@ using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Contracts;
 using Triangle.Core.Controllers;
+using Triangle.Core.GameObjects;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Render.Materials;

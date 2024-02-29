@@ -3,6 +3,7 @@ using Hexa.NET.ImGui;
 using Hexa.NET.ImGuizmo;
 using Silk.NET.Input;
 using Silk.NET.Maths;
+using Triangle.Core.Contracts.GameObjects;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 

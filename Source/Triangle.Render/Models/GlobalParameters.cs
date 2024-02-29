@@ -1,9 +1,9 @@
-﻿using Triangle.Core.Graphics;
+﻿using Triangle.Core.GameObjects;
 using Triangle.Core.Structs;
 
 namespace Triangle.Render.Models;
 
-public class GlobalParameters(TrCamera camera, TrSceneData sceneData, TrAmbientLight ambientLight = default, TrDirectionalLight directionalLight = default)
+public class GlobalParameters(TrCamera camera, TrSceneData sceneData, TrAmbientLight ambientLight, TrDirectionalLight directionalLight)
 {
     public TrCamera Camera { get; set; } = camera;
 

@@ -1,8 +1,9 @@
 ﻿using Hexa.NET.ImGui;
 using Silk.NET.Maths;
+using Triangle.Core.Contracts.GameObjects;
 using Triangle.Core.Helpers;
 
-namespace Triangle.Core.Graphics;
+namespace Triangle.Core.GameObjects;
 
 public class TrCamera(string name) : TrGameObject(name)
 {

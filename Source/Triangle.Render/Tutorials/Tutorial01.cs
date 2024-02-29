@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using Silk.NET.Input;
 using Triangle.Core;
+using Triangle.Core.GameObjects;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Render.Contracts.Tutorials;

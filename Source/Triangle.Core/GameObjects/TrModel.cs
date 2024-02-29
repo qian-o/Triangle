@@ -1,20 +1,15 @@
 ﻿using System.Collections.ObjectModel;
 using Hexa.NET.ImGui;
+using Triangle.Core.Contracts.GameObjects;
+using Triangle.Core.Graphics;
 
-namespace Triangle.Core.Graphics;
+namespace Triangle.Core.GameObjects;
 
-public class TrModel : TrGameObject
+public class TrModel(string name) : TrGameObject(name)
 {
-    private readonly TrMesh[] _meshes;
-    private readonly TrMaterial[] _materials;
-    private readonly Dictionary<TrMesh, TrMaterial> _indexer;
-
-    private TrModel(string name) : base(name)
-    {
-        _meshes = [];
-        _materials = [];
-        _indexer = [];
-    }
+    private readonly TrMesh[] _meshes = [];
+    private readonly TrMaterial[] _materials = [];
+    private readonly Dictionary<TrMesh, TrMaterial> _indexer = [];
 
     public TrModel(string name, TrMesh[] meshes, TrMaterial materials) : this(name)
     {
@@ -74,6 +69,15 @@ public class TrModel : TrGameObject
         }
     }
 
+    /// <summary>
+    /// This method is empty and should be overridden by the user.
+    /// </summary>
+    public virtual void Render() { }
+
+    /// <summary>
+    /// Renders the model with the given arguments.
+    /// </summary>
+    /// <param name="args">Before passing to the material, the model's transformation matrix will be added to the list of arguments.</param>
     public void Render(params object[] args)
     {
         foreach (TrMesh mesh in Meshes)
@@ -82,6 +86,11 @@ public class TrModel : TrGameObject
         }
     }
 
+    /// <summary>
+    /// Renders the model with the given material and arguments.
+    /// </summary>
+    /// <param name="material">material</param>
+    /// <param name="args">Before passing to the material, the model's transformation matrix will be added to the list of arguments.</param>
     public void Render(TrMaterial material, params object[] args)
     {
         foreach (TrMesh mesh in Meshes)

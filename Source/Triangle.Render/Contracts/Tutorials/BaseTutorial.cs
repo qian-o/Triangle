@@ -4,6 +4,7 @@ using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Controllers;
+using Triangle.Core.GameObjects;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Render.Controllers;
@@ -24,6 +25,8 @@ public abstract class BaseTutorial : ITutorial
 
     #region Models
     private readonly TrModel _grid;
+    private readonly TrAmbientLight _ambientLight;
+    private readonly TrDirectionalLight _directionalLight;
     #endregion
 
     private bool disposedValue;
@@ -35,14 +38,20 @@ public abstract class BaseTutorial : ITutorial
         Scene = new TrScene(input, context, GetType().GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? GetType().Name);
 
         SceneController = new(Scene);
-        LightingController = new();
         PickupController = new(Context, Scene, SceneController);
 
         _gridMeshes = [Context.CreateGrid()];
-
         _gridMat = new(Context);
-
         _grid = new("Grid", _gridMeshes, _gridMat);
+
+        _ambientLight = new(Context, Scene.Camera, "Ambient Light");
+        _directionalLight = new(Context, Scene.Camera, "Directional Light");
+        _directionalLight.Transform.Translate(new Vector3D<float>(3.0f, 5.0f, 3.0f));
+        _directionalLight.Transform.Scaled(new Vector3D<float>(0.5f));
+        _directionalLight.Transform.Rotate(new Vector3D<float>(-45.0f, 45.0f, 0.0f));
+
+        SceneController.Add(_ambientLight);
+        SceneController.Add(_directionalLight);
 
         Loaded();
     }
@@ -59,8 +68,6 @@ public abstract class BaseTutorial : ITutorial
     public TrScene Scene { get; }
 
     public SceneController SceneController { get; }
-
-    public LightingController LightingController { get; }
 
     public PickupController PickupController { get; }
 
@@ -85,6 +92,8 @@ public abstract class BaseTutorial : ITutorial
             Context.Clear(new Vector4D<float>(0.2f, 0.2f, 0.2f, 1.0f));
 
             RenderScene(deltaSeconds);
+
+            _directionalLight.Render();
 
             _grid.Render(GetSceneParameters());
 
@@ -112,8 +121,8 @@ public abstract class BaseTutorial : ITutorial
     {
         return new(Scene.Camera,
                    Scene.SceneData,
-                   LightingController.AmbientLight,
-                   LightingController.DirectionalLight);
+                   _ambientLight,
+                   _directionalLight);
     }
 
     protected abstract void Destroy(bool disposing = false);

@@ -1,8 +1,9 @@
 ﻿using Hexa.NET.ImGui;
 using Silk.NET.Maths;
+using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 
-namespace Triangle.Core.Graphics;
+namespace Triangle.Core.Contracts.GameObjects;
 
 public abstract class TrGameObject(string name)
 {
