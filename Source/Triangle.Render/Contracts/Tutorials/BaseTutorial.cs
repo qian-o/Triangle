@@ -20,6 +20,7 @@ public abstract class BaseTutorial : ITutorial
     private readonly TrModel _grid;
     private readonly TrAmbientLight _ambientLight;
     private readonly TrDirectionalLight _directionalLight;
+    private readonly List<TrPointLight> _pointLights;
     #endregion
 
     private bool disposedValue;
@@ -45,6 +46,8 @@ public abstract class BaseTutorial : ITutorial
         _directionalLight.Transform.Translate(new Vector3D<float>(3.0f, 5.0f, 3.0f));
         _directionalLight.Transform.Scaled(new Vector3D<float>(0.2f));
         _directionalLight.Transform.Rotate(new Vector3D<float>(-45.0f, 45.0f, 0.0f));
+
+        _pointLights = [];
 
         SceneController.Add(_sky);
         SceneController.Add(_ambientLight);
@@ -92,6 +95,7 @@ public abstract class BaseTutorial : ITutorial
 
             _ambientLight.Render();
             _directionalLight.Render();
+            _pointLights.ForEach(light => light.Render());
 
             _sky.Render(GetSceneParameters());
             _grid.Render(GetSceneParameters());
@@ -115,6 +119,16 @@ public abstract class BaseTutorial : ITutorial
     protected abstract void UpdateScene(double deltaSeconds);
 
     protected abstract void RenderScene(double deltaSeconds);
+
+    protected void AddPointLight(string name)
+    {
+        TrPointLight pointLight = new(Context, Scene.Camera, name);
+        pointLight.Transform.Scaled(new Vector3D<float>(0.2f));
+
+        _pointLights.Add(pointLight);
+
+        SceneController.Add(pointLight);
+    }
 
     protected GlobalParameters GetSceneParameters()
     {

@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Hexa.NET.ImGui;
 using Silk.NET.Maths;
@@ -15,8 +16,9 @@ namespace Triangle.Render.Contracts.Materials;
 
 public abstract class GlobalMat : TrMaterial
 {
-    public const uint UniformBufferBindingStart = 7;
+    public const uint UniformBufferBindingStart = 8;
     public const uint UniformSampler2dBindingStart = 4;
+    public const uint MaxPointLights = 50;
 
     public const AttribLocation InPosition = 0;
     public const AttribLocation InNormal = 1;
@@ -24,6 +26,30 @@ public abstract class GlobalMat : TrMaterial
     public const AttribLocation InBitangent = 3;
     public const AttribLocation InColor = 4;
     public const AttribLocation InTexCoord = 5;
+
+    #region Structs
+    [StructLayout(LayoutKind.Explicit)]
+    private struct PointLight
+    {
+        [FieldOffset(0)]
+        public Vector3D<float> Color;
+
+        [FieldOffset(16)]
+        public Vector3D<float> Position;
+
+        [FieldOffset(32)]
+        public float Intensity;
+
+        [FieldOffset(36)]
+        public float Range;
+    }
+
+    [InlineArray((int)MaxPointLights)]
+    private struct PointLights
+    {
+        public PointLight _;
+    }
+    #endregion
 
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -104,6 +130,16 @@ public abstract class GlobalMat : TrMaterial
     }
 
     [StructLayout(LayoutKind.Explicit)]
+    private struct UniPointLights
+    {
+        [FieldOffset(0)]
+        public int Count;
+
+        [FieldOffset(4)]
+        public PointLights Lights;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
     private struct UniTexTexParams
     {
         [FieldOffset(0)]
@@ -141,6 +177,7 @@ public abstract class GlobalMat : TrMaterial
     private readonly TrBuffer<UniConstants> _uboConstants;
     private readonly TrBuffer<UniAmbientLight> _uboAmbientLight;
     private readonly TrBuffer<UniDirectionalLight> _uboDirectionalLight;
+    private readonly TrBuffer<UniPointLights> _uboPointLights;
     private readonly TrBuffer<UniTexTexParams> _uboUniTexTexParams;
     private readonly TrBuffer<UniTexScaleOffset> _uboTexScaleOffset;
     private readonly Dictionary<int, (PropertyInfo Channel, PropertyInfo ChannelST)> _channelCache;
@@ -152,6 +189,7 @@ public abstract class GlobalMat : TrMaterial
         _uboConstants = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
         _uboAmbientLight = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
         _uboDirectionalLight = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        _uboPointLights = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
         _uboTexScaleOffset = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
         _uboUniTexTexParams = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
@@ -198,6 +236,11 @@ public abstract class GlobalMat : TrMaterial
             throw new ArgumentException("Invalid arguments.");
         }
 
+        if (parameters.PointLights.Length > MaxPointLights)
+        {
+            throw new InvalidOperationException($"The maximum number of point lights is {MaxPointLights}.");
+        }
+
         Vector4D<float> channel0Size = Vector4D<float>.Zero;
         Vector4D<float> channel1Size = Vector4D<float>.Zero;
         Vector4D<float> channel2Size = Vector4D<float>.Zero;
@@ -218,6 +261,18 @@ public abstract class GlobalMat : TrMaterial
         if (Channel3 != null)
         {
             channel3Size = new Vector4D<float>(1.0f / Channel3.Width, 1.0f / Channel3.Height, Channel3.Width, Channel3.Height);
+        }
+
+        PointLights pointLights = new();
+        for (int i = 0; i < parameters.PointLights.Length; i++)
+        {
+            pointLights[i] = new PointLight()
+            {
+                Color = parameters.PointLights[i].Color,
+                Position = parameters.PointLights[i].Transform.Position,
+                Intensity = parameters.PointLights[i].Intensity,
+                Range = parameters.PointLights[i].Range
+            };
         }
 
         foreach (TrRenderPipeline renderPipeline in RenderPass.RenderPipelines)
@@ -265,6 +320,11 @@ public abstract class GlobalMat : TrMaterial
                 Color = parameters.DirectionalLight.Color,
                 Position = -parameters.DirectionalLight.Direction
             });
+            _uboPointLights.SetData(new UniPointLights()
+            {
+                Count = parameters.PointLights.Length,
+                Lights = pointLights
+            });
             _uboUniTexTexParams.SetData(new UniTexTexParams()
             {
                 Channel0Size = channel0Size,
@@ -285,8 +345,9 @@ public abstract class GlobalMat : TrMaterial
             renderPipeline.BindUniformBlock(2, _uboConstants);
             renderPipeline.BindUniformBlock(3, _uboAmbientLight);
             renderPipeline.BindUniformBlock(4, _uboDirectionalLight);
-            renderPipeline.BindUniformBlock(5, _uboUniTexTexParams);
-            renderPipeline.BindUniformBlock(6, _uboTexScaleOffset);
+            renderPipeline.BindUniformBlock(5, _uboPointLights);
+            renderPipeline.BindUniformBlock(6, _uboUniTexTexParams);
+            renderPipeline.BindUniformBlock(7, _uboTexScaleOffset);
 
             renderPipeline.BindUniformBlock(0, Channel0);
             renderPipeline.BindUniformBlock(1, Channel1);

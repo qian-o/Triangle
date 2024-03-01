@@ -1,6 +1,15 @@
-#define UNIFORM_BUFFER_BINDING_START 7
+#define UNIFORM_BUFFER_BINDING_START 8
 #define UNIFORM_SAMPLER_2D_BINDING_START 4
+#define MAX_POINT_LIGHTS 50
 #define ANTI_ALIASING 4
+
+struct PointLight
+{
+    vec3 Color;
+    vec3 Position;
+    float Intensity;
+    float Range;
+};
 
 layout(std140, binding = 0) uniform Transforms
 {
@@ -46,7 +55,14 @@ layout(std140, binding = 4) uniform DirectionalLight
 }
 Uni_DirectionalLight;
 
-layout(std140, binding = 5) uniform TexParams
+layout(std140, binding = 5) uniform PointLights
+{
+    int Count;
+    PointLight Lights[MAX_POINT_LIGHTS];
+}
+Uni_PointLights;
+
+layout(std140, binding = 6) uniform TexParams
 {
     vec4 Channel0Size;
     vec4 Channel1Size;
@@ -55,7 +71,7 @@ layout(std140, binding = 5) uniform TexParams
 }
 Uni_TexParams;
 
-layout(std140, binding = 6) uniform TexScaleOffset
+layout(std140, binding = 7) uniform TexScaleOffset
 {
     vec4 Channel0ST;
     vec4 Channel1ST;
