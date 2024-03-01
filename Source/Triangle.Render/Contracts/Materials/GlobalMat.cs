@@ -17,7 +17,7 @@ namespace Triangle.Render.Contracts.Materials;
 public abstract class GlobalMat : TrMaterial
 {
     public const uint UniformBufferBindingStart = 8;
-    public const uint UniformSampler2dBindingStart = 4;
+    public const uint UniformSampler2dBindingStart = 5;
     public const uint MaxPointLights = 50;
 
     public const AttribLocation InPosition = 0;
@@ -153,6 +153,9 @@ public abstract class GlobalMat : TrMaterial
 
         [FieldOffset(48)]
         public Vector4D<float> Channel3Size;
+
+        [FieldOffset(64)]
+        public Vector4D<float> Channel4Size;
     }
 
     [StructLayout(LayoutKind.Explicit)]
@@ -169,6 +172,9 @@ public abstract class GlobalMat : TrMaterial
 
         [FieldOffset(48)]
         public Vector4D<float> Channel3ST;
+
+        [FieldOffset(64)]
+        public Vector4D<float> Channel4ST;
     }
     #endregion
 
@@ -204,6 +210,8 @@ public abstract class GlobalMat : TrMaterial
 
     public TrTexture? Channel3 { get; set; }
 
+    public TrTexture? Channel4 { get; set; }
+
     public Vector4D<float> Channel0ST { get; set; } = new(1.0f, 1.0f, 0.0f, 0.0f);
 
     public Vector4D<float> Channel1ST { get; set; } = new(1.0f, 1.0f, 0.0f, 0.0f);
@@ -211,6 +219,8 @@ public abstract class GlobalMat : TrMaterial
     public Vector4D<float> Channel2ST { get; set; } = new(1.0f, 1.0f, 0.0f, 0.0f);
 
     public Vector4D<float> Channel3ST { get; set; } = new(1.0f, 1.0f, 0.0f, 0.0f);
+
+    public Vector4D<float> Channel4ST { get; set; } = new(1.0f, 1.0f, 0.0f, 0.0f);
 
     /// <summary>
     /// Draw the mesh with the material.
@@ -245,6 +255,7 @@ public abstract class GlobalMat : TrMaterial
         Vector4D<float> channel1Size = Vector4D<float>.Zero;
         Vector4D<float> channel2Size = Vector4D<float>.Zero;
         Vector4D<float> channel3Size = Vector4D<float>.Zero;
+        Vector4D<float> channel4Size = Vector4D<float>.Zero;
 
         if (Channel0 != null)
         {
@@ -261,6 +272,10 @@ public abstract class GlobalMat : TrMaterial
         if (Channel3 != null)
         {
             channel3Size = new Vector4D<float>(1.0f / Channel3.Width, 1.0f / Channel3.Height, Channel3.Width, Channel3.Height);
+        }
+        if (Channel4 != null)
+        {
+            channel4Size = new Vector4D<float>(1.0f / Channel4.Width, 1.0f / Channel4.Height, Channel4.Width, Channel4.Height);
         }
 
         PointLights pointLights = new();
@@ -330,14 +345,16 @@ public abstract class GlobalMat : TrMaterial
                 Channel0Size = channel0Size,
                 Channel1Size = channel1Size,
                 Channel2Size = channel2Size,
-                Channel3Size = channel3Size
+                Channel3Size = channel3Size,
+                Channel4Size = channel4Size
             });
             _uboTexScaleOffset.SetData(new UniTexScaleOffset()
             {
                 Channel0ST = Channel0ST,
                 Channel1ST = Channel1ST,
                 Channel2ST = Channel2ST,
-                Channel3ST = Channel3ST
+                Channel3ST = Channel3ST,
+                Channel4ST = Channel4ST
             });
 
             renderPipeline.BindUniformBlock(0, _uboTransforms);
@@ -353,6 +370,7 @@ public abstract class GlobalMat : TrMaterial
             renderPipeline.BindUniformBlock(1, Channel1);
             renderPipeline.BindUniformBlock(2, Channel2);
             renderPipeline.BindUniformBlock(3, Channel3);
+            renderPipeline.BindUniformBlock(4, Channel4);
 
             renderPipeline.Unbind();
         }

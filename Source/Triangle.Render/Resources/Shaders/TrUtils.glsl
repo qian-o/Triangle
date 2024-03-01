@@ -1,5 +1,14 @@
+#define PI 3.14159265359
+#define WO_PI 6.28318530718
+#define FOUR_PI 12.56637061436
+#define INV_PI 0.31830988618
+#define INV_TWO_PI 0.15915494309
+#define INV_FOUR_PI 0.07957747155
+#define HALF_PI 1.57079632679
+#define INV_HALF_PI 0.636619772367
+
 #define UNIFORM_BUFFER_BINDING_START 8
-#define UNIFORM_SAMPLER_2D_BINDING_START 4
+#define UNIFORM_SAMPLER_2D_BINDING_START 5
 #define MAX_POINT_LIGHTS 50
 #define ANTI_ALIASING 4
 
@@ -68,6 +77,7 @@ layout(std140, binding = 6) uniform TexParams
     vec4 Channel1Size;
     vec4 Channel2Size;
     vec4 Channel3Size;
+    vec4 Channel4Size;
 }
 Uni_TexParams;
 
@@ -77,6 +87,7 @@ layout(std140, binding = 7) uniform TexScaleOffset
     vec4 Channel1ST;
     vec4 Channel2ST;
     vec4 Channel3ST;
+    vec4 Channel4ST;
 }
 Uni_TexScaleOffset;
 
@@ -84,6 +95,7 @@ layout(binding = 0) uniform sampler2D Channel0;
 layout(binding = 1) uniform sampler2D Channel1;
 layout(binding = 2) uniform sampler2D Channel2;
 layout(binding = 3) uniform sampler2D Channel3;
+layout(binding = 4) uniform sampler2D Channel4;
 
 /// <summary>
 /// computes depth from position

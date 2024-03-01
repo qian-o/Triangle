@@ -14,7 +14,7 @@ public class TrPointLight(TrContext context, TrCamera camera, string name) : TrM
 
     public override void Render()
     {
-        Render([camera, Color, Intensity]);
+        Render([camera, Color, Intensity, Range]);
     }
 
     protected override void OtherPropertyEditor()

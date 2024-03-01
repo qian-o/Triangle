@@ -120,11 +120,10 @@ public abstract class BaseTutorial : ITutorial
 
     protected abstract void RenderScene(double deltaSeconds);
 
-    protected void AddPointLight(string name)
+    protected void AddPointLight(string name, out TrPointLight pointLight)
     {
-        TrPointLight pointLight = new(Context, Scene.Camera, name);
+        pointLight = new(Context, Scene.Camera, name);
         pointLight.Transform.Scaled(new Vector3D<float>(0.2f));
-
         _pointLights.Add(pointLight);
 
         SceneController.Add(pointLight);
@@ -153,6 +152,7 @@ public abstract class BaseTutorial : ITutorial
             _grid.Dispose();
             _ambientLight.Dispose();
             _directionalLight.Dispose();
+            _pointLights.ForEach(light => light.Dispose());
 
             PickupController.Dispose();
 

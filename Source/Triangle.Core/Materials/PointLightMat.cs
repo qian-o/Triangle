@@ -41,6 +41,12 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
     {
         [FieldOffset(0)]
         public Vector4D<float> Color;
+
+        [FieldOffset(16)]
+        public float Intensity;
+
+        [FieldOffset(20)]
+        public float Range;
     }
     #endregion
 
@@ -70,10 +76,17 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
     /// args[0] - Transform matrix
     /// args[1] - Camera
     /// args[2] - Color vec3
+    /// args[3] - Intensity float
+    /// args[4] - Range float
     /// </param>
     public override void Draw(TrMesh mesh, params object[] args)
     {
-        if (args.Length != 3 || args[0] is not Matrix4X4<float> model || args[1] is not TrCamera camera || args[2] is not Vector3D<float> color)
+        if (args.Length != 5
+            || args[0] is not Matrix4X4<float> model
+            || args[1] is not TrCamera camera
+            || args[2] is not Vector3D<float> color
+            || args[3] is not float intensity
+            || args[4] is not float range)
         {
             throw new ArgumentException("Invalid arguments.");
         }
@@ -95,7 +108,9 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
             });
             uboParameters.SetData(new UniParameters()
             {
-                Color = new(color.X, color.Y, color.Z, 1.0f)
+                Color = new(color.X, color.Y, color.Z, 1.0f),
+                Intensity = intensity,
+                Range = range
             });
 
             renderPipeline.BindUniformBlock(0, uboTransforms);
