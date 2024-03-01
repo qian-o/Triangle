@@ -5,7 +5,7 @@ using Triangle.Core.Helpers;
 
 namespace Triangle.Core.Contracts.GameObjects;
 
-public abstract class TrGameObject(string name)
+public abstract class TrGameObject(string name) : Disposable
 {
     private readonly Guid _id = Guid.NewGuid();
     private readonly TrTransform _transform = new();

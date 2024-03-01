@@ -15,14 +15,6 @@ namespace Triangle.Render.Contracts.Tutorials;
 
 public abstract class BaseTutorial : ITutorial
 {
-    #region Meshes
-    private readonly TrMesh[] _gridMeshes;
-    #endregion
-
-    #region Materials
-    private readonly GridMat _gridMat;
-    #endregion
-
     #region Models
     private readonly TrModel _grid;
     private readonly TrAmbientLight _ambientLight;
@@ -40,14 +32,13 @@ public abstract class BaseTutorial : ITutorial
         SceneController = new(Scene);
         PickupController = new(Context, Scene, SceneController);
 
-        _gridMeshes = [Context.CreateGrid()];
-        _gridMat = new(Context);
-        _grid = new("Grid", _gridMeshes, _gridMat);
+        _grid = new("Grid", [Context.CreateGrid()], new GridMat(Context));
 
         _ambientLight = new(Context, Scene.Camera, "Ambient Light");
+
         _directionalLight = new(Context, Scene.Camera, "Directional Light");
         _directionalLight.Transform.Translate(new Vector3D<float>(3.0f, 5.0f, 3.0f));
-        _directionalLight.Transform.Scaled(new Vector3D<float>(0.5f));
+        _directionalLight.Transform.Scaled(new Vector3D<float>(0.2f));
         _directionalLight.Transform.Rotate(new Vector3D<float>(-45.0f, 45.0f, 0.0f));
 
         SceneController.Add(_ambientLight);
@@ -136,12 +127,9 @@ public abstract class BaseTutorial : ITutorial
                 Destroy(disposing);
             }
 
-            _gridMat.Dispose();
-
-            foreach (TrMesh mesh in _gridMeshes)
-            {
-                mesh.Dispose();
-            }
+            _grid.Dispose();
+            _ambientLight.Dispose();
+            _directionalLight.Dispose();
 
             PickupController.Dispose();
 

@@ -55,4 +55,9 @@ public class TrCamera(string name) : TrGameObject(name)
         Transform.Position = position;
         Transform.Rotation = rotation;
     }
+
+    protected override void Destroy(bool disposing = false)
+    {
+
+    }
 }

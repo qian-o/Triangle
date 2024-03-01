@@ -55,6 +55,7 @@ public class Tutorial05(IInputContext input, TrContext context) : BaseTutorial(i
         {
             mat.Dispose();
         }
+
         canvas.Dispose();
     }
 }

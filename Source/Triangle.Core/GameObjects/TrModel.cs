@@ -98,4 +98,19 @@ public class TrModel(string name) : TrGameObject(name)
             material.Draw(mesh, [Transform.Model, .. args]);
         }
     }
+
+    protected override void Destroy(bool disposing = false)
+    {
+        foreach (TrMesh mesh in _meshes)
+        {
+            mesh.Dispose();
+        }
+
+        foreach (TrMaterial material in _materials)
+        {
+            material.Dispose();
+        }
+
+        _indexer.Clear();
+    }
 }

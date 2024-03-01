@@ -64,6 +64,21 @@ public static unsafe class TrMeshFactory
         return new(context, vertices, vertices.Select((a, b) => (uint)b).ToArray());
     }
 
+    public static TrMesh CreateCapsule(this TrContext context)
+    {
+        return AssimpParsing(context, Path.Combine("Resources", "Models", "Capsule.glb"))[0];
+    }
+
+    public static TrMesh CreateSphere(this TrContext context)
+    {
+        return AssimpParsing(context, Path.Combine("Resources", "Models", "Sphere.glb"))[0];
+    }
+
+    public static TrMesh CreateStar(this TrContext context)
+    {
+        return AssimpParsing(context, Path.Combine("Resources", "Models", "Star.glb"))[0];
+    }
+
     public static TrMesh CreateGrid(this TrContext context)
     {
         TrVertex[] vertices =
