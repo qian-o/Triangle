@@ -11,6 +11,8 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
 {
     public override TrRenderPass CreateRenderPass()
     {
+        Channel0 = TrTextureManager.Texture("Resources/Textures/Skies/cloudy_puresky_4k.hdr".Path());
+
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Sky/Sky.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Sky/Sky.frag.spv".Path());
 

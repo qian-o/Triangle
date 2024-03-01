@@ -13,10 +13,9 @@ Out;
 
 void main()
 {
-    Out.UV = TransformUV(In_TexCoord, Uni_TexScaleOffset.Channel0ST);
+    Out.UV = In_TexCoord;
 
     mat4 view = mat4(mat3(Uni_Transforms.View));
-
     vec4 position = Uni_Transforms.Projection * view * vec4(In_Position, 1.0);
 
     gl_Position = position.xyww;
