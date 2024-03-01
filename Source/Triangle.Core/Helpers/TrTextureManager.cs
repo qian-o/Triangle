@@ -36,6 +36,7 @@ public static class TrTextureManager
         LoadTextures(context, folder, "jpeg");
         LoadTextures(context, folder, "psd");
         LoadTextures(context, folder, "tga");
+        LoadTextures(context, folder, "hdr");
 
         Dictionary<string, TrTexture> sortedFiles = temp.OrderBy(item => item.Key, new FilePathComparer()).ToDictionary();
 

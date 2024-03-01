@@ -16,6 +16,7 @@ namespace Triangle.Render.Contracts.Tutorials;
 public abstract class BaseTutorial : ITutorial
 {
     #region Models
+    private readonly TrModel _sky;
     private readonly TrModel _grid;
     private readonly TrAmbientLight _ambientLight;
     private readonly TrDirectionalLight _directionalLight;
@@ -32,6 +33,8 @@ public abstract class BaseTutorial : ITutorial
         SceneController = new(Scene);
         PickupController = new(Context, Scene, SceneController);
 
+        _sky = new("Sky", [Context.CreateSphere()], new SkyMat(Context));
+
         _grid = new("Grid", [Context.CreateGrid()], new GridMat(Context));
 
         _ambientLight = new(Context, Scene.Camera, "Ambient Light");
@@ -43,6 +46,7 @@ public abstract class BaseTutorial : ITutorial
         _directionalLight.Transform.Scaled(new Vector3D<float>(0.2f));
         _directionalLight.Transform.Rotate(new Vector3D<float>(-45.0f, 45.0f, 0.0f));
 
+        SceneController.Add(_sky);
         SceneController.Add(_ambientLight);
         SceneController.Add(_directionalLight);
 
@@ -89,6 +93,7 @@ public abstract class BaseTutorial : ITutorial
             _ambientLight.Render();
             _directionalLight.Render();
 
+            _sky.Render(GetSceneParameters());
             _grid.Render(GetSceneParameters());
 
             PickupController.PostEffects(GetSceneParameters());
@@ -130,6 +135,7 @@ public abstract class BaseTutorial : ITutorial
                 Destroy(disposing);
             }
 
+            _sky.Dispose();
             _grid.Dispose();
             _ambientLight.Dispose();
             _directionalLight.Dispose();
