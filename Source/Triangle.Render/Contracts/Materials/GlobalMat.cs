@@ -42,6 +42,9 @@ public abstract class GlobalMat : TrMaterial
 
         [FieldOffset(36)]
         public float Range;
+
+        [FieldOffset(44)]
+        public float _padding;
     }
 
     [InlineArray((int)MaxPointLights)]
@@ -135,7 +138,7 @@ public abstract class GlobalMat : TrMaterial
         [FieldOffset(0)]
         public int Count;
 
-        [FieldOffset(4)]
+        [FieldOffset(16)]
         public PointLights Lights;
     }
 

@@ -134,7 +134,8 @@ public abstract class BaseTutorial : ITutorial
         return new(Scene.Camera,
                    Scene.SceneData,
                    _ambientLight,
-                   _directionalLight);
+                   _directionalLight,
+                   [.. _pointLights]);
     }
 
     protected abstract void Destroy(bool disposing = false);

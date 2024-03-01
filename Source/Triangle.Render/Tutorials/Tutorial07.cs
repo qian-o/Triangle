@@ -20,7 +20,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
     {
         const int rows = 7;
         const int cols = 7;
-        const float spacing = 2.5f;
+        const float spacing = 1.2f;
 
         spheres = new TrModel[rows * cols];
         for (int i = 0; i < rows; i++)
@@ -31,21 +31,22 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
                 spheres[index] = new($"Sphere [{index}]", [Context.CreateSphere()], new PhysicallyBasedRenderingMat(Context));
                 spheres[index].Transform.Translate(new Vector3D<float>(i * spacing - rows * spacing / 2.0f, j * spacing - cols * spacing / 2.0f, 0.0f));
+                spheres[index].Transform.Scaled(new Vector3D<float>(0.5f));
                 SceneController.Add(spheres[index]);
             }
         }
 
         AddPointLight("Point Light [0]", out TrPointLight pointLight0);
-        pointLight0.Transform.Translate(new Vector3D<float>(-2.0f, 2.0f, 4.0f));
+        pointLight0.Transform.Translate(new Vector3D<float>(-1.0f, 1.0f, 1.0f));
 
         AddPointLight("Point Light [1]", out TrPointLight pointLight1);
-        pointLight1.Transform.Translate(new Vector3D<float>(2.0f, 2.0f, 4.0f));
+        pointLight1.Transform.Translate(new Vector3D<float>(1.0f, 1.0f, 1.0f));
 
         AddPointLight("Point Light [2]", out TrPointLight pointLight2);
-        pointLight2.Transform.Translate(new Vector3D<float>(-2.0f, -2.0f, 4.0f));
+        pointLight2.Transform.Translate(new Vector3D<float>(-1.0f, -1.0f, 1.0f));
 
         AddPointLight("Point Light [3]", out TrPointLight pointLight3);
-        pointLight3.Transform.Translate(new Vector3D<float>(2.0f, -2.0f, 4.0f));
+        pointLight3.Transform.Translate(new Vector3D<float>(1.0f, -1.0f, 1.0f));
     }
 
     protected override void UpdateScene(double deltaSeconds)
