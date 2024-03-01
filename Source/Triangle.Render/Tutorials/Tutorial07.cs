@@ -37,16 +37,16 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         }
 
         AddPointLight("Point Light [0]", out TrPointLight pointLight0);
-        pointLight0.Transform.Translate(new Vector3D<float>(-1.0f, 1.0f, 1.0f));
+        pointLight0.Transform.Translate(new Vector3D<float>(-1.0f, 1.0f, 2.0f));
 
         AddPointLight("Point Light [1]", out TrPointLight pointLight1);
-        pointLight1.Transform.Translate(new Vector3D<float>(1.0f, 1.0f, 1.0f));
+        pointLight1.Transform.Translate(new Vector3D<float>(1.0f, 1.0f, 2.0f));
 
         AddPointLight("Point Light [2]", out TrPointLight pointLight2);
-        pointLight2.Transform.Translate(new Vector3D<float>(-1.0f, -1.0f, 1.0f));
+        pointLight2.Transform.Translate(new Vector3D<float>(-1.0f, -1.0f, 2.0f));
 
         AddPointLight("Point Light [3]", out TrPointLight pointLight3);
-        pointLight3.Transform.Translate(new Vector3D<float>(1.0f, -1.0f, 1.0f));
+        pointLight3.Transform.Translate(new Vector3D<float>(1.0f, -1.0f, 2.0f));
     }
 
     protected override void UpdateScene(double deltaSeconds)
