@@ -38,8 +38,8 @@ public class SpecularVertexLevelMat(TrContext context) : GlobalMat(context, "Spe
     {
         uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter6/SpecularVertexLevel/SpecularVertexLevel.vert.spv".PathFormatter());
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter6/SpecularVertexLevel/SpecularVertexLevel.frag.spv".PathFormatter());
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter6/SpecularVertexLevel/SpecularVertexLevel.vert.spv".Path());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter6/SpecularVertexLevel/SpecularVertexLevel.frag.spv".Path());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);

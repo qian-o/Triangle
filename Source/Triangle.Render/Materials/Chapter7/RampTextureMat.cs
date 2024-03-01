@@ -38,10 +38,10 @@ public class RampTextureMat(TrContext context) : GlobalMat(context, "RampTexture
     {
         uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
-        Channel0 = TrTextureManager.Texture("Resources/Textures/Chapter07/Ramp_Texture0.psd".PathFormatter());
+        Channel0 = TrTextureManager.Texture("Resources/Textures/Chapter07/Ramp_Texture0.psd".Path());
 
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter7/RampTexture/RampTexture.vert.spv".PathFormatter());
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter7/RampTexture/RampTexture.frag.spv".PathFormatter());
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter7/RampTexture/RampTexture.vert.spv".Path());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter7/RampTexture/RampTexture.frag.spv".Path());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);

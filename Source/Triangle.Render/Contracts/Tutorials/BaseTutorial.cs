@@ -35,6 +35,8 @@ public abstract class BaseTutorial : ITutorial
         _grid = new("Grid", [Context.CreateGrid()], new GridMat(Context));
 
         _ambientLight = new(Context, Scene.Camera, "Ambient Light");
+        _ambientLight.Transform.Translate(new Vector3D<float>(3.0f, 4.0f, 3.0f));
+        _ambientLight.Transform.Scaled(new Vector3D<float>(0.2f));
 
         _directionalLight = new(Context, Scene.Camera, "Directional Light");
         _directionalLight.Transform.Translate(new Vector3D<float>(3.0f, 5.0f, 3.0f));
@@ -84,6 +86,7 @@ public abstract class BaseTutorial : ITutorial
 
             RenderScene(deltaSeconds);
 
+            _ambientLight.Render();
             _directionalLight.Render();
 
             _grid.Render(GetSceneParameters());

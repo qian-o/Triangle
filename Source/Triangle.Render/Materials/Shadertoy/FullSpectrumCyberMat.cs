@@ -11,8 +11,8 @@ public class FullSpectrumCyberMat(TrContext context) : GlobalMat(context, "FullS
 {
     public override TrRenderPass CreateRenderPass()
     {
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Shadertoy/FullSpectrumCyber/FullSpectrumCyber.vert.spv".PathFormatter());
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Shadertoy/FullSpectrumCyber/FullSpectrumCyber.frag.spv".PathFormatter());
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Shadertoy/FullSpectrumCyber/FullSpectrumCyber.vert.spv".Path());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Shadertoy/FullSpectrumCyber/FullSpectrumCyber.frag.spv".Path());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Geometry);

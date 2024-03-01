@@ -19,7 +19,7 @@ public class Tutorial06(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Loaded()
     {
-        knot = new("Knot", Context.AssimpParsing("Resources/Models/Knot.FBX".PathFormatter()), new RampTextureMat(Context));
+        knot = new("Knot", Context.AssimpParsing("Resources/Models/Knot.FBX".Path()), new RampTextureMat(Context));
         knot.Transform.Translate(new Vector3D<float>(0.0f, 2.0f, 0.0f));
         knot.Transform.Rotate(new Vector3D<float>(90.0f, 180.0f, 0.0f));
         knot.Transform.Scaled(new Vector3D<float>(0.05f, 0.05f, 0.05f));

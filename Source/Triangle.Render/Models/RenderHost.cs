@@ -79,7 +79,7 @@ public unsafe class RenderHost<TApplication> : Disposable where TApplication : I
                                               inputContext,
                                               new ImGuiFontConfig("Resources/Fonts/MSYH.TTC", 14, (a) => (nint)a.Fonts.GetGlyphRangesChineseFull()));
 
-        TrTextureManager.InitializeImages(trContext, "Resources/Textures".PathFormatter());
+        TrTextureManager.InitializeImages(trContext, "Resources/Textures".Path());
 
         _application.Initialize(_window, inputContext, trContext);
     }

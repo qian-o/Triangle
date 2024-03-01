@@ -48,12 +48,12 @@ public class MaskTextureMat(TrContext context) : GlobalMat(context, "MaskTexture
     {
         uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
-        Channel0 = TrTextureManager.Texture("Resources/Textures/Chapter07/Road_Diffuse.tga".PathFormatter());
-        Channel1 = TrTextureManager.Texture("Resources/Textures/Chapter07/Road_Normal.tga".PathFormatter());
-        Channel2 = TrTextureManager.Texture("Resources/Textures/Chapter07/Road_Specular.tga".PathFormatter());
+        Channel0 = TrTextureManager.Texture("Resources/Textures/Chapter07/Road_Diffuse.tga".Path());
+        Channel1 = TrTextureManager.Texture("Resources/Textures/Chapter07/Road_Normal.tga".Path());
+        Channel2 = TrTextureManager.Texture("Resources/Textures/Chapter07/Road_Specular.tga".Path());
 
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter7/MaskTexture/MaskTexture.vert.spv".PathFormatter());
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter7/MaskTexture/MaskTexture.frag.spv".PathFormatter());
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter7/MaskTexture/MaskTexture.vert.spv".Path());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter7/MaskTexture/MaskTexture.frag.spv".Path());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);

@@ -9,5 +9,9 @@ public class TrRenderPass(TrContext context, IList<TrRenderPipeline> pipelines) 
 
     protected override void Destroy(bool disposing = false)
     {
+        foreach (TrRenderPipeline pipeline in RenderPipelines)
+        {
+            pipeline.Dispose();
+        }
     }
 }

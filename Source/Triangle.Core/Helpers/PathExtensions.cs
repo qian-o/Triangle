@@ -2,10 +2,10 @@
 
 public static class PathExtensions
 {
-    public static string PathFormatter(this string path)
+    public static string Path(this string path)
     {
         // 在Windows平台下，将斜杠替换为反斜杠
-        if (Path.DirectorySeparatorChar == '\\')
+        if (System.IO.Path.DirectorySeparatorChar == '\\')
         {
             path = path.Replace('/', '\\');
         }

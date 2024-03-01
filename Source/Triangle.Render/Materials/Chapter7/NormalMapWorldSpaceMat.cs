@@ -43,11 +43,11 @@ public class NormalMapWorldSpaceMat(TrContext context) : GlobalMat(context, "Nor
     {
         uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
-        Channel0 = TrTextureManager.Texture("Resources/Textures/Chapter07/Brick_Diffuse.JPG".PathFormatter());
-        Channel1 = TrTextureManager.Texture("Resources/Textures/Chapter07/Brick_Normal.JPG".PathFormatter());
+        Channel0 = TrTextureManager.Texture("Resources/Textures/Chapter07/Brick_Diffuse.JPG".Path());
+        Channel1 = TrTextureManager.Texture("Resources/Textures/Chapter07/Brick_Normal.JPG".Path());
 
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter7/NormalMapWorldSpace/NormalMapWorldSpace.vert.spv".PathFormatter());
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter7/NormalMapWorldSpace/NormalMapWorldSpace.frag.spv".PathFormatter());
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter7/NormalMapWorldSpace/NormalMapWorldSpace.vert.spv".Path());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter7/NormalMapWorldSpace/NormalMapWorldSpace.frag.spv".Path());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);

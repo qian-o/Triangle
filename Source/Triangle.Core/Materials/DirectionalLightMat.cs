@@ -52,8 +52,8 @@ internal sealed class DirectionalLightMat(TrContext context) : TrMaterial(contex
         uboTransforms = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
         uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/DirectionalLight/DirectionalLight.vert.spv".PathFormatter());
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/DirectionalLight/DirectionalLight.frag.spv".PathFormatter());
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/DirectionalLight/DirectionalLight.vert.spv".Path());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/DirectionalLight/DirectionalLight.frag.spv".Path());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);
@@ -115,11 +115,6 @@ internal sealed class DirectionalLightMat(TrContext context) : TrMaterial(contex
 
     protected override void Destroy(bool disposing = false)
     {
-        foreach (TrRenderPipeline renderPipeline in RenderPass.RenderPipelines)
-        {
-            renderPipeline.Dispose();
-        }
-
         RenderPass.Dispose();
 
         uboTransforms.Dispose();

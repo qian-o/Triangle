@@ -71,7 +71,7 @@ public static unsafe class ShadercHelper
     {
         IncludeResult* result = (IncludeResult*)Marshal.AllocHGlobal(sizeof(IncludeResult));
         string folder = Marshal.PtrToStringAnsi((nint)userData)!;
-        string include = Marshal.PtrToStringAnsi((nint)requestedResource)!.PathFormatter();
+        string include = Marshal.PtrToStringAnsi((nint)requestedResource)!.Path();
         string file = Path.Combine(folder, include);
 
         string name = Path.GetFileNameWithoutExtension(file);

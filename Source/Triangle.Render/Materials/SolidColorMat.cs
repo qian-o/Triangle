@@ -28,8 +28,8 @@ public class SolidColorMat(TrContext context) : GlobalMat(context, "SolidColor")
     {
         uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/SolidColor/SolidColor.vert.spv".PathFormatter());
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/SolidColor/SolidColor.frag.spv".PathFormatter());
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/SolidColor/SolidColor.vert.spv".Path());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/SolidColor/SolidColor.frag.spv".Path());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);

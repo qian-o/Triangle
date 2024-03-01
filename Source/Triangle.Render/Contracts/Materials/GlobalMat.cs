@@ -373,11 +373,6 @@ public abstract class GlobalMat : TrMaterial
 
     protected override void Destroy(bool disposing = false)
     {
-        foreach (TrRenderPipeline renderPipeline in RenderPass.RenderPipelines)
-        {
-            renderPipeline.Dispose();
-        }
-
         RenderPass.Dispose();
 
         _uboTransforms.Dispose();
