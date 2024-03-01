@@ -37,10 +37,10 @@ public abstract class GlobalMat : TrMaterial
         [FieldOffset(16)]
         public Vector3D<float> Position;
 
-        [FieldOffset(32)]
+        [FieldOffset(28)]
         public float Intensity;
 
-        [FieldOffset(36)]
+        [FieldOffset(32)]
         public float Range;
 
         [FieldOffset(44)]

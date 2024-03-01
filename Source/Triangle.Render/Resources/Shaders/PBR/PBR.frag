@@ -16,7 +16,7 @@ layout(location = 0) out vec4 Out_Color;
 
 vec3 GetNormalFromMap()
 {
-    vec3 normal = UnpackNormal(SampleTexture(Channel1, In.UV));
+    vec3 tangentNormal = UnpackNormal(SampleTexture(Channel1, In.UV));
 
     vec3 Q1 = dFdx(In.WorldPos);
     vec3 Q2 = dFdy(In.WorldPos);
@@ -28,7 +28,7 @@ vec3 GetNormalFromMap()
     vec3 B = -normalize(cross(N, T));
     mat3 TBN = mat3(T, B, N);
 
-    return normalize(TBN * normal);
+    return normalize(TBN * tangentNormal);
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)
@@ -38,11 +38,11 @@ float DistributionGGX(vec3 N, vec3 H, float roughness)
     float NdotH = max(dot(N, H), 0.0);
     float NdotH2 = NdotH * NdotH;
 
-    float num = a2;
+    float nom = a2;
     float denom = (NdotH2 * (a2 - 1.0) + 1.0);
     denom = PI * denom * denom;
 
-    return num / denom;
+    return nom / denom;
 }
 
 float GeometrySchlickGGX(float NdotV, float roughness)
@@ -74,12 +74,11 @@ vec3 FresnelSchlick(float cosTheta, vec3 F0)
 void main()
 {
     vec3 albedo = pow(SampleTexture(Channel0, In.UV).rgb, vec3(2.2));
-    vec3 normal = GetNormalFromMap();
     float metallic = SampleTexture(Channel2, In.UV).r;
     float roughness = SampleTexture(Channel3, In.UV).r;
     float ao = SampleTexture(Channel4, In.UV).r;
 
-    vec3 N = normalize(In.WorldNormal);
+    vec3 N = GetNormalFromMap();
     vec3 V = normalize(WorldSpaceViewDir(In.WorldPos));
 
     vec3 F0 = vec3(0.04);
@@ -94,7 +93,7 @@ void main()
         vec3 H = normalize(V + L);
         float distance = length(Uni_PointLights.Lights[i].Position - In.WorldPos);
         float attenuation = 1.0 / (distance * distance);
-        vec3 radiance = Uni_PointLights.Lights[i].Color * attenuation;
+        vec3 radiance = Uni_PointLights.Lights[i].Color * Uni_PointLights.Lights[i].Range * attenuation;
 
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);
@@ -106,7 +105,7 @@ void main()
         kD *= 1.0 - metallic;
 
         vec3 numerator = NDF * G * F;
-        float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
+        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
         vec3 specular = numerator / max(denominator, 0.001);
 
         // add to outgoing radiance Lo
