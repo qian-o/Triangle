@@ -108,9 +108,33 @@ float ComputeDepth(vec3 pos)
 }
 
 /// <summary>
-/// 0 - 1
+/// 0 - 1 float
 /// </summary>
 float Saturate(float value)
+{
+    return clamp(value, 0.0, 1.0);
+}
+
+/// <summary>
+/// 0 - 1 vec2
+/// </summary>
+vec2 Saturate(vec2 value)
+{
+    return clamp(value, 0.0, 1.0);
+}
+
+/// <summary>
+/// 0 - 1 vec3
+/// </summary>
+vec3 Saturate(vec3 value)
+{
+    return clamp(value, 0.0, 1.0);
+}
+
+/// <summary>
+/// 0 - 1 vec4
+/// </summary>
+vec4 Saturate(vec4 value)
 {
     return clamp(value, 0.0, 1.0);
 }

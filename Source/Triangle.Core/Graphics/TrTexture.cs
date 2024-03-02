@@ -44,15 +44,27 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         gl.DeleteTexture(Handle);
     }
 
-    public void Write(string file)
+    public void Write(string file, bool isHdr = false)
     {
         Name = Path.GetFileName(file);
 
-        ImageResult image = ImageResult.FromMemory(File.ReadAllBytes(file), ColorComponents.RedGreenBlueAlpha);
-
-        fixed (byte* ptr = image.Data)
+        if (isHdr)
         {
-            Write((uint)image.Width, (uint)image.Height, TrPixelFormat.RGBA8, ptr);
+            int width;
+            int height;
+            int comp;
+            float* data = StbImage.stbi__loadf_main(new StbImage.stbi__context(File.OpenRead(file)), &width, &height, &comp, (int)ColorComponents.RedGreenBlueAlpha);
+
+            Write((uint)width, (uint)height, TrPixelFormat.RGBA16F, data);
+        }
+        else
+        {
+            ImageResult image = ImageResult.FromMemory(File.ReadAllBytes(file), ColorComponents.RedGreenBlueAlpha);
+
+            fixed (byte* ptr = image.Data)
+            {
+                Write((uint)image.Width, (uint)image.Height, TrPixelFormat.RGBA8, ptr);
+            }
         }
     }
 
@@ -74,10 +86,10 @@ public unsafe class TrTexture : TrGraphics<TrContext>
 
         GL gl = Context.GL;
 
-        (GLEnum Target, GLEnum Format) = pixelFormat.ToGL();
+        (GLEnum Target, GLEnum Format, GLEnum Type) = pixelFormat.ToGL();
 
         gl.BindTexture(GLEnum.Texture2D, Handle);
-        gl.TexImage2D(GLEnum.Texture2D, 0, (int)Target, Width, Height, 0, Format, GLEnum.UnsignedByte, data);
+        gl.TexImage2D(GLEnum.Texture2D, 0, (int)Target, Width, Height, 0, Format, Type, data);
         gl.BindTexture(GLEnum.Texture2D, 0);
 
         UpdateParameters();
@@ -91,10 +103,10 @@ public unsafe class TrTexture : TrGraphics<TrContext>
 
         GL gl = Context.GL;
 
-        (GLEnum Target, GLEnum Format) = pixelFormat.ToGL();
+        (GLEnum Target, GLEnum Format, GLEnum Type) = pixelFormat.ToGL();
 
         gl.BindTexture(GLEnum.Texture2D, Handle);
-        gl.TexImage2D(GLEnum.Texture2D, 0, (int)Target, Width, Height, 0, Format, GLEnum.UnsignedByte, null);
+        gl.TexImage2D(GLEnum.Texture2D, 0, (int)Target, Width, Height, 0, Format, Type, null);
         gl.BindTexture(GLEnum.Texture2D, 0);
     }
 

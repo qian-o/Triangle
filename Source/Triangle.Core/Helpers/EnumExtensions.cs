@@ -159,14 +159,22 @@ public static class EnumExtensions
         };
     }
 
-    public static (GLEnum Target, GLEnum Format) ToGL(this TrPixelFormat pixelFormat)
+    public static (GLEnum Target, GLEnum Format, GLEnum Type) ToGL(this TrPixelFormat pixelFormat)
     {
         return pixelFormat switch
         {
-            TrPixelFormat.R8 => (GLEnum.R8, GLEnum.Red),
-            TrPixelFormat.RG8 => (GLEnum.RG8, GLEnum.RG),
-            TrPixelFormat.RGB8 => (GLEnum.Rgb8, GLEnum.Rgb),
-            TrPixelFormat.RGBA8 => (GLEnum.Rgba8, GLEnum.Rgba),
+            TrPixelFormat.R8 => (GLEnum.R8, GLEnum.Red, GLEnum.UnsignedByte),
+            TrPixelFormat.RG8 => (GLEnum.RG8, GLEnum.RG, GLEnum.UnsignedByte),
+            TrPixelFormat.RGB8 => (GLEnum.Rgb8, GLEnum.Rgb, GLEnum.UnsignedByte),
+            TrPixelFormat.RGBA8 => (GLEnum.Rgba8, GLEnum.Rgba, GLEnum.UnsignedByte),
+            TrPixelFormat.R16 => (GLEnum.R16, GLEnum.Red, GLEnum.UnsignedShort),
+            TrPixelFormat.RG16 => (GLEnum.RG16, GLEnum.RG, GLEnum.UnsignedShort),
+            TrPixelFormat.RGB16 => (GLEnum.Rgb16, GLEnum.Rgb, GLEnum.UnsignedShort),
+            TrPixelFormat.RGBA16 => (GLEnum.Rgba16, GLEnum.Rgba, GLEnum.UnsignedShort),
+            TrPixelFormat.R16F => (GLEnum.R16f, GLEnum.Red, GLEnum.Float),
+            TrPixelFormat.RG16F => (GLEnum.RG16f, GLEnum.RG, GLEnum.Float),
+            TrPixelFormat.RGB16F => (GLEnum.Rgb16f, GLEnum.Rgb, GLEnum.Float),
+            TrPixelFormat.RGBA16F => (GLEnum.Rgba16f, GLEnum.Rgba, GLEnum.Float),
             _ => throw new NotSupportedException("不支持的像素格式。")
         };
     }
