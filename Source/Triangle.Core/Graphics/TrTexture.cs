@@ -4,6 +4,7 @@ using StbImageSharp;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
 using Triangle.Core.Helpers;
+using static StbImageSharp.StbImage;
 
 namespace Triangle.Core.Graphics;
 
@@ -44,28 +45,32 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         gl.DeleteTexture(Handle);
     }
 
-    public void Write(string file, bool isHdr = false)
+    public void Write(string file)
     {
         Name = Path.GetFileName(file);
 
-        if (isHdr)
-        {
-            int width;
-            int height;
-            int comp;
-            float* data = StbImage.stbi__loadf_main(new StbImage.stbi__context(File.OpenRead(file)), &width, &height, &comp, (int)ColorComponents.RedGreenBlueAlpha);
+        stbi__context stbiContext = new(File.OpenRead(file));
+        int width;
+        int height;
+        int comp;
+        void* data;
+        TrPixelFormat pixelFormat;
 
-            Write((uint)width, (uint)height, TrPixelFormat.RGBA16F, data);
+        if (stbi__hdr_test(stbiContext) != 0)
+        {
+            stbi__result_info stbi__result_info = default;
+            data = stbi__hdr_load(stbiContext, &width, &height, &comp, (int)ColorComponents.RedGreenBlueAlpha, &stbi__result_info);
+
+            pixelFormat = TrPixelFormat.RGBA16F;
         }
         else
         {
-            ImageResult image = ImageResult.FromMemory(File.ReadAllBytes(file), ColorComponents.RedGreenBlueAlpha);
+            data = stbi__load_and_postprocess_8bit(stbiContext, &width, &height, &comp, (int)ColorComponents.RedGreenBlueAlpha);
 
-            fixed (byte* ptr = image.Data)
-            {
-                Write((uint)image.Width, (uint)image.Height, TrPixelFormat.RGBA8, ptr);
-            }
+            pixelFormat = TrPixelFormat.RGBA8;
         }
+
+        Write((uint)width, (uint)height, pixelFormat, data);
     }
 
     public void Write(TrFrame frame)
