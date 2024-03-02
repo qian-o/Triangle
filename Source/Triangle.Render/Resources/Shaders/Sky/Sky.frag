@@ -14,5 +14,7 @@ layout(location = 0) out vec4 Out_Color;
 
 void main()
 {
-    Out_Color = SampleTexture(Channel0, In.UV);
+    vec3 color = SampleTexture(Channel0, In.UV).rgb;
+
+    Out_Color = vec4(GammaCorrection(color), 1.0);
 }

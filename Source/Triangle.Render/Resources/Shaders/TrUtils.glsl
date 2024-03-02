@@ -217,3 +217,8 @@ vec4 SampleTexture(sampler2D tex, vec2 uv)
 {
     return texture(tex, uv);
 }
+
+vec3 GammaCorrection(vec3 color)
+{
+    return pow(color, vec3(1.0 / 2.2));
+}
