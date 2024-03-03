@@ -213,11 +213,17 @@ vec3 UnpackNormal(vec4 packednormal)
     return normalize(packednormal.xyz * 2.0 - 1.0);
 }
 
+/// <summary>
+/// Samples a texture.
+/// </summary>
 vec4 SampleTexture(sampler2D tex, vec2 uv)
 {
     return texture(tex, uv);
 }
 
+/// <summary>
+/// Applies gamma correction to the color.
+/// </summary>
 vec3 ApplyGammaCorrection(vec3 color, float exposure)
 {
     // exposure tone mapping
