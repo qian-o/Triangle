@@ -1,4 +1,5 @@
-﻿using Triangle.Core;
+﻿using System.Runtime.InteropServices;
+using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
@@ -9,8 +10,24 @@ namespace Triangle.Render.Materials;
 
 public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
 {
+
+    #region Uniforms
+    [StructLayout(LayoutKind.Explicit)]
+    private struct UniParameters
+    {
+        [FieldOffset(0)]
+        public float Exposure;
+    }
+    #endregion
+
+    private TrBuffer<UniParameters> uboParameters = null!;
+
+    public float Exposure { get; set; } = 1.0f;
+
     public override TrRenderPass CreateRenderPass()
     {
+        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+
         Channel0 = TrTextureManager.Texture("Resources/Textures/Skies/cloudy_puresky_4k.hdr".Path());
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Sky/Sky.vert.spv".Path());
@@ -28,6 +45,13 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
 
         renderPipeline.Bind();
 
+        uboParameters.SetData(new UniParameters()
+        {
+            Exposure = Exposure
+        });
+
+        renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);
+
         mesh.Draw();
 
         renderPipeline.Unbind();
@@ -35,6 +59,10 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
 
     protected override void ControllerCore()
     {
+        float exposure = Exposure;
+        ImGuiHelper.SliderFloat("Exposure", ref exposure, 0.0f, 10.0f);
+        Exposure = exposure;
+
         AdjustChannel("Sky Tex", 0);
     }
 
