@@ -21,6 +21,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
     #region Materials
     private EquirectangularToCubemapMat equirectangularToCubemapMat = null!;
+    private IrradianceConvolutionMat irradianceConvolutionMat = null!;
     private SingleCubeMapMat singleCubeMapMat = null!;
     #endregion
 
@@ -35,6 +36,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
     #region Sky Map
     private TrCubeMap envCubemap = null!;
+    private TrCubeMap irradianceMap = null!;
     #endregion
 
     #region Models
@@ -46,6 +48,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         cubeMesh = Context.CreateCube(1.0f);
 
         equirectangularToCubemapMat = new(Context);
+        irradianceConvolutionMat = new(Context);
         singleCubeMapMat = new(Context);
 
         envCubemap = new(Context)
@@ -53,6 +56,12 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
             TextureWrap = TrTextureWrap.ClampToEdge
         };
         envCubemap.UpdateParameters();
+
+        irradianceMap = new(Context)
+        {
+            TextureWrap = TrTextureWrap.ClampToEdge
+        };
+        irradianceMap.UpdateParameters();
 
         skyPositiveX = new(Context);
         skyNegativeX = new(Context);
@@ -97,7 +106,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void UpdateScene(double deltaSeconds)
     {
-        singleCubeMapMat.Map0 = envCubemap;
+        singleCubeMapMat.Map0 = irradianceMap;
     }
 
     protected override void RenderScene(double deltaSeconds)
@@ -112,9 +121,10 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Destroy(bool disposing = false)
     {
-        equirectangularToCubemapMat.Dispose();
-
         cubeMesh.Dispose();
+
+        equirectangularToCubemapMat.Dispose();
+        singleCubeMapMat.Dispose();
 
         skyPositiveX.Dispose();
         skyNegativeX.Dispose();
@@ -215,6 +225,80 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
     private void GenerateIrradianceMap()
     {
-        // TODO: Implement this method
+        irradianceConvolutionMat.Map0 = envCubemap;
+        irradianceConvolutionMat.Projection = Matrix4X4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(90.0f), 1.0f, 0.1f, 10.0f);
+
+        skyPositiveX.Update(64, 64, pixelFormat: TrPixelFormat.RGB16F);
+        skyPositiveX.Bind();
+        {
+            Context.Clear();
+
+            irradianceConvolutionMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, Vector3D<float>.UnitX, -Vector3D<float>.UnitY);
+
+            irradianceConvolutionMat.Draw(cubeMesh, GetSceneParameters());
+        }
+        skyPositiveX.Unbind();
+
+        skyNegativeX.Update(64, 64, pixelFormat: TrPixelFormat.RGB16F);
+        skyNegativeX.Bind();
+        {
+            Context.Clear();
+
+            irradianceConvolutionMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, -Vector3D<float>.UnitX, -Vector3D<float>.UnitY);
+
+            irradianceConvolutionMat.Draw(cubeMesh, GetSceneParameters());
+        }
+        skyNegativeX.Unbind();
+
+        skyPositiveY.Update(64, 64, pixelFormat: TrPixelFormat.RGB16F);
+        skyPositiveY.Bind();
+        {
+            Context.Clear();
+
+            irradianceConvolutionMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, Vector3D<float>.UnitY, Vector3D<float>.UnitZ);
+
+            irradianceConvolutionMat.Draw(cubeMesh, GetSceneParameters());
+        }
+        skyPositiveY.Unbind();
+
+        skyNegativeY.Update(64, 64, pixelFormat: TrPixelFormat.RGB16F);
+        skyNegativeY.Bind();
+        {
+            Context.Clear();
+
+            irradianceConvolutionMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, -Vector3D<float>.UnitY, -Vector3D<float>.UnitZ);
+
+            irradianceConvolutionMat.Draw(cubeMesh, GetSceneParameters());
+        }
+        skyNegativeY.Unbind();
+
+        skyPositiveZ.Update(64, 64, pixelFormat: TrPixelFormat.RGB16F);
+        skyPositiveZ.Bind();
+        {
+            Context.Clear();
+
+            irradianceConvolutionMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, Vector3D<float>.UnitZ, -Vector3D<float>.UnitY);
+
+            irradianceConvolutionMat.Draw(cubeMesh, GetSceneParameters());
+        }
+        skyPositiveZ.Unbind();
+
+        skyNegativeZ.Update(64, 64, pixelFormat: TrPixelFormat.RGB16F);
+        skyNegativeZ.Bind();
+        {
+            Context.Clear();
+
+            irradianceConvolutionMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, -Vector3D<float>.UnitZ, -Vector3D<float>.UnitY);
+
+            irradianceConvolutionMat.Draw(cubeMesh, GetSceneParameters());
+        }
+        skyNegativeZ.Unbind();
+
+        irradianceMap.Write(skyPositiveX.Texture, TrCubeMapFace.PositiveX);
+        irradianceMap.Write(skyNegativeX.Texture, TrCubeMapFace.NegativeX);
+        irradianceMap.Write(skyPositiveY.Texture, TrCubeMapFace.PositiveY);
+        irradianceMap.Write(skyNegativeY.Texture, TrCubeMapFace.NegativeY);
+        irradianceMap.Write(skyPositiveZ.Texture, TrCubeMapFace.PositiveZ);
+        irradianceMap.Write(skyNegativeZ.Texture, TrCubeMapFace.NegativeZ);
     }
 }
