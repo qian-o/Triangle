@@ -134,12 +134,12 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 StencilFunction = TrStencilFunction.Always;
                 StencilReference = 0;
                 StencilMask = 0xFF;
-                IsCullFace = true;
+                IsCullFace = false;
                 TriangleFace = TrTriangleFace.Back;
                 FrontFaceDirection = TrFrontFaceDirection.CounterClockwise;
-                IsBlend = true;
-                SourceFactor = TrBlendFactor.SrcAlpha;
-                DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
+                IsBlend = false;
+                SourceFactor = TrBlendFactor.One;
+                DestinationFactor = TrBlendFactor.Zero;
                 BlendEquation = TrBlendEquation.Add;
                 BlendFuncSeparate = TrBlendFuncSeparate.Default;
                 IsScissorTest = false;
@@ -335,6 +335,14 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 
         gl.ActiveTexture(GLEnum.Texture0 + (int)bindingPoint);
         gl.BindTexture(GLEnum.Texture2D, texture != null ? texture.Handle : 0);
+    }
+
+    public void BindUniformBlock(uint bindingPoint, TrCubeMap? cubeMap)
+    {
+        GL gl = Context.GL;
+
+        gl.ActiveTexture(GLEnum.Texture0 + (int)bindingPoint);
+        gl.BindTexture(GLEnum.TextureCubeMap, cubeMap != null ? cubeMap.Handle : 0);
     }
 
     public void Bind()

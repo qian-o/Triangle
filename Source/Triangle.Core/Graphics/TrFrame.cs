@@ -3,6 +3,7 @@ using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
 using Triangle.Core.Exceptions;
+using Triangle.Core.Helpers;
 
 namespace Triangle.Core.Graphics;
 
@@ -33,6 +34,8 @@ public unsafe class TrFrame : TrGraphics<TrContext>
 
     public int Samples { get; private set; }
 
+    public TrPixelFormat PixelFormat { get; private set; }
+
     public TrTexture Texture { get; }
 
     public uint Framebuffer { get; }
@@ -54,14 +57,14 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         Texture.Dispose();
     }
 
-    public void Update(int width, int height, int samples = 1)
+    public void Update(int width, int height, int samples = 1, TrPixelFormat pixelFormat = TrPixelFormat.RGB8)
     {
         if (samples < 1)
         {
             throw new TrException("The number of samples must be greater than or equal to 1.");
         }
 
-        if (Width == width && Height == height && Samples == samples)
+        if (Width == width && Height == height && Samples == samples && PixelFormat == pixelFormat)
         {
             return;
         }
@@ -69,6 +72,7 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         Width = width;
         Height = height;
         Samples = samples;
+        PixelFormat = pixelFormat;
 
         if (Handle == 0)
         {
@@ -77,7 +81,7 @@ public unsafe class TrFrame : TrGraphics<TrContext>
 
         GL gl = Context.GL;
 
-        Texture.Clear((uint)Width, (uint)Height, TrPixelFormat.RGB8);
+        Texture.Clear((uint)Width, (uint)Height, PixelFormat);
 
         gl.BindFramebuffer(GLEnum.Framebuffer, Handle);
         gl.FramebufferTexture2D(GLEnum.Framebuffer, GLEnum.ColorAttachment0, GLEnum.Texture2D, Texture.Handle, 0);
@@ -86,7 +90,7 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         // 多重采样缓冲区
         {
             gl.BindRenderbuffer(GLEnum.Renderbuffer, ColorBuffer);
-            gl.RenderbufferStorageMultisample(GLEnum.Renderbuffer, (uint)Samples, GLEnum.Rgb8, (uint)Width, (uint)Height);
+            gl.RenderbufferStorageMultisample(GLEnum.Renderbuffer, (uint)Samples, PixelFormat.ToGL().Target, (uint)Width, (uint)Height);
             gl.BindRenderbuffer(GLEnum.Renderbuffer, 0);
 
             gl.BindRenderbuffer(GLEnum.Renderbuffer, DepthStencilBuffer);

@@ -179,6 +179,20 @@ public static class EnumExtensions
         };
     }
 
+    public static GLEnum ToGL(this TrCubeMapFace textureCubeMap)
+    {
+        return textureCubeMap switch
+        {
+            TrCubeMapFace.PositiveX => GLEnum.TextureCubeMapPositiveX,
+            TrCubeMapFace.NegativeX => GLEnum.TextureCubeMapNegativeX,
+            TrCubeMapFace.PositiveY => GLEnum.TextureCubeMapPositiveY,
+            TrCubeMapFace.NegativeY => GLEnum.TextureCubeMapNegativeY,
+            TrCubeMapFace.PositiveZ => GLEnum.TextureCubeMapPositiveZ,
+            TrCubeMapFace.NegativeZ => GLEnum.TextureCubeMapNegativeZ,
+            _ => throw new NotSupportedException("不支持的立方体贴图。")
+        };
+    }
+
     public static GLEnum ToGL(this TrPolygonMode polygonMode)
     {
         return polygonMode switch
@@ -187,6 +201,26 @@ public static class EnumExtensions
             TrPolygonMode.Line => GLEnum.Line,
             TrPolygonMode.Point => GLEnum.Point,
             _ => throw new NotSupportedException("不支持的多边形模式。")
+        };
+    }
+
+    public static int Size(this TrPixelFormat pixelFormat)
+    {
+        return pixelFormat switch
+        {
+            TrPixelFormat.R8 => sizeof(byte),
+            TrPixelFormat.RG8 => sizeof(byte) * 2,
+            TrPixelFormat.RGB8 => sizeof(byte) * 3,
+            TrPixelFormat.RGBA8 => sizeof(byte) * 4,
+            TrPixelFormat.R16 => sizeof(ushort),
+            TrPixelFormat.RG16 => sizeof(ushort) * 2,
+            TrPixelFormat.RGB16 => sizeof(ushort) * 3,
+            TrPixelFormat.RGBA16 => sizeof(ushort) * 4,
+            TrPixelFormat.R16F => sizeof(float),
+            TrPixelFormat.RG16F => sizeof(float) * 2,
+            TrPixelFormat.RGB16F => sizeof(float) * 3,
+            TrPixelFormat.RGBA16F => sizeof(float) * 4,
+            _ => throw new NotSupportedException("不支持的像素格式。")
         };
     }
 

@@ -18,6 +18,7 @@ public abstract class GlobalMat : TrMaterial
 {
     public const uint UniformBufferBindingStart = 8;
     public const uint UniformSampler2dBindingStart = 5;
+    public const uint UniformSamplerCubeBindingStart = 5;
     public const uint MaxPointLights = 50;
 
     public const AttribLocation InPosition = 0;
@@ -225,6 +226,16 @@ public abstract class GlobalMat : TrMaterial
 
     public Vector4D<float> Channel4ST { get; set; } = new(1.0f, 1.0f, 0.0f, 0.0f);
 
+    public TrCubeMap? Map0 { get; set; }
+
+    public TrCubeMap? Map1 { get; set; }
+
+    public TrCubeMap? Map2 { get; set; }
+
+    public TrCubeMap? Map3 { get; set; }
+
+    public TrCubeMap? Map4 { get; set; }
+
     /// <summary>
     /// Draw the mesh with the material.
     /// </summary>
@@ -375,6 +386,12 @@ public abstract class GlobalMat : TrMaterial
             renderPipeline.BindUniformBlock(3, Channel3);
             renderPipeline.BindUniformBlock(4, Channel4);
 
+            renderPipeline.BindUniformBlock(0, Map0);
+            renderPipeline.BindUniformBlock(1, Map1);
+            renderPipeline.BindUniformBlock(2, Map2);
+            renderPipeline.BindUniformBlock(3, Map3);
+            renderPipeline.BindUniformBlock(4, Map4);
+
             renderPipeline.Unbind();
         }
 
@@ -462,6 +479,7 @@ public abstract class GlobalMat : TrMaterial
         _uboConstants.Dispose();
         _uboAmbientLight.Dispose();
         _uboDirectionalLight.Dispose();
+        _uboPointLights.Dispose();
         _uboUniTexTexParams.Dispose();
         _uboTexScaleOffset.Dispose();
 

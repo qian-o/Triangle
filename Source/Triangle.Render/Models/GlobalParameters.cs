@@ -14,4 +14,6 @@ public class GlobalParameters(TrCamera camera, TrSceneData sceneData, TrAmbientL
     public TrDirectionalLight DirectionalLight { get; set; } = directionalLight;
 
     public TrPointLight[] PointLights { get; set; } = pointLights ?? [];
+
+    public object? Tag { get; set; }
 }

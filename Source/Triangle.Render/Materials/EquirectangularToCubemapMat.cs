@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
@@ -8,33 +9,35 @@ using Triangle.Render.Models;
 
 namespace Triangle.Render.Materials;
 
-public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
+public class EquirectangularToCubemapMat(TrContext context) : GlobalMat(context, "EquirectangularToCubemap")
 {
-
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
     private struct UniParameters
     {
         [FieldOffset(0)]
-        public float Exposure;
+        public Matrix4X4<float> View;
+
+        [FieldOffset(64)]
+        public Matrix4X4<float> Projection;
     }
     #endregion
 
     private TrBuffer<UniParameters> uboParameters = null!;
 
-    public float Exposure { get; set; } = 1.0f;
+    public Matrix4X4<float> View { get; set; }
+
+    public Matrix4X4<float> Projection { get; set; }
 
     public override TrRenderPass CreateRenderPass()
     {
         uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
-        Channel0 = TrTextureManager.Texture("Resources/Textures/Skies/cloudy_puresky_4k.hdr".Path());
-
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Sky/Sky.vert.spv".Path());
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Sky/Sky.frag.spv".Path());
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/EquirectangularToCubemap/EquirectangularToCubemap.vert.spv".Path());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/EquirectangularToCubemap/EquirectangularToCubemap.frag.spv".Path());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
-        renderPipeline.SetRenderLayer(TrRenderLayer.Background);
+        renderPipeline.SetRenderLayer(TrRenderLayer.Geometry);
 
         return new TrRenderPass(Context, [renderPipeline]);
     }
@@ -45,9 +48,10 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
 
         renderPipeline.Bind();
 
-        uboParameters.SetData(new UniParameters()
+        uboParameters.SetData(new UniParameters
         {
-            Exposure = Exposure
+            View = View,
+            Projection = Projection
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);
@@ -59,11 +63,7 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
 
     protected override void ControllerCore()
     {
-        float exposure = Exposure;
-        ImGuiHelper.SliderFloat("Exposure", ref exposure, 0.0f, 10.0f);
-        Exposure = exposure;
-
-        AdjustChannel("Sky Tex", 0);
+        AdjustChannel("Sky Map", 0);
     }
 
     protected override void DestroyCore(bool disposing = false)

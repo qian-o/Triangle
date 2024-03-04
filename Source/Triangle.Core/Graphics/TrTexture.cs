@@ -45,7 +45,7 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         gl.DeleteTexture(Handle);
     }
 
-    public void Write(string file)
+    public void Write(string file, bool flip = false)
     {
         Name = Path.GetFileName(file);
 
@@ -56,10 +56,11 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         void* data;
         TrPixelFormat pixelFormat;
 
+        stbi_set_flip_vertically_on_load(flip ? 1 : 0);
+
         if (stbi__hdr_test(stbiContext) != 0)
         {
-            stbi__result_info stbi__result_info = default;
-            data = stbi__hdr_load(stbiContext, &width, &height, &comp, (int)ColorComponents.RedGreenBlueAlpha, &stbi__result_info);
+            data = stbi__loadf_main(stbiContext, &width, &height, &comp, (int)ColorComponents.RedGreenBlueAlpha);
 
             pixelFormat = TrPixelFormat.RGBA16F;
         }
@@ -112,6 +113,17 @@ public unsafe class TrTexture : TrGraphics<TrContext>
 
         gl.BindTexture(GLEnum.Texture2D, Handle);
         gl.TexImage2D(GLEnum.Texture2D, 0, (int)Target, Width, Height, 0, Format, Type, null);
+        gl.BindTexture(GLEnum.Texture2D, 0);
+    }
+
+    public void Read(void* data)
+    {
+        GL gl = Context.GL;
+
+        (GLEnum _, GLEnum Format, GLEnum Type) = PixelFormat.ToGL();
+
+        gl.BindTexture(GLEnum.Texture2D, Handle);
+        gl.GetTexImage(GLEnum.Texture2D, 0, Format, Type, data);
         gl.BindTexture(GLEnum.Texture2D, 0);
     }
 

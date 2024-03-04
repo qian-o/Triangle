@@ -9,8 +9,11 @@
 
 #define UNIFORM_BUFFER_BINDING_START 8
 #define UNIFORM_SAMPLER_2D_BINDING_START 5
+#define UNIFORM_SAMPLER_CUBE_BINDING_START 5
 #define MAX_POINT_LIGHTS 50
 #define ANTI_ALIASING 4
+
+const vec2 InvAtan = vec2(0.1591, 0.3183);
 
 struct PointLight
 {
@@ -96,6 +99,12 @@ layout(binding = 1) uniform sampler2D Channel1;
 layout(binding = 2) uniform sampler2D Channel2;
 layout(binding = 3) uniform sampler2D Channel3;
 layout(binding = 4) uniform sampler2D Channel4;
+
+layout(binding = 0) uniform samplerCube Map0;
+layout(binding = 1) uniform samplerCube Map1;
+layout(binding = 2) uniform samplerCube Map2;
+layout(binding = 3) uniform samplerCube Map3;
+layout(binding = 4) uniform samplerCube Map4;
 
 /// <summary>
 /// computes depth from position
@@ -222,6 +231,14 @@ vec4 SampleTexture(sampler2D tex, vec2 uv)
 }
 
 /// <summary>
+/// Samples a texture.
+/// </summary>
+vec4 SampleTexture(samplerCube tex, vec3 uv)
+{
+    return texture(tex, uv);
+}
+
+/// <summary>
 /// Applies gamma correction to the color.
 /// </summary>
 vec3 ApplyGammaCorrection(vec3 color, float exposure)
@@ -233,4 +250,16 @@ vec3 ApplyGammaCorrection(vec3 color, float exposure)
     mapped = pow(mapped, vec3(1.0 / 2.2));
 
     return mapped;
+}
+
+/// <summary>
+/// Sample a spherical map.
+/// </summary>
+vec2 SampleSphericalMap(vec3 dir)
+{
+    vec2 uv = vec2(atan(dir.z, dir.x), asin(dir.y));
+    uv *= InvAtan;
+    uv += 0.5;
+
+    return uv;
 }

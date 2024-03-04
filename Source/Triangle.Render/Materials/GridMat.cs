@@ -49,7 +49,7 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Grid/Grid.frag.spv".Path());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
-        renderPipeline.SetRenderLayer(TrRenderLayer.Geometry);
+        renderPipeline.SetRenderLayer(TrRenderLayer.Transparent);
 
         return new TrRenderPass(Context, [renderPipeline]);
     }
