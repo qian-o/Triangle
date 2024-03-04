@@ -92,8 +92,10 @@ void main()
         vec3 L = normalize(Uni_PointLights.Lights[i].Position - In.WorldPos);
         vec3 H = normalize(V + L);
         float distance = length(Uni_PointLights.Lights[i].Position - In.WorldPos);
-        float attenuation = 1.0 / (distance * distance);
-        vec3 radiance = Uni_PointLights.Lights[i].Color * Uni_PointLights.Lights[i].Range * attenuation;
+        float attenuation = (clamp(1.0 - pow(distance / Uni_PointLights.Lights[i].Range, 4.0), 0.0, 1.0) *
+                             clamp(1.0 - pow(distance / Uni_PointLights.Lights[i].Range, 4.0), 0.0, 1.0)) /
+                            (distance * distance + 1.0);
+        vec3 radiance = Uni_PointLights.Lights[i].Color * Uni_PointLights.Lights[i].Intensity * attenuation;
 
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);
