@@ -8,8 +8,7 @@
 #define INV_HALF_PI 0.636619772367
 
 #define UNIFORM_BUFFER_BINDING_START 8
-#define UNIFORM_SAMPLER_2D_BINDING_START 5
-#define UNIFORM_SAMPLER_CUBE_BINDING_START 5
+#define UNIFORM_SAMPLER_BINDING_START 10
 #define MAX_POINT_LIGHTS 50
 #define ANTI_ALIASING 4
 
@@ -100,11 +99,11 @@ layout(binding = 2) uniform sampler2D Channel2;
 layout(binding = 3) uniform sampler2D Channel3;
 layout(binding = 4) uniform sampler2D Channel4;
 
-layout(binding = 0) uniform samplerCube Map0;
-layout(binding = 1) uniform samplerCube Map1;
-layout(binding = 2) uniform samplerCube Map2;
-layout(binding = 3) uniform samplerCube Map3;
-layout(binding = 4) uniform samplerCube Map4;
+layout(binding = 5) uniform samplerCube Map0;
+layout(binding = 6) uniform samplerCube Map1;
+layout(binding = 7) uniform samplerCube Map2;
+layout(binding = 8) uniform samplerCube Map3;
+layout(binding = 9) uniform samplerCube Map4;
 
 /// <summary>
 /// computes depth from position

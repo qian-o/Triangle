@@ -71,6 +71,11 @@ vec3 FresnelSchlick(float cosTheta, vec3 F0)
     return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }
 
+vec3 FresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
+{
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
+}
+
 void main()
 {
     vec3 albedo = pow(SampleTexture(Channel0, In.UV).rgb, vec3(2.2));
@@ -114,7 +119,17 @@ void main()
         Lo += (kD * albedo / PI + specular) * radiance * max(dot(N, L), 0.0);
     }
 
-    vec3 ambient = vec3(0.03) * albedo * ao;
+    // ambient lighting (we now use IBL as the ambient light)
+    vec3 F = FresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
+
+    vec3 kS = F;
+    vec3 kD = 1.0 - kS;
+    kD *= 1.0 - metallic;
+
+    vec3 irradiance = SampleTexture(Map0, N).rgb;
+    vec3 diffuse = irradiance * albedo;
+
+    vec3 ambient = (kD * diffuse) * ao;
     vec3 color = ambient + Lo;
 
     // HDR tonemapping

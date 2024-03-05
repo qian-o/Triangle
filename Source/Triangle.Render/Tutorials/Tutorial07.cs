@@ -84,7 +84,12 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
             {
                 int index = i * rows + j;
 
-                spheres[index] = new($"Sphere [{index}]", [Context.CreateSphere()], new PhysicallyBasedRenderingMat(Context));
+                PhysicallyBasedRenderingMat mat = new(Context)
+                {
+                    Map0 = irradianceMap
+                };
+
+                spheres[index] = new($"Sphere [{index}]", [Context.CreateSphere()], mat);
                 spheres[index].Transform.Translate(new Vector3D<float>(i * spacing - rows * spacing / 2.0f, j * spacing - cols * spacing / 2.0f, 0.0f));
                 spheres[index].Transform.Scaled(new Vector3D<float>(0.5f));
                 SceneController.Add(spheres[index]);

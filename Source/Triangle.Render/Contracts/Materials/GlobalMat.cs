@@ -17,8 +17,7 @@ namespace Triangle.Render.Contracts.Materials;
 public abstract class GlobalMat : TrMaterial
 {
     public const uint UniformBufferBindingStart = 8;
-    public const uint UniformSampler2dBindingStart = 5;
-    public const uint UniformSamplerCubeBindingStart = 5;
+    public const uint UniformSamplerBindingStart = 10;
     public const uint MaxPointLights = 50;
 
     public const AttribLocation InPosition = 0;
@@ -386,11 +385,11 @@ public abstract class GlobalMat : TrMaterial
             renderPipeline.BindUniformBlock(3, Channel3);
             renderPipeline.BindUniformBlock(4, Channel4);
 
-            renderPipeline.BindUniformBlock(0, Map0);
-            renderPipeline.BindUniformBlock(1, Map1);
-            renderPipeline.BindUniformBlock(2, Map2);
-            renderPipeline.BindUniformBlock(3, Map3);
-            renderPipeline.BindUniformBlock(4, Map4);
+            renderPipeline.BindUniformBlock(5, Map0);
+            renderPipeline.BindUniformBlock(6, Map1);
+            renderPipeline.BindUniformBlock(7, Map2);
+            renderPipeline.BindUniformBlock(8, Map3);
+            renderPipeline.BindUniformBlock(9, Map4);
 
             renderPipeline.Unbind();
         }
