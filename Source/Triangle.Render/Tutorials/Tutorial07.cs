@@ -113,7 +113,8 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
                 Channel4 = TrTextureManager.Texture($"Resources/Textures/PBR/{directory.Name}/AmbientOcclusion.png".Path()),
                 Map0 = irradianceMap,
                 Map1 = prefilteredMap,
-                MaxMipLevels = MaxMipLevels
+                MaxMipLevels = MaxMipLevels,
+                BRDF = brdfLUTT
             };
 
             spheres[i] = new($"Sphere [{directory.Name}]", [Context.CreateSphere()], mat);

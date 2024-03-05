@@ -20,6 +20,8 @@ layout(std140, binding = UNIFORM_BUFFER_BINDING_START + 0) uniform Parameters
 }
 Uni_Parameters;
 
+layout(binding = UNIFORM_SAMPLER_BINDING_START + 0) uniform sampler2D BRDF;
+
 vec3 GetNormalFromMap()
 {
     vec3 tangentNormal = UnpackNormal(SampleTexture(Channel1, In.UV));
@@ -119,8 +121,8 @@ void main()
         kD *= 1.0 - metallic;
 
         vec3 numerator = NDF * G * F;
-        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
-        vec3 specular = numerator / max(denominator, 0.001);
+        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
+        vec3 specular = numerator / denominator;
 
         // add to outgoing radiance Lo
         Lo += (kD * albedo / PI + specular) * radiance * max(dot(N, L), 0.0);
@@ -139,7 +141,7 @@ void main()
     // sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to
     // get the IBL specular part.
     vec3 prefilteredColor = SampleTexture(Map1, R, roughness * Uni_Parameters.MaxMipLevels).rgb;
-    vec2 brdf = SampleTexture(Channel0, vec2(max(dot(N, V), 0.0), roughness)).rg;
+    vec2 brdf = SampleTexture(BRDF, vec2(max(dot(N, V), 0.0), roughness)).rg;
     vec3 specular = prefilteredColor * (F * brdf.x + brdf.y);
 
     vec3 ambient = (kD * diffuse + specular) * ao;

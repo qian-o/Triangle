@@ -23,6 +23,8 @@ public class PBRMat(TrContext context) : GlobalMat(context, "PBR")
 
     public int MaxMipLevels { get; set; }
 
+    public TrTexture? BRDF { get; set; }
+
     public override TrRenderPass CreateRenderPass()
     {
         uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
@@ -47,6 +49,8 @@ public class PBRMat(TrContext context) : GlobalMat(context, "PBR")
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);
+
+        renderPipeline.BindUniformBlock(UniformSamplerBindingStart + 0, BRDF);
 
         mesh.Draw();
 
