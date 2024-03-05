@@ -35,6 +35,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
     #endregion
 
     #region Sky Map
+    private TrTexture flipSkyMap = null!;
     private TrCubeMap envCubemap = null!;
     private TrCubeMap irradianceMap = null!;
     #endregion
@@ -50,6 +51,9 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         equirectangularToCubemapMat = new(Context);
         irradianceConvolutionMat = new(Context);
         singleCubeMapMat = new(Context);
+
+        flipSkyMap = new(Context);
+        flipSkyMap.Write("Resources/Textures/Skies/newport_loft.hdr".Path(), true);
 
         envCubemap = new(Context)
         {
@@ -70,7 +74,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         skyPositiveZ = new(Context);
         skyNegativeZ = new(Context);
 
-        GenerateCubeMap("Resources/Textures/Skies/cloudy_puresky_4k.hdr".Path());
+        GenerateCubeMap();
         GenerateIrradianceMap();
 
         const int rows = 7;
@@ -95,6 +99,8 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
                 SceneController.Add(spheres[index]);
             }
         }
+
+        SetSky(TrTextureManager.Texture("Resources/Textures/Skies/newport_loft.hdr".Path()));
 
         AddPointLight("Point Light [0]", out TrPointLight pointLight0);
         pointLight0.Transform.Translate(new Vector3D<float>(-1.0f, 1.0f, 2.0f));
@@ -129,6 +135,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         cubeMesh.Dispose();
 
         equirectangularToCubemapMat.Dispose();
+        irradianceConvolutionMat.Dispose();
         singleCubeMapMat.Dispose();
 
         skyPositiveX.Dispose();
@@ -138,7 +145,9 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         skyPositiveZ.Dispose();
         skyNegativeZ.Dispose();
 
+        flipSkyMap.Dispose();
         envCubemap.Dispose();
+        irradianceMap.Dispose();
 
         foreach (TrModel sphere in spheres)
         {
@@ -146,12 +155,9 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         }
     }
 
-    private void GenerateCubeMap(string hdr)
+    private void GenerateCubeMap()
     {
-        equirectangularToCubemapMat.Channel0?.Dispose();
-        equirectangularToCubemapMat.Channel0 = new TrTexture(Context);
-        equirectangularToCubemapMat.Channel0.Write(hdr, true);
-
+        equirectangularToCubemapMat.Channel0 = flipSkyMap;
         equirectangularToCubemapMat.Projection = Matrix4X4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(90.0f), 1.0f, 0.1f, 10.0f);
 
         skyPositiveX.Update(1024, 1024, pixelFormat: TrPixelFormat.RGB16F);
