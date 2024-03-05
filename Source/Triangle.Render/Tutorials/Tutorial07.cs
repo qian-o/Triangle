@@ -15,6 +15,8 @@ namespace Triangle.Render.Tutorials;
 [Description("Physically Based Rendering (PBR) 渲染光照模型。")]
 public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
+    private const int MaxMipLevels = 5;
+
     #region Meshes
     private TrMesh cubeMesh = null!;
     private TrMesh canvasMesh = null!;
@@ -89,7 +91,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         skyPositiveZ = new(Context);
         skyNegativeZ = new(Context);
 
-        GeneratePBRMaps("Resources/Textures/Skies/newport_loft.hdr".Path());
+        GeneratePBRMaps("Resources/Textures/Skies/cloudy_puresky_4k.hdr".Path());
 
         const int rows = 7;
         const int cols = 7;
@@ -106,7 +108,8 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
                 {
                     Channel0 = brdfLUTT,
                     Map0 = irradianceMap,
-                    Map1 = prefilteredMap
+                    Map1 = prefilteredMap,
+                    MaxMipLevels = MaxMipLevels
                 };
 
                 spheres[index] = new($"Sphere [{index}]", [Context.CreateSphere()], mat);
@@ -355,7 +358,6 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
     {
         const int width = 256;
         const int height = 256;
-        const int maxMipLevels = 5;
 
         prefilteredMap.Initialize(width, height, TrPixelFormat.RGB16F);
         prefilteredMap.GenerateMipmap();
@@ -363,9 +365,9 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         prefilterMat.Map0 = envCubeMap;
         prefilterMat.Projection = Matrix4X4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(90.0f), 1.0f, 0.1f, 10.0f);
 
-        for (int i = 0; i < maxMipLevels; i++)
+        for (int i = 0; i < MaxMipLevels; i++)
         {
-            prefilterMat.Roughness = (float)i / (maxMipLevels - 1);
+            prefilterMat.Roughness = (float)i / (MaxMipLevels - 1);
 
             int mipWidth = (int)(width * MathF.Pow(0.5f, i));
             int mipHeight = (int)(height * MathF.Pow(0.5f, i));

@@ -10,7 +10,6 @@ namespace Triangle.Render.Materials;
 
 public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
 {
-
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
     private struct UniParameters

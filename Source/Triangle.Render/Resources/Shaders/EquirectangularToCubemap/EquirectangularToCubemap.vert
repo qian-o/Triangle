@@ -15,6 +15,7 @@ layout(std140, binding = UNIFORM_BUFFER_BINDING_START + 0) uniform Parameters
 {
     mat4 View;
     mat4 Projection;
+    float Exposure;
 }
 Uni_Parameters;
 

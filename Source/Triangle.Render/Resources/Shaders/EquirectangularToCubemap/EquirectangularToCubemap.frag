@@ -12,9 +12,20 @@ In;
 
 layout(location = 0) out vec4 Out_Color;
 
+layout(std140, binding = UNIFORM_BUFFER_BINDING_START + 0) uniform Parameters
+{
+    mat4 View;
+    mat4 Projection;
+    float Exposure;
+}
+Uni_Parameters;
+
 void main()
 {
     vec2 uv = SampleSphericalMap(normalize(In.WorldPos));
 
-    Out_Color = vec4(SampleTexture(Channel0, uv).rgb, 1.0);
+    vec3 color = SampleTexture(Channel0, uv).rgb;
+    color = ApplyGammaCorrection(color, Uni_Parameters.Exposure);
+
+    Out_Color = vec4(color, 1.0);
 }

@@ -1,4 +1,5 @@
-﻿using Triangle.Core;
+﻿using System.Runtime.InteropServices;
+using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
@@ -9,8 +10,23 @@ namespace Triangle.Render.Materials;
 
 public class PBRMat(TrContext context) : GlobalMat(context, "PBR")
 {
+    #region Uniforms
+    [StructLayout(LayoutKind.Explicit)]
+    private struct UniParameters
+    {
+        [FieldOffset(0)]
+        public int MaxMipLevels;
+    }
+    #endregion
+
+    private TrBuffer<UniParameters> uboParameters = null!;
+
+    public int MaxMipLevels { get; set; }
+
     public override TrRenderPass CreateRenderPass()
     {
+        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+
         Channel0 = TrTextureManager.Texture("Resources/Textures/Rusted Iron/Albedo.png".Path());
         Channel1 = TrTextureManager.Texture("Resources/Textures/Rusted Iron/Normal.png".Path());
         Channel2 = TrTextureManager.Texture("Resources/Textures/Rusted Iron/Metallic.png".Path());
@@ -31,6 +47,13 @@ public class PBRMat(TrContext context) : GlobalMat(context, "PBR")
         TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
         renderPipeline.Bind();
 
+        uboParameters.SetData(new UniParameters
+        {
+            MaxMipLevels = MaxMipLevels
+        });
+
+        renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);
+
         mesh.Draw();
 
         renderPipeline.Unbind();
@@ -47,5 +70,6 @@ public class PBRMat(TrContext context) : GlobalMat(context, "PBR")
 
     protected override void DestroyCore(bool disposing = false)
     {
+        uboParameters.Dispose();
     }
 }

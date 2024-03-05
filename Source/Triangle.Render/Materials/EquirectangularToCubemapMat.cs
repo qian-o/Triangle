@@ -20,6 +20,9 @@ public class EquirectangularToCubemapMat(TrContext context) : GlobalMat(context,
 
         [FieldOffset(64)]
         public Matrix4X4<float> Projection;
+
+        [FieldOffset(128)]
+        public float Exposure;
     }
     #endregion
 
@@ -28,6 +31,8 @@ public class EquirectangularToCubemapMat(TrContext context) : GlobalMat(context,
     public Matrix4X4<float> View { get; set; }
 
     public Matrix4X4<float> Projection { get; set; }
+
+    public float Exposure { get; set; } = 1.0f;
 
     public override TrRenderPass CreateRenderPass()
     {
@@ -51,7 +56,8 @@ public class EquirectangularToCubemapMat(TrContext context) : GlobalMat(context,
         uboParameters.SetData(new UniParameters
         {
             View = View,
-            Projection = Projection
+            Projection = Projection,
+            Exposure = Exposure
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);
