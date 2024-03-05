@@ -96,30 +96,30 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         skyPositiveZ = new(Context);
         skyNegativeZ = new(Context);
 
-        const int rows = 7;
-        const int cols = 7;
-        const float spacing = 1.2f;
+        DirectoryInfo pbrDir = new("Resources/Textures/PBR".Path());
+        DirectoryInfo[] pbrMaterials = pbrDir.GetDirectories();
 
-        spheres = new TrModel[rows * cols];
-        for (int i = 0; i < rows; i++)
+        spheres = new TrModel[pbrMaterials.Length];
+        for (int i = 0; i < pbrMaterials.Length; i++)
         {
-            for (int j = 0; j < cols; j++)
+            DirectoryInfo directory = pbrMaterials[i];
+
+            PBRMat mat = new(Context)
             {
-                int index = i * rows + j;
+                Channel0 = TrTextureManager.Texture($"Resources/Textures/PBR/{directory.Name}/Albedo.png".Path()),
+                Channel1 = TrTextureManager.Texture($"Resources/Textures/PBR/{directory.Name}/Normal.png".Path()),
+                Channel2 = TrTextureManager.Texture($"Resources/Textures/PBR/{directory.Name}/Metallic.png".Path()),
+                Channel3 = TrTextureManager.Texture($"Resources/Textures/PBR/{directory.Name}/Roughness.png".Path()),
+                Channel4 = TrTextureManager.Texture($"Resources/Textures/PBR/{directory.Name}/AmbientOcclusion.png".Path()),
+                Map0 = irradianceMap,
+                Map1 = prefilteredMap,
+                MaxMipLevels = MaxMipLevels
+            };
 
-                PBRMat mat = new(Context)
-                {
-                    Channel0 = brdfLUTT,
-                    Map0 = irradianceMap,
-                    Map1 = prefilteredMap,
-                    MaxMipLevels = MaxMipLevels
-                };
+            spheres[i] = new($"Sphere [{directory.Name}]", [Context.CreateSphere()], mat);
+            spheres[i].Transform.Translate(new Vector3D<float>(-2.0f + i, 0.0f, 0.0f));
 
-                spheres[index] = new($"Sphere [{index}]", [Context.CreateSphere()], mat);
-                spheres[index].Transform.Translate(new Vector3D<float>(i * spacing - rows * spacing / 2.0f, j * spacing - cols * spacing / 2.0f, 0.0f));
-                spheres[index].Transform.Scaled(new Vector3D<float>(0.5f));
-                SceneController.Add(spheres[index]);
-            }
+            SceneController.Add(spheres[i]);
         }
 
         AddPointLight("Point Light [0]", out TrPointLight pointLight0);
