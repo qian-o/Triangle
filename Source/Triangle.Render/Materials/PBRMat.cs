@@ -27,12 +27,6 @@ public class PBRMat(TrContext context) : GlobalMat(context, "PBR")
     {
         uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
 
-        Channel0 = TrTextureManager.Texture("Resources/Textures/Rusted Iron/Albedo.png".Path());
-        Channel1 = TrTextureManager.Texture("Resources/Textures/Rusted Iron/Normal.png".Path());
-        Channel2 = TrTextureManager.Texture("Resources/Textures/Rusted Iron/Metallic.png".Path());
-        Channel3 = TrTextureManager.Texture("Resources/Textures/Rusted Iron/Roughness.png".Path());
-        Channel4 = TrTextureManager.Texture("Resources/Textures/Rusted Iron/AmbientOcclusion.png".Path());
-
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/PBR/PBR.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/PBR/PBR.frag.spv".Path());
 
