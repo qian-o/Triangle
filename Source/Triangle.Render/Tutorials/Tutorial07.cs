@@ -50,6 +50,11 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
     private TrModel[] spheres = null!;
     #endregion
 
+    #region current sky settings
+    private string skyTexture = string.Empty;
+    private float skyExposure = 1.0f;
+    #endregion
+
     protected override void Loaded()
     {
         cubeMesh = Context.CreateCube(1.0f);
@@ -90,8 +95,6 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         skyNegativeY = new(Context);
         skyPositiveZ = new(Context);
         skyNegativeZ = new(Context);
-
-        GeneratePBRMaps("Resources/Textures/Skies/cloudy_puresky_4k.hdr".Path());
 
         const int rows = 7;
         const int cols = 7;
@@ -134,6 +137,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void UpdateScene(double deltaSeconds)
     {
+        TryGeneratePBRMaps();
     }
 
     protected override void RenderScene(double deltaSeconds)
@@ -173,16 +177,27 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         }
     }
 
-    private void GeneratePBRMaps(string hdr)
+    private void TryGeneratePBRMaps()
     {
-        flipSky.Write(hdr, true);
+        if (SkyMat.Channel0 == null)
+        {
+            return;
+        }
+
+        if (skyTexture == SkyMat.Channel0.Name && skyExposure == SkyMat.Exposure)
+        {
+            return;
+        }
+
+        skyTexture = SkyMat.Channel0.Name;
+        skyExposure = SkyMat.Exposure;
+
+        flipSky.Write(SkyMat.Channel0.Name, true);
 
         GenerateCubeMap();
         GenerateIrradianceMap();
         GeneratePrefilteredMap();
         GenerateBRDFLUT();
-
-        SetSky(TrTextureManager.Texture(hdr));
     }
 
     /// <summary>
@@ -195,6 +210,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
         equirectangularToCubemapMat.Channel0 = flipSky;
         equirectangularToCubemapMat.Projection = Matrix4X4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(90.0f), 1.0f, 0.1f, 10.0f);
+        equirectangularToCubemapMat.Exposure = SkyMat.Exposure;
 
         skyPositiveX.Update(width, height, pixelFormat: TrPixelFormat.RGB16F);
         skyPositiveX.Bind();

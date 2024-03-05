@@ -68,12 +68,11 @@ public static class TrTextureManager
 
             foreach (string file in files)
             {
-                TrTexture texture = new(context)
-                {
-                    Name = file
-                };
+                TrTexture texture = new(context);
 
                 texture.Write(file);
+
+                texture.Name = file;
 
                 temp.Add(file, texture);
             }

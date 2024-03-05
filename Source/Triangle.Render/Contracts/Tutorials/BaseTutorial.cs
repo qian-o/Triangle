@@ -15,21 +15,12 @@ namespace Triangle.Render.Contracts.Tutorials;
 
 public abstract class BaseTutorial : ITutorial
 {
-    #region Materials
-    private readonly SkyMat _skyMat;
-    private readonly GridMat _gridMat;
-    #endregion
-
     #region Models
     private readonly TrModel _sky;
     private readonly TrModel _grid;
     private readonly TrAmbientLight _ambientLight;
     private readonly TrDirectionalLight _directionalLight;
     private readonly List<TrPointLight> _pointLights;
-    #endregion
-
-    #region Textures
-    private TrTexture? skyTexture;
     #endregion
 
     private bool disposedValue;
@@ -43,11 +34,11 @@ public abstract class BaseTutorial : ITutorial
         SceneController = new(Scene);
         PickupController = new(Context, Scene, SceneController);
 
-        _skyMat = new SkyMat(Context);
-        _gridMat = new GridMat(Context);
+        SkyMat = new SkyMat(Context);
+        GridMat = new GridMat(Context);
 
-        _sky = new("Sky", [Context.CreateSphere()], _skyMat);
-        _grid = new("Grid", [Context.CreateCanvas()], _gridMat);
+        _sky = new("Sky", [Context.CreateSphere()], SkyMat);
+        _grid = new("Grid", [Context.CreateCanvas()], GridMat);
 
         _ambientLight = new(Context, Scene.Camera, "Ambient Light");
         _ambientLight.Transform.Translate(new Vector3D<float>(3.0f, 4.0f, 3.0f));
@@ -82,13 +73,14 @@ public abstract class BaseTutorial : ITutorial
 
     public PickupController PickupController { get; }
 
+    #region Materials
+    protected SkyMat SkyMat { get; }
+
+    protected GridMat GridMat { get; }
+    #endregion
+
     public void Update(double deltaSeconds)
     {
-        if (skyTexture != null)
-        {
-            _skyMat.Channel0 = skyTexture;
-        }
-
         Scene.Update(deltaSeconds);
 
         UpdateScene(deltaSeconds);
@@ -135,11 +127,6 @@ public abstract class BaseTutorial : ITutorial
     protected abstract void UpdateScene(double deltaSeconds);
 
     protected abstract void RenderScene(double deltaSeconds);
-
-    protected void SetSky(TrTexture texture)
-    {
-        skyTexture = texture;
-    }
 
     protected void AddPointLight(string name, out TrPointLight pointLight)
     {

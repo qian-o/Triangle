@@ -49,7 +49,9 @@ public unsafe class TrTexture : TrGraphics<TrContext>
     {
         Name = Path.GetFileName(file);
 
-        stbi__context stbiContext = new(File.OpenRead(file));
+        using Stream stream = File.OpenRead(file);
+
+        stbi__context stbiContext = new(stream);
         int width;
         int height;
         int comp;

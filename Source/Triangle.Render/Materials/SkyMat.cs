@@ -59,7 +59,7 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
     protected override void ControllerCore()
     {
         float exposure = Exposure;
-        ImGuiHelper.SliderFloat("Exposure", ref exposure, 0.0f, 10.0f);
+        ImGuiHelper.SliderFloat("Exposure", ref exposure, 0.1f, 10.0f);
         Exposure = exposure;
 
         AdjustChannel("Sky Tex", 0);
