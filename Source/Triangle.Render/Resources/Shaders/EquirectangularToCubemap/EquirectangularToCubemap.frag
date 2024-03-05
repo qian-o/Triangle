@@ -25,7 +25,6 @@ void main()
     vec2 uv = SampleSphericalMap(normalize(In.WorldPos));
 
     vec3 color = SampleTexture(Channel0, uv).rgb;
-    color = ApplyGammaCorrection(color, Uni_Parameters.Exposure);
 
     Out_Color = vec4(color, 1.0);
 }

@@ -1,6 +1,5 @@
 ﻿using Hexa.NET.ImGui;
 using Silk.NET.OpenGL;
-using StbImageSharp;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
 using Triangle.Core.Helpers;
@@ -62,15 +61,45 @@ public unsafe class TrTexture : TrGraphics<TrContext>
 
         if (stbi__hdr_test(stbiContext) != 0)
         {
-            data = stbi__loadf_main(stbiContext, &width, &height, &comp, (int)ColorComponents.RedGreenBlueAlpha);
+            data = stbi__loadf_main(stbiContext, &width, &height, &comp, 0);
 
-            pixelFormat = TrPixelFormat.RGBA16F;
+            if (comp == 1)
+            {
+                pixelFormat = TrPixelFormat.R16F;
+            }
+            else if (comp == 2)
+            {
+                pixelFormat = TrPixelFormat.RG16F;
+            }
+            else if (comp == 3)
+            {
+                pixelFormat = TrPixelFormat.RGB16F;
+            }
+            else
+            {
+                pixelFormat = TrPixelFormat.RGBA16F;
+            }
         }
         else
         {
-            data = stbi__load_and_postprocess_8bit(stbiContext, &width, &height, &comp, (int)ColorComponents.RedGreenBlueAlpha);
+            data = stbi__load_and_postprocess_8bit(stbiContext, &width, &height, &comp, 0);
 
-            pixelFormat = TrPixelFormat.RGBA8;
+            if (comp == 1)
+            {
+                pixelFormat = TrPixelFormat.R8;
+            }
+            else if (comp == 2)
+            {
+                pixelFormat = TrPixelFormat.RG8;
+            }
+            else if (comp == 3)
+            {
+                pixelFormat = TrPixelFormat.RGB8;
+            }
+            else
+            {
+                pixelFormat = TrPixelFormat.RGBA8;
+            }
         }
 
         Write((uint)width, (uint)height, pixelFormat, data);
