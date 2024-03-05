@@ -30,24 +30,45 @@ public unsafe class TrCubeMap : TrGraphics<TrContext>
         gl.DeleteTexture(Handle);
     }
 
-    public void Write(TrTexture texture, TrCubeMapFace cubeMapFace)
+    public void Initialize(int width, int height, TrPixelFormat pixelFormat)
     {
         GL gl = Context.GL;
 
-        byte[] pixels = new byte[texture.Width * texture.Height * texture.PixelFormat.Size()];
+        (GLEnum Target, GLEnum Format, GLEnum Type) = pixelFormat.ToGL();
+
+        gl.BindTexture(GLEnum.TextureCubeMap, Handle);
+
+        for (int i = 0; i < 6; i++)
+        {
+            gl.TexImage2D(GLEnum.TextureCubeMapPositiveX + i, 0, (int)Target, (uint)width, (uint)height, 0, Format, Type, null);
+        }
+
+        gl.BindTexture(GLEnum.TextureCubeMap, 0);
+    }
+
+    public void Write(TrTexture texture, TrCubeMapFace cubeMapFace, int level = 0)
+    {
+        GL gl = Context.GL;
+
+        byte[] pixels = texture.GetPixels();
 
         fixed (byte* ptr = pixels)
         {
-            texture.Read(ptr);
-
             (GLEnum Target, GLEnum Format, GLEnum Type) = texture.PixelFormat.ToGL();
 
             gl.BindTexture(GLEnum.TextureCubeMap, Handle);
-            gl.TexImage2D(cubeMapFace.ToGL(), 0, (int)Target, texture.Width, texture.Height, 0, Format, Type, ptr);
+            gl.TexImage2D(cubeMapFace.ToGL(), level, (int)Target, texture.Width, texture.Height, 0, Format, Type, ptr);
             gl.BindTexture(GLEnum.TextureCubeMap, 0);
-
-            UpdateParameters();
         }
+    }
+
+    public void GenerateMipmap()
+    {
+        GL gl = Context.GL;
+
+        gl.BindTexture(GLEnum.TextureCubeMap, Handle);
+        gl.GenerateMipmap(GLEnum.TextureCubeMap);
+        gl.BindTexture(GLEnum.TextureCubeMap, 0);
     }
 
     public void UpdateParameters()

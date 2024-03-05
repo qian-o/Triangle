@@ -232,9 +232,25 @@ vec4 SampleTexture(sampler2D tex, vec2 uv)
 /// <summary>
 /// Samples a texture.
 /// </summary>
+vec4 SampleTexture(sampler2D tex, vec2 uv, float lod)
+{
+    return textureLod(tex, uv, lod);
+}
+
+/// <summary>
+/// Samples a texture.
+/// </summary>
 vec4 SampleTexture(samplerCube tex, vec3 uv)
 {
     return texture(tex, uv);
+}
+
+/// <summary>
+/// Samples a texture.
+/// </summary>
+vec4 SampleTexture(samplerCube tex, vec3 uv, float lod)
+{
+    return textureLod(tex, uv, lod);
 }
 
 /// <summary>

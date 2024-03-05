@@ -144,13 +144,17 @@ public unsafe class TrFrame : TrGraphics<TrContext>
     {
         GL gl = Context.GL;
 
-        gl.BindFramebuffer(GLEnum.Framebuffer, Handle);
-        gl.ReadBuffer(GLEnum.ColorAttachment0);
+        byte[] pixels = new byte[Width * Height * PixelFormat.Size()];
 
-        byte[] pixels = new byte[Width * Height * 4];
-        gl.ReadPixels<byte>(0, 0, (uint)Width, (uint)Height, GLEnum.Rgba, GLEnum.UnsignedByte, pixels);
+        fixed (byte* ptr = pixels)
+        {
+            (GLEnum _, GLEnum Format, GLEnum Type) = PixelFormat.ToGL();
 
-        gl.BindFramebuffer(GLEnum.Framebuffer, 0);
+            gl.BindFramebuffer(GLEnum.Framebuffer, Handle);
+            gl.ReadBuffer(GLEnum.ColorAttachment0);
+            gl.ReadPixels(0, 0, (uint)Width, (uint)Height, Format, Type, ptr);
+            gl.BindFramebuffer(GLEnum.Framebuffer, 0);
+        }
 
         return pixels;
     }

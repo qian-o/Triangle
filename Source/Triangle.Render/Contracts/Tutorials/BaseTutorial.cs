@@ -47,7 +47,7 @@ public abstract class BaseTutorial : ITutorial
         _gridMat = new GridMat(Context);
 
         _sky = new("Sky", [Context.CreateSphere()], _skyMat);
-        _grid = new("Grid", [Context.CreateGrid()], _gridMat);
+        _grid = new("Grid", [Context.CreateCanvas()], _gridMat);
 
         _ambientLight = new(Context, Scene.Camera, "Ambient Light");
         _ambientLight.Transform.Translate(new Vector3D<float>(3.0f, 4.0f, 3.0f));

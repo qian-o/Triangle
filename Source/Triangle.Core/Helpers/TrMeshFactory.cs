@@ -79,21 +79,6 @@ public static unsafe class TrMeshFactory
         return AssimpParsing(context, Path.Combine("Resources", "Models", "Star.glb"))[0];
     }
 
-    public static TrMesh CreateGrid(this TrContext context)
-    {
-        TrVertex[] vertices =
-        [
-            new(new(-1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(0.0f, 1.0f)),
-            new(new(-1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(0.0f, 0.0f)),
-            new(new(1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(1.0f, 0.0f)),
-            new(new(1.0f, -1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(1.0f, 0.0f)),
-            new(new(1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(1.0f, 1.0f)),
-            new(new(-1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(0.0f, 1.0f))
-        ];
-
-        return new(context, vertices, vertices.Select((a, b) => (uint)b).ToArray());
-    }
-
     public static TrMesh CreateCanvas(this TrContext context)
     {
         TrVertex[] vertices =

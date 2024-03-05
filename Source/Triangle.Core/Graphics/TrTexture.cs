@@ -80,7 +80,7 @@ public unsafe class TrTexture : TrGraphics<TrContext>
 
         fixed (byte* ptr = pixels)
         {
-            Write((uint)frame.Width, (uint)frame.Height, TrPixelFormat.RGBA8, ptr);
+            Write((uint)frame.Width, (uint)frame.Height, frame.PixelFormat, ptr);
         }
     }
 
@@ -116,15 +116,22 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         gl.BindTexture(GLEnum.Texture2D, 0);
     }
 
-    public void Read(void* data)
+    public byte[] GetPixels()
     {
         GL gl = Context.GL;
 
-        (GLEnum _, GLEnum Format, GLEnum Type) = PixelFormat.ToGL();
+        byte[] pixels = new byte[Width * Height * PixelFormat.Size()];
 
-        gl.BindTexture(GLEnum.Texture2D, Handle);
-        gl.GetTexImage(GLEnum.Texture2D, 0, Format, Type, data);
-        gl.BindTexture(GLEnum.Texture2D, 0);
+        fixed (byte* ptr = pixels)
+        {
+            (GLEnum _, GLEnum Format, GLEnum Type) = PixelFormat.ToGL();
+
+            gl.BindTexture(GLEnum.Texture2D, Handle);
+            gl.GetTexImage(GLEnum.Texture2D, 0, Format, Type, ptr);
+            gl.BindTexture(GLEnum.Texture2D, 0);
+        }
+
+        return pixels;
     }
 
     public void AdjustImGuiProperties()

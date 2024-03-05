@@ -7,7 +7,7 @@ using Triangle.Render.Models;
 
 namespace Triangle.Render.Materials;
 
-public class PhysicallyBasedRenderingMat(TrContext context) : GlobalMat(context, "PBR")
+public class PBRMat(TrContext context) : GlobalMat(context, "PBR")
 {
     public override TrRenderPass CreateRenderPass()
     {

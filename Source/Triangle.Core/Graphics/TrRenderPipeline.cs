@@ -438,6 +438,9 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
         {
             gl.Disable(GLEnum.Multisample);
         }
+
+        // Other settings, not controlled by the render pipeline.
+        gl.Enable(GLEnum.TextureCubeMapSeamless);
     }
 
     public void Unbind()
