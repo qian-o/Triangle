@@ -14,6 +14,8 @@ In;
 
 layout(location = 0) out vec4 Out_Color;
 
+const float MAX_REFLECTION_LOD = 4.0;
+
 vec3 GetNormalFromMap()
 {
     vec3 tangentNormal = UnpackNormal(SampleTexture(Channel1, In.UV));
@@ -85,6 +87,7 @@ void main()
 
     vec3 N = GetNormalFromMap();
     vec3 V = normalize(WorldSpaceViewDir(In.WorldPos));
+    vec3 R = reflect(-V, N);
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
@@ -119,7 +122,7 @@ void main()
         Lo += (kD * albedo / PI + specular) * radiance * max(dot(N, L), 0.0);
     }
 
-    // ambient lighting (we now use IBL as the ambient light)
+    // ambient lighting (we now use IBL as the ambient term)
     vec3 F = FresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
 
     vec3 kS = F;
@@ -129,11 +132,20 @@ void main()
     vec3 irradiance = SampleTexture(Map0, N).rgb;
     vec3 diffuse = irradiance * albedo;
 
-    vec3 ambient = (kD * diffuse) * ao;
+    // sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to
+    // get the IBL specular part.
+    vec3 prefilteredColor = SampleTexture(Map1, R, roughness * MAX_REFLECTION_LOD).rgb;
+    vec2 brdf = SampleTexture(Channel0, vec2(max(dot(N, V), 0.0), roughness)).rg;
+    vec3 specular = prefilteredColor * (F * brdf.x + brdf.y);
+
+    vec3 ambient = (kD * diffuse + specular) * ao;
+
     vec3 color = ambient + Lo;
 
     // HDR tonemapping
     color = color / (color + vec3(1.0));
+
+    // gamma correct
     color = pow(color, vec3(1.0 / 2.2));
 
     Out_Color = vec4(color, 1.0);

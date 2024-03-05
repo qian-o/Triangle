@@ -25,7 +25,6 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
     private IrradianceConvolutionMat irradianceConvolutionMat = null!;
     private PrefilterMat prefilterMat = null!;
     private BRDFMat brdfMat = null!;
-    private SingleCubeMapMat singleCubeMapMat = null!;
     #endregion
 
     #region Capture Skybox framebuffer
@@ -58,10 +57,8 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         irradianceConvolutionMat = new(Context);
         prefilterMat = new(Context);
         brdfMat = new(Context);
-        singleCubeMapMat = new(Context);
 
         flipSky = new(Context);
-        flipSky.Write("Resources/Textures/Skies/newport_loft.hdr".Path(), true);
 
         envCubeMap = new(Context)
         {
@@ -92,10 +89,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         skyPositiveZ = new(Context);
         skyNegativeZ = new(Context);
 
-        GenerateCubeMap();
-        GenerateIrradianceMap();
-        GeneratePrefilteredMap();
-        GenerateBRDFLUT();
+        GeneratePBRMaps("Resources/Textures/Skies/newport_loft.hdr".Path());
 
         const int rows = 7;
         const int cols = 7;
@@ -110,7 +104,9 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
                 PBRMat mat = new(Context)
                 {
-                    Map0 = irradianceMap
+                    Channel0 = brdfLUTT,
+                    Map0 = irradianceMap,
+                    Map1 = prefilteredMap
                 };
 
                 spheres[index] = new($"Sphere [{index}]", [Context.CreateSphere()], mat);
@@ -119,8 +115,6 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
                 SceneController.Add(spheres[index]);
             }
         }
-
-        SetSky(TrTextureManager.Texture("Resources/Textures/Skies/newport_loft.hdr".Path()));
 
         AddPointLight("Point Light [0]", out TrPointLight pointLight0);
         pointLight0.Transform.Translate(new Vector3D<float>(-1.0f, 1.0f, 2.0f));
@@ -137,7 +131,6 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void UpdateScene(double deltaSeconds)
     {
-        singleCubeMapMat.Map0 = prefilteredMap;
     }
 
     protected override void RenderScene(double deltaSeconds)
@@ -146,8 +139,6 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         {
             sphere.Render(GetSceneParameters());
         }
-
-        singleCubeMapMat.Draw(cubeMesh, GetSceneParameters());
     }
 
     protected override void Destroy(bool disposing = false)
@@ -156,7 +147,6 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
         equirectangularToCubemapMat.Dispose();
         irradianceConvolutionMat.Dispose();
-        singleCubeMapMat.Dispose();
 
         skyPositiveX.Dispose();
         skyNegativeX.Dispose();
@@ -173,6 +163,18 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         {
             sphere.Dispose();
         }
+    }
+
+    private void GeneratePBRMaps(string hdr)
+    {
+        flipSky.Write(hdr, true);
+
+        GenerateCubeMap();
+        GenerateIrradianceMap();
+        GeneratePrefilteredMap();
+        GenerateBRDFLUT();
+
+        SetSky(TrTextureManager.Texture(hdr));
     }
 
     /// <summary>
