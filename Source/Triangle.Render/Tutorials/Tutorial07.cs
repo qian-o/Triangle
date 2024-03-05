@@ -147,9 +147,12 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
     protected override void Destroy(bool disposing = false)
     {
         cubeMesh.Dispose();
+        canvasMesh.Dispose();
 
         equirectangularToCubemapMat.Dispose();
         irradianceConvolutionMat.Dispose();
+        prefilterMat.Dispose();
+        brdfMat.Dispose();
 
         skyPositiveX.Dispose();
         skyNegativeX.Dispose();
@@ -161,6 +164,8 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         flipSky.Dispose();
         envCubeMap.Dispose();
         irradianceMap.Dispose();
+        prefilteredMap.Dispose();
+        brdfLUTT.Dispose();
 
         foreach (TrModel sphere in spheres)
         {
