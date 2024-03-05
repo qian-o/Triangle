@@ -71,7 +71,41 @@ public static unsafe class TrMeshFactory
 
     public static TrMesh CreateSphere(this TrContext context)
     {
-        return AssimpParsing(context, Path.Combine("Resources", "Models", "Sphere.glb"))[0];
+        const int X_SEGMENTS = 64;
+        const int Y_SEGMENTS = 64;
+
+        List<TrVertex> vertices = [];
+        List<uint> indices = [];
+
+        for (int x = 0; x <= X_SEGMENTS; x++)
+        {
+            for (int y = 0; y <= Y_SEGMENTS; y++)
+            {
+                float xSegment = (float)x / X_SEGMENTS;
+                float ySegment = (float)y / Y_SEGMENTS;
+                float xPos = (float)(Math.Cos(xSegment * 2.0 * Math.PI) * Math.Sin(ySegment * Math.PI));
+                float yPos = (float)Math.Cos(ySegment * Math.PI);
+                float zPos = (float)(Math.Sin(xSegment * 2.0 * Math.PI) * Math.Sin(ySegment * Math.PI));
+
+                vertices.Add(new(new(xPos, yPos, zPos), new(xPos, yPos, zPos), texCoord: new(xSegment, ySegment)));
+            }
+        }
+
+        for (int x = 0; (x < X_SEGMENTS) && (x < Y_SEGMENTS); x++)
+        {
+            for (int y = 0; (y < X_SEGMENTS) && (y < Y_SEGMENTS); y++)
+            {
+                indices.Add((uint)((x * (Y_SEGMENTS + 1)) + y));
+                indices.Add((uint)(((x + 1) * (Y_SEGMENTS + 1)) + y));
+                indices.Add((uint)((x * (Y_SEGMENTS + 1)) + y + 1));
+
+                indices.Add((uint)(((x + 1) * (Y_SEGMENTS + 1)) + y));
+                indices.Add((uint)(((x + 1) * (Y_SEGMENTS + 1)) + y + 1));
+                indices.Add((uint)((x * (Y_SEGMENTS + 1)) + y + 1));
+            }
+        }
+
+        return new(context, [.. vertices], [.. indices]);
     }
 
     public static TrMesh CreateStar(this TrContext context)

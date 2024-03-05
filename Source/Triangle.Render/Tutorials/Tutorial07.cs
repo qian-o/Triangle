@@ -119,7 +119,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
             spheres[i] = new($"Sphere [{directory.Name}]", [Context.CreateSphere()], mat);
             spheres[i].Transform.Translate(new Vector3D<float>(-2.0f + i, 0.0f, 0.0f));
-            spheres[i].Transform.Scaled(new Vector3D<float>(0.5f));
+            spheres[i].Transform.Scaled(new Vector3D<float>(0.4f));
 
             SceneController.Add(spheres[i]);
         }
