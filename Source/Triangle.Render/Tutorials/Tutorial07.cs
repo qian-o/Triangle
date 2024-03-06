@@ -15,7 +15,8 @@ namespace Triangle.Render.Tutorials;
 [Description("Physically Based Rendering (PBR) 渲染光照模型。")]
 public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
-    private const int MaxMipLevels = 5;
+    // PBR: Maximum number of mip levels for prefiltered map (0 to 4)
+    private const int MaxMipLevels = 4;
 
     #region Meshes
     private TrMesh cubeMesh = null!;
@@ -85,7 +86,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
             TextureMinFilter = TrTextureFilter.LinearMipmapLinear,
             TextureWrap = TrTextureWrap.ClampToEdge
         };
-        irradianceMap.UpdateParameters();
+        prefilteredMap.UpdateParameters();
 
         brdfLUTT = new(Context);
 
@@ -388,7 +389,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         prefilterMat.Map0 = envCubeMap;
         prefilterMat.Projection = Matrix4X4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(90.0f), 1.0f, 0.1f, 10.0f);
 
-        for (int i = 0; i < MaxMipLevels; i++)
+        for (int i = 0; i <= MaxMipLevels; i++)
         {
             prefilterMat.Roughness = (float)i / (MaxMipLevels - 1);
 
