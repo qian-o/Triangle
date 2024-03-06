@@ -2,6 +2,7 @@
 using System.Numerics;
 using Hexa.NET.ImGui;
 using Silk.NET.Maths;
+using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
 using Triangle.Core.Models;
 using Triangle.Core.Structs;
@@ -68,9 +69,14 @@ public static class TrTextureManager
 
             foreach (string file in files)
             {
-                TrTexture texture = new(context);
+                TrTexture texture = new(context)
+                {
+                    TextureMinFilter = TrTextureFilter.LinearMipmapLinear,
+                    IsGenerateMipmap = true
+                };
 
                 texture.Write(file);
+                texture.UpdateParameters();
 
                 texture.Name = file;
 

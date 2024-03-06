@@ -1,4 +1,5 @@
-﻿using Hexa.NET.ImGui;
+﻿using System.Runtime.InteropServices;
+using Hexa.NET.ImGui;
 using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
@@ -103,6 +104,8 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         }
 
         Write((uint)width, (uint)height, pixelFormat, data);
+
+        Marshal.FreeHGlobal((nint)data);
     }
 
     public void Write(TrFrame frame)
