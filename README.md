@@ -5,3 +5,5 @@
 ![image](https://github.com/qian-o/Triangle/assets/84434846/cdaf0a6c-3f55-468e-9053-2f85e91f50d6)
 
 ![image](https://github.com/qian-o/Triangle/assets/84434846/7ff1e0ee-d9b1-4205-997e-4de8872af625)
+
+![image](https://github.com/qian-o/Triangle/assets/84434846/ac3ef1f1-6f97-47c5-b687-441b03f81b8a)
