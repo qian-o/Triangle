@@ -14,7 +14,7 @@ namespace Triangle.Render.Tutorials;
 [Description("使用 KTX 文件加载天空盒")]
 public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
-    private class Map(TrCubeMap skybox, TrCubeMap radiance, TrCubeMap irradiance)
+    private sealed class Map(TrCubeMap skybox, TrCubeMap radiance, TrCubeMap irradiance)
     {
         public TrCubeMap Skybox { get; } = skybox;
 

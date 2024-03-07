@@ -1,10 +1,9 @@
-﻿using System.Runtime.InteropServices;
-using Hexa.NET.ImGui;
+﻿using Hexa.NET.ImGui;
 using Silk.NET.OpenGL;
+using StbiSharp;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
 using Triangle.Core.Helpers;
-using static StbImageSharp.StbImage;
 
 namespace Triangle.Core.Graphics;
 
@@ -49,63 +48,64 @@ public unsafe class TrTexture : TrGraphics<TrContext>
     {
         Name = Path.GetFileName(file);
 
-        using Stream stream = File.OpenRead(file);
+        byte[] bytes = File.ReadAllBytes(file);
 
-        stbi__context stbiContext = new(stream);
-        int width;
-        int height;
-        int comp;
-        void* data;
-        TrPixelFormat pixelFormat;
-
-        stbi_set_flip_vertically_on_load(flip ? 1 : 0);
-
-        if (stbi__hdr_test(stbiContext) != 0)
+        fixed (byte* ptr = bytes)
         {
-            data = stbi__loadf_main(stbiContext, &width, &height, &comp, 0);
+            int length = bytes.Length;
+            int width;
+            int height;
+            int comp;
+            void* pixels;
+            TrPixelFormat pixelFormat;
 
-            if (comp == 1)
+            Stbi.SetFlipVerticallyOnLoad(flip);
+
+            if (Stbi.IsHdrFromMemory(ptr, length))
             {
-                pixelFormat = TrPixelFormat.R16F;
-            }
-            else if (comp == 2)
-            {
-                pixelFormat = TrPixelFormat.RG16F;
-            }
-            else if (comp == 3)
-            {
-                pixelFormat = TrPixelFormat.RGB16F;
+                pixels = Stbi.LoadFFromMemory(ptr, length, out width, out height, out comp, 0);
+
+                if (comp == 1)
+                {
+                    pixelFormat = TrPixelFormat.R16F;
+                }
+                else if (comp == 2)
+                {
+                    pixelFormat = TrPixelFormat.RG16F;
+                }
+                else if (comp == 3)
+                {
+                    pixelFormat = TrPixelFormat.RGB16F;
+                }
+                else
+                {
+                    pixelFormat = TrPixelFormat.RGBA16F;
+                }
             }
             else
             {
-                pixelFormat = TrPixelFormat.RGBA16F;
+                pixels = Stbi.LoadFromMemory(ptr, length, out width, out height, out comp, 0);
+
+                if (comp == 1)
+                {
+                    pixelFormat = TrPixelFormat.R8;
+                }
+                else if (comp == 2)
+                {
+                    pixelFormat = TrPixelFormat.RG8;
+                }
+                else if (comp == 3)
+                {
+                    pixelFormat = TrPixelFormat.RGB8;
+                }
+                else
+                {
+                    pixelFormat = TrPixelFormat.RGBA8;
+                }
             }
+
+            Write((uint)width, (uint)height, pixelFormat, pixels);
         }
-        else
-        {
-            data = stbi__load_and_postprocess_8bit(stbiContext, &width, &height, &comp, 0);
-
-            if (comp == 1)
-            {
-                pixelFormat = TrPixelFormat.R8;
-            }
-            else if (comp == 2)
-            {
-                pixelFormat = TrPixelFormat.RG8;
-            }
-            else if (comp == 3)
-            {
-                pixelFormat = TrPixelFormat.RGB8;
-            }
-            else
-            {
-                pixelFormat = TrPixelFormat.RGBA8;
-            }
-        }
-
-        Write((uint)width, (uint)height, pixelFormat, data);
-
-        Marshal.FreeHGlobal((nint)data);
     }
 
     public void Write(TrFrame frame)
