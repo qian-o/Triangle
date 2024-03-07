@@ -15,7 +15,6 @@
 	<ItemGroup>
 		<PackageReference Include="Hexa.NET.ImGui" Version="1.0.2" />
 		<PackageReference Include="Hexa.NET.ImGuizmo" Version="1.0.2" />
-		<PackageReference Include="Ktx2Sharp" Version="1.0.2" />
 		<PackageReference Include="Silk.NET.Assimp" Version="2.20.0" />
 		<PackageReference Include="Silk.NET.Input" Version="2.20.0" />
 		<PackageReference Include="Silk.NET.Maths" Version="2.20.0" />
@@ -23,6 +22,7 @@
 		<PackageReference Include="Silk.NET.Shaderc" Version="2.20.0" />
 		<PackageReference Include="Silk.NET.Shaderc.Native" Version="2.20.0" />
 		<PackageReference Include="Silk.NET.Windowing" Version="2.20.0" />
+		<PackageReference Include="SixLabors.ImageSharp.Textures" Version="0.0.0-alpha.0.140" />
 		<PackageReference Include="StbImageSharp" Version="2.27.13" />
 	</ItemGroup>
 
