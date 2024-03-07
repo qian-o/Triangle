@@ -22,7 +22,6 @@
 		<PackageReference Include="Silk.NET.Shaderc" Version="2.20.0" />
 		<PackageReference Include="Silk.NET.Shaderc.Native" Version="2.20.0" />
 		<PackageReference Include="Silk.NET.Windowing" Version="2.20.0" />
-		<PackageReference Include="SixLabors.ImageSharp.Textures" Version="0.0.0-alpha.0.140" />
 		<PackageReference Include="StbImageSharp" Version="2.27.13" />
 	</ItemGroup>
 
