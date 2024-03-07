@@ -201,6 +201,27 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
         });
 
         _maps.Clear();
+
+        cubeMesh.Dispose();
+        canvasMesh.Dispose();
+
+        equirectangularToCubemapMat.Dispose();
+        prefilterMat.Dispose();
+        brdfMat.Dispose();
+
+        skyPositiveX.Dispose();
+        skyNegativeX.Dispose();
+        skyPositiveY.Dispose();
+        skyNegativeY.Dispose();
+        skyPositiveZ.Dispose();
+        skyNegativeZ.Dispose();
+
+        brdfLUTT.Dispose();
+
+        foreach (TrModel sphere in spheres)
+        {
+            sphere.Dispose();
+        }
     }
 
     private void GenerateCubeMap(TrCubeMap cubeMap, string map)
