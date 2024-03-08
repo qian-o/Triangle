@@ -11,8 +11,8 @@ using Triangle.Render.Materials;
 
 namespace Triangle.Render.Tutorials;
 
-[DisplayName("PBR - KTX Skybox")]
-[Description("使用 KTX 文件加载天空盒")]
+[DisplayName("PBR - Skybox")]
+[Description("使用预生成的 HDR 贴图创建 PBR 材质。")]
 public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     private sealed class Map(TrCubeMap skybox, TrCubeMap radiance, TrCubeMap irradiance, TrCubeMap prefiltered)
