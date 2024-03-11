@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Hexa.NET.ImGui;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
@@ -49,11 +50,6 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
     #region Models
     private TrModel[] spheres = null!;
-    #endregion
-
-    #region current sky settings
-    private string skyTexture = string.Empty;
-    private float skyExposure = 1.0f;
     #endregion
 
     protected override void Loaded()
@@ -140,7 +136,6 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void UpdateScene(double deltaSeconds)
     {
-        TryGeneratePBRMaps();
     }
 
     protected override void RenderScene(double deltaSeconds)
@@ -148,6 +143,21 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         foreach (var sphere in spheres)
         {
             sphere.Render(GetSceneParameters());
+        }
+    }
+
+    public override void ImGuiRender()
+    {
+        base.ImGuiRender();
+
+        if (ImGui.Begin("PBR"))
+        {
+            if (ImGui.Button("Generate PBR Maps"))
+            {
+                TryGeneratePBRMaps();
+            }
+
+            ImGui.End();
         }
     }
 
@@ -187,14 +197,6 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
             return;
         }
 
-        if (skyTexture == SkyMat.Channel0.Name && skyExposure == SkyMat.Exposure)
-        {
-            return;
-        }
-
-        skyTexture = SkyMat.Channel0.Name;
-        skyExposure = SkyMat.Exposure;
-
         flipSky.Write(SkyMat.Channel0.Name, true);
 
         GenerateCubeMap();
@@ -213,6 +215,8 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
         equirectangularToCubemapMat.Channel0 = flipSky;
         equirectangularToCubemapMat.Projection = Matrix4X4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(90.0f), 1.0f, 0.1f, 10.0f);
+        equirectangularToCubemapMat.GammaCorrection = SkyMat.GammaCorrection;
+        equirectangularToCubemapMat.Gamma = SkyMat.Gamma;
         equirectangularToCubemapMat.Exposure = SkyMat.Exposure;
 
         skyPositiveX.Update(width, height, pixelFormat: TrPixelFormat.RGB16F);

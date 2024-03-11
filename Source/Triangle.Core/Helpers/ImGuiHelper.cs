@@ -441,6 +441,15 @@ public static class ImGuiHelper
         EndLeftTextRightContent();
     }
 
+    public static void Checkbox(string label, ref bool value)
+    {
+        BeginLeftTextRightContent(label);
+
+        ImGui.Checkbox($"##{label}", ref value);
+
+        EndLeftTextRightContent();
+    }
+
     private static void BeginLeftTextRightContent(string label)
     {
         float width = ImGui.GetContentRegionAvail().X - ImGui.GetCursorPosX();

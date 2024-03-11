@@ -22,6 +22,12 @@ public class EquirectangularToCubemapMat(TrContext context) : GlobalMat(context,
         public Matrix4X4<float> Projection;
 
         [FieldOffset(128)]
+        public bool GammaCorrection;
+
+        [FieldOffset(132)]
+        public float Gamma;
+
+        [FieldOffset(136)]
         public float Exposure;
     }
     #endregion
@@ -31,6 +37,10 @@ public class EquirectangularToCubemapMat(TrContext context) : GlobalMat(context,
     public Matrix4X4<float> View { get; set; }
 
     public Matrix4X4<float> Projection { get; set; }
+
+    public bool GammaCorrection { get; set; }
+
+    public float Gamma { get; set; } = 2.2f;
 
     public float Exposure { get; set; } = 1.0f;
 
@@ -57,6 +67,8 @@ public class EquirectangularToCubemapMat(TrContext context) : GlobalMat(context,
         {
             View = View,
             Projection = Projection,
+            GammaCorrection = GammaCorrection,
+            Gamma = Gamma,
             Exposure = Exposure
         });
 
@@ -69,6 +81,21 @@ public class EquirectangularToCubemapMat(TrContext context) : GlobalMat(context,
 
     protected override void ControllerCore()
     {
+        bool gammaCorrection = GammaCorrection;
+        ImGuiHelper.Checkbox("Gamma Correction", ref gammaCorrection);
+        GammaCorrection = gammaCorrection;
+
+        if (GammaCorrection)
+        {
+            float gamma = Gamma;
+            ImGuiHelper.DragFloat("Gamma", ref gamma, 0.1f, 3.0f);
+            Gamma = gamma;
+
+            float exposure = Exposure;
+            ImGuiHelper.DragFloat("Exposure", ref exposure, 0.1f, 10.0f);
+            Exposure = exposure;
+        }
+
         AdjustChannel("Sky Map", 0);
     }
 

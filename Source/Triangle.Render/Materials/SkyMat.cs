@@ -15,11 +15,21 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
     private struct UniParameters
     {
         [FieldOffset(0)]
+        public bool GammaCorrection;
+
+        [FieldOffset(4)]
+        public float Gamma;
+
+        [FieldOffset(8)]
         public float Exposure;
     }
     #endregion
 
     private TrBuffer<UniParameters> uboParameters = null!;
+
+    public bool GammaCorrection { get; set; }
+
+    public float Gamma { get; set; } = 2.2f;
 
     public float Exposure { get; set; } = 1.0f;
 
@@ -46,6 +56,8 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
 
         uboParameters.SetData(new UniParameters()
         {
+            GammaCorrection = GammaCorrection,
+            Gamma = Gamma,
             Exposure = Exposure
         });
 
@@ -58,9 +70,20 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
 
     protected override void ControllerCore()
     {
-        float exposure = Exposure;
-        ImGuiHelper.SliderFloat("Exposure", ref exposure, 0.1f, 10.0f);
-        Exposure = exposure;
+        bool gammaCorrection = GammaCorrection;
+        ImGuiHelper.Checkbox("Gamma Correction", ref gammaCorrection);
+        GammaCorrection = gammaCorrection;
+
+        if (GammaCorrection)
+        {
+            float gamma = Gamma;
+            ImGuiHelper.DragFloat("Gamma", ref gamma, 0.1f, 3.0f);
+            Gamma = gamma;
+
+            float exposure = Exposure;
+            ImGuiHelper.DragFloat("Exposure", ref exposure, 0.1f, 10.0f);
+            Exposure = exposure;
+        }
 
         AdjustChannel("Sky Tex", 0);
     }

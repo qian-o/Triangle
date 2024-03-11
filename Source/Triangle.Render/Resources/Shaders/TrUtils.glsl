@@ -256,13 +256,13 @@ vec4 SampleTexture(samplerCube tex, vec3 uv, float lod)
 /// <summary>
 /// Applies gamma correction to the color.
 /// </summary>
-vec3 ApplyGammaCorrection(vec3 color, float exposure)
+vec3 ApplyGammaCorrection(vec3 color, float gamma, float exposure)
 {
     // exposure tone mapping
     vec3 mapped = vec3(1.0) - exp(-color * exposure);
 
     // gamma correction
-    mapped = pow(mapped, vec3(1.0 / 2.2));
+    mapped = pow(mapped, vec3(1.0 / gamma));
 
     return mapped;
 }
