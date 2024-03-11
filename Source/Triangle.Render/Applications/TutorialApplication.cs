@@ -30,7 +30,7 @@ public class TutorialApplication : BaseApplication
             string displayName = type.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? type.Name;
             string description = type.GetCustomAttribute<DescriptionAttribute>()?.Description ?? "";
 
-            _allTutorials.Add(new TrControl(128.0f, 46.0f)
+            _allTutorials.Add(new TrControl(64.0f, 46.0f)
             {
                 Margin = new TrThickness(2.0f),
                 Tag = (type, displayName, description)
