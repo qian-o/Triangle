@@ -335,6 +335,15 @@ public static class ImGuiHelper
         ImGui.Image(frame != null ? (nint)frame.Texture.Handle : 0, size.ToSystem(), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
     }
 
+    public static void DragInt(string label, ref int value, float speed = 1.0f, int min = int.MinValue, int max = int.MaxValue)
+    {
+        BeginLeftTextRightContent(label);
+
+        ImGui.DragInt($"##{label}", ref value, speed, min, max);
+
+        EndLeftTextRightContent();
+    }
+
     public static void DragFloat(string label, ref float value, float speed = 1.0f, float min = float.MinValue, float max = float.MaxValue)
     {
         BeginLeftTextRightContent(label);

@@ -67,6 +67,15 @@ public class SceneController
     {
         if (ImGui.Begin("Scene Collection"))
         {
+            if (ImGui.TreeNode("Properties"))
+            {
+                int samples = _scene.Samples;
+                ImGuiHelper.DragInt("Samples", ref samples, 1, 1, 16);
+                _scene.Samples = samples;
+
+                ImGui.TreePop();
+            }
+
             ImGui.SetNextItemOpen(true, ImGuiCond.Once);
 
             if (ImGui.TreeNode("Collection"))
