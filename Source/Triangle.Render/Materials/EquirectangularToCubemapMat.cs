@@ -88,11 +88,11 @@ public class EquirectangularToCubemapMat(TrContext context) : GlobalMat(context,
         if (GammaCorrection)
         {
             float gamma = Gamma;
-            ImGuiHelper.DragFloat("Gamma", ref gamma, 0.1f, 3.0f);
+            ImGuiHelper.DragFloat("Gamma", ref gamma, 0.01f, 0.1f, 3.0f);
             Gamma = gamma;
 
             float exposure = Exposure;
-            ImGuiHelper.DragFloat("Exposure", ref exposure, 0.1f, 10.0f);
+            ImGuiHelper.DragFloat("Exposure", ref exposure, 0.01f, 0.1f, 10.0f);
             Exposure = exposure;
         }
 
