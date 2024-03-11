@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 using Hexa.NET.ImGui;
 using Silk.NET.Maths;
 using Triangle.Core;
-using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Core.Structs;
