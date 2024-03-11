@@ -36,7 +36,7 @@ public class PrefilterMat(TrContext context) : GlobalMat(context, "Prefilter")
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboParameters = new(Context);
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Prefilter/Prefilter.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Prefilter/Prefilter.frag.spv".Path());

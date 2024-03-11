@@ -26,7 +26,7 @@ public class EdgeDetectionMat(TrContext context) : GlobalMat(context, "EdgeDetec
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboParameters = new(Context);
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/EdgeDetection/EdgeDetection.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/EdgeDetection/EdgeDetection.frag.spv".Path());

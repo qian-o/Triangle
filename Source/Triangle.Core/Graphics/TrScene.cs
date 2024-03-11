@@ -123,32 +123,32 @@ public class TrScene : TrGraphics<TrContext>
 
             if (KeyPressed(Key.W))
             {
-                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Forward);
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrTransform.DefaultForward);
             }
 
             if (KeyPressed(Key.A))
             {
-                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Left);
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrTransform.DefaultLeft);
             }
 
             if (KeyPressed(Key.S))
             {
-                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Backward);
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrTransform.DefaultBackward);
             }
 
             if (KeyPressed(Key.D))
             {
-                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Right);
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrTransform.DefaultRight);
             }
 
             if (KeyPressed(Key.Q))
             {
-                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Down);
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrTransform.DefaultDown);
             }
 
             if (KeyPressed(Key.E))
             {
-                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrContext.Up);
+                Camera.Transform.Translate(Camera.Speed * (float)deltaSeconds * TrTransform.DefaultUp);
             }
 
             if (KeyPressed(Key.Number1))

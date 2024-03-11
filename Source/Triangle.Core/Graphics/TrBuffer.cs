@@ -1,38 +1,28 @@
 ﻿using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
-using Triangle.Core.Enums;
 using Triangle.Core.Exceptions;
-using Triangle.Core.Helpers;
 
 namespace Triangle.Core.Graphics;
 
-public class TrBuffer(TrContext context, TrBufferTarget bufferTarget, TrBufferUsage bufferUsage, uint length = 1) : TrGraphics<TrContext>(context)
+public unsafe class TrBuffer<TDataType> : TrGraphics<TrContext> where TDataType : unmanaged
 {
-    public uint Length { get; } = length;
+    public TrBuffer(TrContext context, uint length = 1) : base(context)
+    {
+        GL gl = Context.GL;
 
-    public TrBufferTarget BufferTarget { get; } = bufferTarget;
+        Handle = gl.CreateBuffer();
+        Length = length;
 
-    public TrBufferUsage BufferUsage { get; } = bufferUsage;
+        gl.NamedBufferStorage(Handle, (uint)(Length * sizeof(TDataType)), null, (uint)GLEnum.DynamicStorageBit);
+    }
+
+    public uint Length { get; }
 
     protected override void Destroy(bool disposing = false)
     {
         GL gl = Context.GL;
 
         gl.DeleteBuffer(Handle);
-    }
-}
-
-public unsafe class TrBuffer<TDataType> : TrBuffer where TDataType : unmanaged
-{
-    public TrBuffer(TrContext context, TrBufferTarget bufferTarget, TrBufferUsage bufferUsage, uint length = 1) : base(context, bufferTarget, bufferUsage, length)
-    {
-        GL gl = Context.GL;
-
-        Handle = gl.GenBuffer();
-
-        gl.BindBuffer(BufferTarget.ToGL(), Handle);
-        gl.BufferData(BufferTarget.ToGL(), (uint)(Length * sizeof(TDataType)), null, BufferUsage.ToGL());
-        gl.BindBuffer(BufferTarget.ToGL(), 0);
     }
 
     public void SetData(TDataType[] data, uint offset = 0)
@@ -52,18 +42,14 @@ public unsafe class TrBuffer<TDataType> : TrBuffer where TDataType : unmanaged
     {
         GL gl = Context.GL;
 
-        gl.BindBuffer(BufferTarget.ToGL(), Handle);
-        gl.BufferSubData(BufferTarget.ToGL(), (int)(offset * sizeof(TDataType)), (uint)(Length * sizeof(TDataType)), data);
-        gl.BindBuffer(BufferTarget.ToGL(), 0);
+        gl.NamedBufferSubData(Handle, (int)(offset * sizeof(TDataType)), (uint)(Length * sizeof(TDataType)), data);
     }
 
     public void SetData(TDataType data, uint offset = 0)
     {
         GL gl = Context.GL;
 
-        gl.BindBuffer(BufferTarget.ToGL(), Handle);
-        gl.BufferSubData(BufferTarget.ToGL(), (int)(offset * sizeof(TDataType)), (uint)sizeof(TDataType), &data);
-        gl.BindBuffer(BufferTarget.ToGL(), 0);
+        gl.NamedBufferSubData(Handle, (int)(offset * sizeof(TDataType)), (uint)sizeof(TDataType), &data);
     }
 
     public TDataType[] GetData()
@@ -72,14 +58,12 @@ public unsafe class TrBuffer<TDataType> : TrBuffer where TDataType : unmanaged
 
         TDataType[] result = new TDataType[Length];
 
-        gl.BindBuffer(BufferTarget.ToGL(), Handle);
-        void* mapBuffer = gl.MapBufferRange(BufferTarget.ToGL(), 0, (uint)(Length * sizeof(TDataType)), (uint)GLEnum.MapReadBit);
+        void* mapBuffer = gl.MapNamedBuffer(Handle, GLEnum.MapReadBit);
 
         Span<TDataType> resultSpan = new(mapBuffer, (int)Length);
         resultSpan.CopyTo(result);
 
-        gl.UnmapBuffer(BufferTarget.ToGL());
-        gl.BindBuffer(BufferTarget.ToGL(), 0);
+        gl.UnmapNamedBuffer(Handle);
 
         return result;
     }

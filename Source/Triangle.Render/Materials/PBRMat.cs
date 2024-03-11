@@ -27,7 +27,7 @@ public class PBRMat(TrContext context) : GlobalMat(context, "PBR")
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboParameters = new(Context);
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/PBR/PBR.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/PBR/PBR.frag.spv".Path());

@@ -49,8 +49,8 @@ internal sealed class DirectionalLightMat(TrContext context) : TrMaterial(contex
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboTransforms = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
-        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboTransforms = new(Context);
+        uboParameters = new(Context);
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/DirectionalLight/DirectionalLight.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/DirectionalLight/DirectionalLight.frag.spv".Path());

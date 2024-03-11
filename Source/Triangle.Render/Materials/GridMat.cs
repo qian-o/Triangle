@@ -43,7 +43,7 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboParameters = new(Context);
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Grid/Grid.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Grid/Grid.frag.spv".Path());

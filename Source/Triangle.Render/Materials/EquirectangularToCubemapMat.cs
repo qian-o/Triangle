@@ -46,7 +46,7 @@ public class EquirectangularToCubemapMat(TrContext context) : GlobalMat(context,
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboParameters = new(Context);
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/EquirectangularToCubemap/EquirectangularToCubemap.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/EquirectangularToCubemap/EquirectangularToCubemap.frag.spv".Path());

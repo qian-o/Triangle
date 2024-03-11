@@ -55,8 +55,8 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboTransforms = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
-        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboTransforms = new(Context);
+        uboParameters = new(Context);
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/PointLight/PointLight.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/PointLight/PointLight.frag.spv".Path());

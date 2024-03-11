@@ -11,49 +11,50 @@ public unsafe class TrMesh : TrGraphics<TrContext>
     {
         GL gl = Context.GL;
 
-        Handle = gl.GenVertexArray();
-        ArrayBuffer = gl.GenBuffer();
-        IndexBuffer = gl.GenBuffer();
-        IndexLength = indices.Length;
+        Handle = gl.CreateVertexArray();
+        VerticesBuffer = gl.CreateBuffer();
+        IndicesBuffer = gl.CreateBuffer();
+        VerticesLength = vertices.Length;
+        IndicesLength = indices.Length;
 
-        gl.BindVertexArray(Handle);
+        fixed (TrVertex* verticesPtr = vertices)
+        {
+            gl.NamedBufferStorage(VerticesBuffer, (uint)(vertices.Length * sizeof(TrVertex)), verticesPtr, (uint)GLEnum.None);
+        }
 
-        gl.BindBuffer(GLEnum.ArrayBuffer, ArrayBuffer);
-        gl.BufferData<TrVertex>(GLEnum.ArrayBuffer, (uint)(vertices.Length * sizeof(TrVertex)), vertices, GLEnum.StaticDraw);
+        fixed (uint* indicesPtr = indices)
+        {
+            gl.NamedBufferStorage(IndicesBuffer, (uint)(indices.Length * sizeof(uint)), indicesPtr, (uint)GLEnum.None);
+        }
 
-        gl.BindBuffer(GLEnum.ElementArrayBuffer, IndexBuffer);
-        gl.BufferData<uint>(GLEnum.ElementArrayBuffer, (uint)(indices.Length * sizeof(uint)), indices, GLEnum.StaticDraw);
-
-        gl.BindVertexArray(0);
+        gl.VertexArrayVertexBuffer(Handle, 0, VerticesBuffer, 0, (uint)sizeof(TrVertex));
+        gl.VertexArrayElementBuffer(Handle, IndicesBuffer);
     }
 
-    public uint ArrayBuffer { get; }
+    public uint VerticesBuffer { get; }
 
-    public uint IndexBuffer { get; }
+    public uint IndicesBuffer { get; }
 
-    public int IndexLength { get; }
+    public int VerticesLength { get; }
+
+    public int IndicesLength { get; }
 
     protected override void Destroy(bool disposing = false)
     {
         GL gl = Context.GL;
 
         gl.DeleteVertexArray(Handle);
-        gl.DeleteBuffer(ArrayBuffer);
-        gl.DeleteBuffer(IndexBuffer);
+        gl.DeleteBuffer(VerticesBuffer);
+        gl.DeleteBuffer(IndicesBuffer);
     }
 
     public void VertexAttributePointer(uint index, int size, string fieldName)
     {
         GL gl = Context.GL;
 
-        gl.BindVertexArray(Handle);
-
-        gl.BindBuffer(GLEnum.ArrayBuffer, ArrayBuffer);
-        gl.VertexAttribPointer(index, size, GLEnum.Float, false, (uint)sizeof(TrVertex), (void*)Marshal.OffsetOf<TrVertex>(fieldName));
-        gl.EnableVertexAttribArray(index);
-        gl.BindBuffer(GLEnum.ArrayBuffer, 0);
-
-        gl.BindVertexArray(0);
+        gl.EnableVertexArrayAttrib(Handle, index);
+        gl.VertexArrayAttribFormat(Handle, index, size, GLEnum.Float, false, (uint)Marshal.OffsetOf<TrVertex>(fieldName));
+        gl.VertexArrayAttribBinding(Handle, index, 0);
     }
 
     public void Draw()
@@ -61,7 +62,7 @@ public unsafe class TrMesh : TrGraphics<TrContext>
         GL gl = Context.GL;
 
         gl.BindVertexArray(Handle);
-        gl.DrawElements(GLEnum.Triangles, (uint)IndexLength, GLEnum.UnsignedInt, null);
+        gl.DrawElements(GLEnum.Triangles, (uint)IndicesLength, GLEnum.UnsignedInt, null);
         gl.BindVertexArray(0);
     }
 }

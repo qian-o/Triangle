@@ -41,7 +41,7 @@ public class NormalMapWorldSpaceMat(TrContext context) : GlobalMat(context, "Nor
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboMaterial = new(Context);
 
         Channel0 = TrTextureManager.Texture("Resources/Textures/Chapter07/Brick_Diffuse.JPG".Path());
         Channel1 = TrTextureManager.Texture("Resources/Textures/Chapter07/Brick_Normal.JPG".Path());

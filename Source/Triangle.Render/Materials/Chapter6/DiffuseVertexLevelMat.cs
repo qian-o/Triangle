@@ -26,7 +26,7 @@ public class DiffuseVertexLevelMat(TrContext context) : GlobalMat(context, "Diff
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboMaterial = new(Context);
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter6/DiffuseVertexLevel/DiffuseVertexLevel.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter6/DiffuseVertexLevel/DiffuseVertexLevel.frag.spv".Path());

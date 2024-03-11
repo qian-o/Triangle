@@ -36,7 +36,7 @@ public class RampTextureMat(TrContext context) : GlobalMat(context, "RampTexture
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboMaterial = new(Context);
 
         Channel0 = TrTextureManager.Texture("Resources/Textures/Chapter07/Ramp_Texture0.psd".Path());
 

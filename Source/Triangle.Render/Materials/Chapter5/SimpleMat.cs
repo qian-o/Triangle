@@ -26,7 +26,7 @@ public class SimpleMat(TrContext context) : GlobalMat(context, "Simple")
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboParameters = new(Context);
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter5/Simple/Simple.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter5/Simple/Simple.frag.spv".Path());

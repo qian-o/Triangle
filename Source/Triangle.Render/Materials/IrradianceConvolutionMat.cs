@@ -31,7 +31,7 @@ public class IrradianceConvolutionMat(TrContext context) : GlobalMat(context, "I
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboParameters = new(Context);
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/IrradianceConvolution/IrradianceConvolution.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/IrradianceConvolution/IrradianceConvolution.frag.spv".Path());

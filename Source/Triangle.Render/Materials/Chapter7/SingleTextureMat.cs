@@ -36,7 +36,7 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboMaterial = new(Context);
 
         Channel0 = TrTextureManager.Texture("Resources/Textures/Chapter07/Brick_Diffuse.JPG".Path());
 

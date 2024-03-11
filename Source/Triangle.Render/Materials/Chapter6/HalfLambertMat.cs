@@ -26,7 +26,7 @@ public class HalfLambertMat(TrContext context) : GlobalMat(context, "HalfLambert
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboMaterial = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboMaterial = new(Context);
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter6/HalfLambert/HalfLambert.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter6/HalfLambert/HalfLambert.frag.spv".Path());

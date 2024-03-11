@@ -13,11 +13,11 @@ public unsafe class TrFrame : TrGraphics<TrContext>
     {
         GL gl = Context.GL;
 
-        Handle = gl.GenFramebuffer();
+        Handle = gl.CreateFramebuffer();
 
-        Framebuffer = gl.GenFramebuffer();
-        ColorBuffer = gl.GenRenderbuffer();
-        DepthStencilBuffer = gl.GenRenderbuffer();
+        Framebuffer = gl.CreateFramebuffer();
+        ColorBuffer = gl.CreateRenderbuffer();
+        DepthStencilBuffer = gl.CreateRenderbuffer();
 
         Texture = new TrTexture(Context)
         {
@@ -83,24 +83,15 @@ public unsafe class TrFrame : TrGraphics<TrContext>
 
         Texture.Clear((uint)Width, (uint)Height, PixelFormat);
 
-        gl.BindFramebuffer(GLEnum.Framebuffer, Handle);
-        gl.FramebufferTexture2D(GLEnum.Framebuffer, GLEnum.ColorAttachment0, GLEnum.Texture2D, Texture.Handle, 0);
-        gl.BindFramebuffer(GLEnum.Framebuffer, 0);
+        gl.NamedFramebufferTexture(Handle, GLEnum.ColorAttachment0, Texture.Handle, 0);
 
         // 多重采样缓冲区
         {
-            gl.BindRenderbuffer(GLEnum.Renderbuffer, ColorBuffer);
-            gl.RenderbufferStorageMultisample(GLEnum.Renderbuffer, (uint)Samples, PixelFormat.ToGL().Target, (uint)Width, (uint)Height);
-            gl.BindRenderbuffer(GLEnum.Renderbuffer, 0);
+            gl.NamedRenderbufferStorageMultisample(ColorBuffer, (uint)Samples, PixelFormat.ToGL().Target, (uint)Width, (uint)Height);
+            gl.NamedRenderbufferStorageMultisample(DepthStencilBuffer, (uint)Samples, GLEnum.Depth32fStencil8, (uint)Width, (uint)Height);
 
-            gl.BindRenderbuffer(GLEnum.Renderbuffer, DepthStencilBuffer);
-            gl.RenderbufferStorageMultisample(GLEnum.Renderbuffer, (uint)Samples, GLEnum.Depth32fStencil8, (uint)Width, (uint)Height);
-            gl.BindRenderbuffer(GLEnum.Renderbuffer, 0);
-
-            gl.BindFramebuffer(GLEnum.Framebuffer, Framebuffer);
-            gl.FramebufferRenderbuffer(GLEnum.Framebuffer, GLEnum.ColorAttachment0, GLEnum.Renderbuffer, ColorBuffer);
-            gl.FramebufferRenderbuffer(GLEnum.Framebuffer, GLEnum.DepthStencilAttachment, GLEnum.Renderbuffer, DepthStencilBuffer);
-            gl.BindFramebuffer(GLEnum.Framebuffer, 0);
+            gl.NamedFramebufferRenderbuffer(Framebuffer, GLEnum.ColorAttachment0, GLEnum.Renderbuffer, ColorBuffer);
+            gl.NamedFramebufferRenderbuffer(Framebuffer, GLEnum.DepthStencilAttachment, GLEnum.Renderbuffer, DepthStencilBuffer);
         }
     }
 
@@ -109,6 +100,7 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         GL gl = Context.GL;
 
         gl.BindFramebuffer(GLEnum.Framebuffer, Framebuffer);
+
         gl.Viewport(0, 0, (uint)Width, (uint)Height);
     }
 
@@ -118,11 +110,7 @@ public unsafe class TrFrame : TrGraphics<TrContext>
 
         gl.BindFramebuffer(GLEnum.Framebuffer, 0);
 
-        gl.BindFramebuffer(GLEnum.ReadFramebuffer, Framebuffer);
-        gl.BindFramebuffer(GLEnum.DrawFramebuffer, Handle);
-        gl.BlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, (uint)GLEnum.ColorBufferBit, GLEnum.Nearest);
-        gl.BindFramebuffer(GLEnum.DrawFramebuffer, 0);
-        gl.BindFramebuffer(GLEnum.ReadFramebuffer, 0);
+        gl.BlitNamedFramebuffer(Framebuffer, Handle, 0, 0, Width, Height, 0, 0, Width, Height, (uint)GLEnum.ColorBufferBit, GLEnum.Nearest);
     }
 
     public Vector4D<byte> GetPixel(int x, int y)

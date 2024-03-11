@@ -193,14 +193,14 @@ public abstract class GlobalMat : TrMaterial
 
     protected GlobalMat(TrContext context, string name) : base(context, name)
     {
-        _uboTransforms = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
-        _uboVectors = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
-        _uboConstants = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
-        _uboAmbientLight = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
-        _uboDirectionalLight = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
-        _uboPointLights = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
-        _uboTexScaleOffset = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
-        _uboUniTexTexParams = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        _uboTransforms = new(Context);
+        _uboVectors = new(Context);
+        _uboConstants = new(Context);
+        _uboAmbientLight = new(Context);
+        _uboDirectionalLight = new(Context);
+        _uboPointLights = new(Context);
+        _uboTexScaleOffset = new(Context);
+        _uboUniTexTexParams = new(Context);
 
         _channelCache = [];
     }

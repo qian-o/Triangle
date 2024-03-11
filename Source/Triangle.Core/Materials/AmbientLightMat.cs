@@ -49,8 +49,8 @@ internal sealed class AmbientLightMat(TrContext context) : TrMaterial(context, "
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboTransforms = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
-        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboTransforms = new(Context);
+        uboParameters = new(Context);
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/AmbientLight/AmbientLight.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/AmbientLight/AmbientLight.frag.spv".Path());

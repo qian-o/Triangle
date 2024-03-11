@@ -35,7 +35,7 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
 
     public override TrRenderPass CreateRenderPass()
     {
-        uboParameters = new(Context, TrBufferTarget.UniformBuffer, TrBufferUsage.Dynamic);
+        uboParameters = new(Context);
 
         Channel0 = TrTextureManager.Texture("Resources/Textures/Skies/kloppenheim_06_puresky_4k/kloppenheim_06_puresky_4k.hdr".Path());
 

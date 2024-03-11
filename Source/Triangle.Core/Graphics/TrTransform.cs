@@ -4,7 +4,7 @@ using Triangle.Core.Helpers;
 
 namespace Triangle.Core.Graphics;
 
-public class TrTransform
+public partial class TrTransform
 {
     private Quaternion<float> rotation = Quaternion<float>.Identity;
     private Vector3D<float> eulerAngles = Vector3D<float>.Zero;
@@ -25,11 +25,11 @@ public class TrTransform
         set { eulerAngles = value; rotation = value.DegreeToRadian().ToQuaternion(); }
     }
 
-    public Vector3D<float> Right => Vector3D.Transform(TrContext.Right, Rotation);
+    public Vector3D<float> Right => Vector3D.Transform(DefaultRight, Rotation);
 
-    public Vector3D<float> Up => Vector3D.Transform(TrContext.Up, Rotation);
+    public Vector3D<float> Up => Vector3D.Transform(DefaultUp, Rotation);
 
-    public Vector3D<float> Forward => Vector3D.Transform(TrContext.Forward, Rotation);
+    public Vector3D<float> Forward => Vector3D.Transform(DefaultForward, Rotation);
 
     public Matrix4X4<float> Model => Matrix4X4.CreateScale(Scale) * Matrix4X4.CreateFromQuaternion(Rotation) * Matrix4X4.CreateTranslation(Position);
 
@@ -73,4 +73,23 @@ public class TrTransform
     {
         return Vector3D.Transform(translation, Rotation);
     }
+}
+
+public partial class TrTransform
+{
+    public static Vector3D<float> DefaultZero => Vector3D<float>.Zero;
+
+    public static Vector3D<float> DefaultOne => Vector3D<float>.One;
+
+    public static Vector3D<float> DefaultRight => Vector3D<float>.UnitX;
+
+    public static Vector3D<float> DefaultLeft => -Vector3D<float>.UnitX;
+
+    public static Vector3D<float> DefaultUp => Vector3D<float>.UnitY;
+
+    public static Vector3D<float> DefaultDown => -Vector3D<float>.UnitY;
+
+    public static Vector3D<float> DefaultForward => -Vector3D<float>.UnitZ;
+
+    public static Vector3D<float> DefaultBackward => Vector3D<float>.UnitZ;
 }
