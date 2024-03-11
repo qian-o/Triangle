@@ -1,4 +1,6 @@
-﻿using Hexa.NET.ImGui;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using Hexa.NET.ImGui;
 using Silk.NET.OpenGL;
 using StbiSharp;
 using Triangle.Core.Contracts.Graphics;
@@ -46,64 +48,28 @@ public unsafe class TrTexture : TrGraphics<TrContext>
     {
         Name = Path.GetFileName(file);
 
-        byte[] bytes = File.ReadAllBytes(file);
+        (uint width, uint height, TrPixelFormat pixelFormat, nint data) = ReadImageAndAllocateMemory(file, flip);
 
-        fixed (byte* ptr = bytes)
+        Write(width, height, pixelFormat, (void*)data);
+
+        Marshal.FreeHGlobal(data);
+    }
+
+    public void EnqueueWrite(string file, bool flip = false)
+    {
+        Name = Path.GetFileName(file);
+
+        Task.Run(() =>
         {
-            int length = bytes.Length;
-            int width;
-            int height;
-            int comp;
-            void* pixels;
-            TrPixelFormat pixelFormat;
+            (uint width, uint height, TrPixelFormat pixelFormat, nint data) = ReadImageAndAllocateMemory(file, flip);
 
-            Stbi.SetFlipVerticallyOnLoad(flip);
-
-            if (Stbi.IsHdrFromMemory(ptr, length))
+            Context.Enqueue(() =>
             {
-                pixels = Stbi.LoadFFromMemory(ptr, length, out width, out height, out comp, 0);
+                Write(width, height, pixelFormat, (void*)data);
 
-                if (comp == 1)
-                {
-                    pixelFormat = TrPixelFormat.R16F;
-                }
-                else if (comp == 2)
-                {
-                    pixelFormat = TrPixelFormat.RG16F;
-                }
-                else if (comp == 3)
-                {
-                    pixelFormat = TrPixelFormat.RGB16F;
-                }
-                else
-                {
-                    pixelFormat = TrPixelFormat.RGBA16F;
-                }
-            }
-            else
-            {
-                pixels = Stbi.LoadFromMemory(ptr, length, out width, out height, out comp, 0);
-
-                if (comp == 1)
-                {
-                    pixelFormat = TrPixelFormat.R8;
-                }
-                else if (comp == 2)
-                {
-                    pixelFormat = TrPixelFormat.RG8;
-                }
-                else if (comp == 3)
-                {
-                    pixelFormat = TrPixelFormat.RGB8;
-                }
-                else
-                {
-                    pixelFormat = TrPixelFormat.RGBA8;
-                }
-            }
-
-            Write((uint)width, (uint)height, pixelFormat, pixels);
-        }
+                Marshal.FreeHGlobal(data);
+            });
+        });
     }
 
     public void Write(TrFrame frame)
@@ -216,5 +182,73 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         gl.GenerateMipmap(GLEnum.Texture2D);
 
         gl.BindTexture(GLEnum.Texture2D, 0);
+    }
+
+    private (uint width, uint height, TrPixelFormat pixelFormat, nint data) ReadImageAndAllocateMemory(string file, bool flip = false)
+    {
+        byte[] bytes = File.ReadAllBytes(file);
+
+        fixed (byte* ptr = bytes)
+        {
+            int length = bytes.Length;
+            int width;
+            int height;
+            int comp;
+            void* pixels;
+            TrPixelFormat pixelFormat;
+
+            Stbi.SetFlipVerticallyOnLoad(flip);
+
+            if (Stbi.IsHdrFromMemory(ptr, length))
+            {
+                pixels = Stbi.LoadFFromMemory(ptr, length, out width, out height, out comp, 0);
+
+                if (comp == 1)
+                {
+                    pixelFormat = TrPixelFormat.R16F;
+                }
+                else if (comp == 2)
+                {
+                    pixelFormat = TrPixelFormat.RG16F;
+                }
+                else if (comp == 3)
+                {
+                    pixelFormat = TrPixelFormat.RGB16F;
+                }
+                else
+                {
+                    pixelFormat = TrPixelFormat.RGBA16F;
+                }
+            }
+            else
+            {
+                pixels = Stbi.LoadFromMemory(ptr, length, out width, out height, out comp, 0);
+
+                if (comp == 1)
+                {
+                    pixelFormat = TrPixelFormat.R8;
+                }
+                else if (comp == 2)
+                {
+                    pixelFormat = TrPixelFormat.RG8;
+                }
+                else if (comp == 3)
+                {
+                    pixelFormat = TrPixelFormat.RGB8;
+                }
+                else
+                {
+                    pixelFormat = TrPixelFormat.RGBA8;
+                }
+            }
+
+            nint data = Marshal.AllocHGlobal(width * height * pixelFormat.Size());
+
+            Unsafe.CopyBlock((void*)data, pixels, (uint)(width * height * pixelFormat.Size()));
+
+            Stbi.Free(pixels);
+
+            return ((uint)width, (uint)height, pixelFormat, data);
+        }
     }
 }

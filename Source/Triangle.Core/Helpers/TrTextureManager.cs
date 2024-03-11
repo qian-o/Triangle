@@ -75,8 +75,7 @@ public static class TrTextureManager
                     IsGenerateMipmap = true
                 };
 
-                texture.Write(file);
-                texture.UpdateParameters();
+                texture.EnqueueWrite(file);
 
                 texture.Name = file;
 

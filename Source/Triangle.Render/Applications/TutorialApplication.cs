@@ -40,6 +40,8 @@ public class TutorialApplication : BaseApplication
 
     public override void Update(double deltaSeconds)
     {
+        Context.Execute();
+
         foreach (ITutorial tutorial in _tutorials)
         {
             tutorial.Update(deltaSeconds);
