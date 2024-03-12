@@ -49,7 +49,7 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(TrMesh mesh, GlobalParameters globalParameters)
+    protected override void DrawCore(IList<TrMesh> meshes, GlobalParameters globalParameters)
     {
         TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
 
@@ -64,7 +64,13 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboMaterial);
 
-        mesh.Draw();
+        foreach (TrMesh mesh in meshes)
+        {
+            Bind(mesh);
+            mesh.Draw();
+        }
+
+        renderPipeline.Unbind();
     }
 
     protected override void ControllerCore()

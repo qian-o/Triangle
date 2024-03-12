@@ -42,7 +42,7 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
     {
         _edgeDetectionMat.Channel0 = _pickupFrame.Texture;
 
-        _edgeDetectionMat.Draw(_pickupMesh, baseParameters);
+        _edgeDetectionMat.Draw([_pickupMesh], baseParameters);
     }
 
     /// <summary>

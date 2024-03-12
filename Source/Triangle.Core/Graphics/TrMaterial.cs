@@ -13,7 +13,7 @@ public abstract class TrMaterial(TrContext context, string name) : TrGraphics<Tr
 
     public abstract TrRenderPass CreateRenderPass();
 
-    public abstract void Draw(TrMesh mesh, params object[] args);
+    public abstract void Draw(IList<TrMesh> meshes, params object[] args);
 
     public void Controller(string name = "")
     {

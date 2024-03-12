@@ -53,6 +53,8 @@ public class TrModel(string name) : TrGameObject(name)
 
     public ReadOnlyCollection<TrMesh> Meshes => new(_meshes);
 
+    public ReadOnlyCollection<TrMaterial> Materials => new(_materials);
+
     protected override void OtherPropertyEditor()
     {
         ImGui.Text("Materials");
@@ -82,7 +84,7 @@ public class TrModel(string name) : TrGameObject(name)
     {
         foreach (TrMesh mesh in Meshes)
         {
-            _indexer[mesh].Draw(mesh, [Transform.Model, .. args]);
+            _indexer[mesh].Draw([mesh], [Transform.Model, .. args]);
         }
     }
 
@@ -93,10 +95,7 @@ public class TrModel(string name) : TrGameObject(name)
     /// <param name="args">Before passing to the material, the model's transformation matrix will be added to the list of arguments.</param>
     public void Render(TrMaterial material, params object[] args)
     {
-        foreach (TrMesh mesh in Meshes)
-        {
-            material.Draw(mesh, [Transform.Model, .. args]);
-        }
+        material.Draw(Meshes, [Transform.Model, .. args]);
     }
 
     protected override void Destroy(bool disposing = false)

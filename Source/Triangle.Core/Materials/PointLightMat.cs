@@ -70,7 +70,7 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
     /// <summary>
     /// Draw point light mesh.
     /// </summary>
-    /// <param name="mesh">mesh</param>
+    /// <param name="meshes">meshes</param>
     /// <param name="args">
     /// args:
     /// args[0] - Transform matrix
@@ -79,7 +79,7 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
     /// args[3] - Intensity float
     /// args[4] - Range float
     /// </param>
-    public override void Draw(TrMesh mesh, params object[] args)
+    public override void Draw(IList<TrMesh> meshes, params object[] args)
     {
         if (args.Length != 5
             || args[0] is not Matrix4X4<float> model
@@ -94,8 +94,6 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
         foreach (TrRenderPipeline renderPipeline in RenderPass.RenderPipelines)
         {
             renderPipeline.Bind();
-
-            mesh.VertexAttributePointer(InPosition, 3, nameof(TrVertex.Position));
 
             uboTransforms.SetData(new UniTransforms()
             {
@@ -116,7 +114,12 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
             renderPipeline.BindUniformBlock(0, uboTransforms);
             renderPipeline.BindUniformBlock(1, uboParameters);
 
-            mesh.Draw();
+            foreach (TrMesh mesh in meshes)
+            {
+                mesh.VertexAttributePointer(InPosition, 3, nameof(TrVertex.Position));
+
+                mesh.Draw();
+            }
 
             renderPipeline.Unbind();
         }

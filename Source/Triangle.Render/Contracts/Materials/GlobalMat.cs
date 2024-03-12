@@ -237,7 +237,7 @@ public abstract class GlobalMat : TrMaterial
     /// <summary>
     /// Draw the mesh with the material.
     /// </summary>
-    /// <param name="mesh">mesh</param>
+    /// <param name="meshes">meshes</param>
     /// <param name="args">
     /// args:
     /// Matrix4X4<float> model - Model matrix (can be null)
@@ -246,7 +246,7 @@ public abstract class GlobalMat : TrMaterial
     /// <exception cref="ArgumentException">
     /// If `GlobalParameters` is not found in the args.
     /// </exception>
-    public override void Draw(TrMesh mesh, params object[] args)
+    public override void Draw(IList<TrMesh> meshes, params object[] args)
     {
         if (args.FirstOrDefault(item => item is Matrix4X4<float>) is not Matrix4X4<float> model)
         {
@@ -302,72 +302,65 @@ public abstract class GlobalMat : TrMaterial
             };
         }
 
+        _uboTransforms.SetData(new UniTransforms()
+        {
+            Model = model,
+            View = parameters.Camera.View,
+            Projection = parameters.Camera.Projection,
+            ObjectToWorld = model,
+            ObjectToClip = model * parameters.Camera.View * parameters.Camera.Projection,
+            WorldToObject = model.Invert()
+        });
+        _uboVectors.SetData(new UniVectors()
+        {
+            Resolution = parameters.SceneData.Resolution,
+            CameraPosition = parameters.Camera.Transform.Position,
+            CameraUp = parameters.Camera.Transform.Up,
+            CameraRight = parameters.Camera.Transform.Right,
+            Mouse = parameters.SceneData.Mouse,
+            Date = parameters.SceneData.Date
+        });
+        _uboConstants.SetData(new UniConstants()
+        {
+            Time = parameters.SceneData.Time,
+            DeltaTime = parameters.SceneData.DeltaTime,
+            FrameRate = parameters.SceneData.FrameRate,
+            FrameCount = parameters.SceneData.FrameCount
+        });
+        _uboAmbientLight.SetData(new UniAmbientLight()
+        {
+            Color = parameters.AmbientLight.Color
+        });
+        _uboDirectionalLight.SetData(new UniDirectionalLight()
+        {
+            Color = parameters.DirectionalLight.Color,
+            Position = -parameters.DirectionalLight.Direction
+        });
+        _uboPointLights.SetData(new UniPointLights()
+        {
+            Count = parameters.PointLights.Length,
+            Lights = pointLights
+        });
+        _uboUniTexTexParams.SetData(new UniTexTexParams()
+        {
+            Channel0Size = channel0Size,
+            Channel1Size = channel1Size,
+            Channel2Size = channel2Size,
+            Channel3Size = channel3Size,
+            Channel4Size = channel4Size
+        });
+        _uboTexScaleOffset.SetData(new UniTexScaleOffset()
+        {
+            Channel0ST = Channel0ST,
+            Channel1ST = Channel1ST,
+            Channel2ST = Channel2ST,
+            Channel3ST = Channel3ST,
+            Channel4ST = Channel4ST
+        });
+
         foreach (TrRenderPipeline renderPipeline in RenderPass.RenderPipelines)
         {
             renderPipeline.Bind();
-
-            mesh.VertexAttributePointer(InPosition, 3, nameof(TrVertex.Position));
-            mesh.VertexAttributePointer(InNormal, 3, nameof(TrVertex.Normal));
-            mesh.VertexAttributePointer(InTangent, 3, nameof(TrVertex.Tangent));
-            mesh.VertexAttributePointer(InBitangent, 3, nameof(TrVertex.Bitangent));
-            mesh.VertexAttributePointer(InColor, 4, nameof(TrVertex.Color));
-            mesh.VertexAttributePointer(InTexCoord, 2, nameof(TrVertex.TexCoord));
-
-            _uboTransforms.SetData(new UniTransforms()
-            {
-                Model = model,
-                View = parameters.Camera.View,
-                Projection = parameters.Camera.Projection,
-                ObjectToWorld = model,
-                ObjectToClip = model * parameters.Camera.View * parameters.Camera.Projection,
-                WorldToObject = model.Invert()
-            });
-            _uboVectors.SetData(new UniVectors()
-            {
-                Resolution = parameters.SceneData.Resolution,
-                CameraPosition = parameters.Camera.Transform.Position,
-                CameraUp = parameters.Camera.Transform.Up,
-                CameraRight = parameters.Camera.Transform.Right,
-                Mouse = parameters.SceneData.Mouse,
-                Date = parameters.SceneData.Date
-            });
-            _uboConstants.SetData(new UniConstants()
-            {
-                Time = parameters.SceneData.Time,
-                DeltaTime = parameters.SceneData.DeltaTime,
-                FrameRate = parameters.SceneData.FrameRate,
-                FrameCount = parameters.SceneData.FrameCount
-            });
-            _uboAmbientLight.SetData(new UniAmbientLight()
-            {
-                Color = parameters.AmbientLight.Color
-            });
-            _uboDirectionalLight.SetData(new UniDirectionalLight()
-            {
-                Color = parameters.DirectionalLight.Color,
-                Position = -parameters.DirectionalLight.Direction
-            });
-            _uboPointLights.SetData(new UniPointLights()
-            {
-                Count = parameters.PointLights.Length,
-                Lights = pointLights
-            });
-            _uboUniTexTexParams.SetData(new UniTexTexParams()
-            {
-                Channel0Size = channel0Size,
-                Channel1Size = channel1Size,
-                Channel2Size = channel2Size,
-                Channel3Size = channel3Size,
-                Channel4Size = channel4Size
-            });
-            _uboTexScaleOffset.SetData(new UniTexScaleOffset()
-            {
-                Channel0ST = Channel0ST,
-                Channel1ST = Channel1ST,
-                Channel2ST = Channel2ST,
-                Channel3ST = Channel3ST,
-                Channel4ST = Channel4ST
-            });
 
             renderPipeline.BindUniformBlock(0, _uboTransforms);
             renderPipeline.BindUniformBlock(1, _uboVectors);
@@ -393,7 +386,7 @@ public abstract class GlobalMat : TrMaterial
             renderPipeline.Unbind();
         }
 
-        DrawCore(mesh, parameters);
+        DrawCore(meshes, parameters);
     }
 
     public void AdjustChannel(string label, int index)
@@ -468,6 +461,16 @@ public abstract class GlobalMat : TrMaterial
         cache.ChannelST.SetValue(this, channelST);
     }
 
+    protected static void Bind(TrMesh mesh)
+    {
+        mesh.VertexAttributePointer(InPosition, 3, nameof(TrVertex.Position));
+        mesh.VertexAttributePointer(InNormal, 3, nameof(TrVertex.Normal));
+        mesh.VertexAttributePointer(InTangent, 3, nameof(TrVertex.Tangent));
+        mesh.VertexAttributePointer(InBitangent, 3, nameof(TrVertex.Bitangent));
+        mesh.VertexAttributePointer(InColor, 4, nameof(TrVertex.Color));
+        mesh.VertexAttributePointer(InTexCoord, 2, nameof(TrVertex.TexCoord));
+    }
+
     protected override void Destroy(bool disposing = false)
     {
         RenderPass.Dispose();
@@ -484,7 +487,7 @@ public abstract class GlobalMat : TrMaterial
         DestroyCore(disposing);
     }
 
-    protected abstract void DrawCore(TrMesh mesh, GlobalParameters globalParameters);
+    protected abstract void DrawCore(IList<TrMesh> meshes, GlobalParameters globalParameters);
 
     /// <summary>
     /// 此处应该清理材质中用到的其他缓冲区资源。

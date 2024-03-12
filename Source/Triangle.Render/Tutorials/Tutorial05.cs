@@ -46,7 +46,7 @@ public class Tutorial05(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        mats[materialIndex].Draw(canvas, GetSceneParameters());
+        mats[materialIndex].Draw([canvas], GetSceneParameters());
     }
 
     protected override void Destroy(bool disposing = false)

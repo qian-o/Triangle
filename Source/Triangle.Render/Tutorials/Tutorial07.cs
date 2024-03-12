@@ -226,7 +226,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
             equirectangularToCubemapMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, Vector3D<float>.UnitX, -Vector3D<float>.UnitY);
 
-            equirectangularToCubemapMat.Draw(cubeMesh, GetSceneParameters());
+            equirectangularToCubemapMat.Draw([cubeMesh], GetSceneParameters());
         }
         skyPositiveX.Unbind();
 
@@ -237,7 +237,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
             equirectangularToCubemapMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, -Vector3D<float>.UnitX, -Vector3D<float>.UnitY);
 
-            equirectangularToCubemapMat.Draw(cubeMesh, GetSceneParameters());
+            equirectangularToCubemapMat.Draw([cubeMesh], GetSceneParameters());
         }
         skyNegativeX.Unbind();
 
@@ -248,7 +248,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
             equirectangularToCubemapMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, Vector3D<float>.UnitY, Vector3D<float>.UnitZ);
 
-            equirectangularToCubemapMat.Draw(cubeMesh, GetSceneParameters());
+            equirectangularToCubemapMat.Draw([cubeMesh], GetSceneParameters());
         }
         skyPositiveY.Unbind();
 
@@ -259,7 +259,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
             equirectangularToCubemapMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, -Vector3D<float>.UnitY, -Vector3D<float>.UnitZ);
 
-            equirectangularToCubemapMat.Draw(cubeMesh, GetSceneParameters());
+            equirectangularToCubemapMat.Draw([cubeMesh], GetSceneParameters());
         }
         skyNegativeY.Unbind();
 
@@ -270,7 +270,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
             equirectangularToCubemapMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, Vector3D<float>.UnitZ, -Vector3D<float>.UnitY);
 
-            equirectangularToCubemapMat.Draw(cubeMesh, GetSceneParameters());
+            equirectangularToCubemapMat.Draw([cubeMesh], GetSceneParameters());
         }
         skyPositiveZ.Unbind();
 
@@ -281,7 +281,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
             equirectangularToCubemapMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, -Vector3D<float>.UnitZ, -Vector3D<float>.UnitY);
 
-            equirectangularToCubemapMat.Draw(cubeMesh, GetSceneParameters());
+            equirectangularToCubemapMat.Draw([cubeMesh], GetSceneParameters());
         }
         skyNegativeZ.Unbind();
 
@@ -312,7 +312,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
             irradianceConvolutionMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, Vector3D<float>.UnitX, -Vector3D<float>.UnitY);
 
-            irradianceConvolutionMat.Draw(cubeMesh, GetSceneParameters());
+            irradianceConvolutionMat.Draw([cubeMesh], GetSceneParameters());
         }
         skyPositiveX.Unbind();
 
@@ -323,7 +323,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
             irradianceConvolutionMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, -Vector3D<float>.UnitX, -Vector3D<float>.UnitY);
 
-            irradianceConvolutionMat.Draw(cubeMesh, GetSceneParameters());
+            irradianceConvolutionMat.Draw([cubeMesh], GetSceneParameters());
         }
         skyNegativeX.Unbind();
 
@@ -334,7 +334,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
             irradianceConvolutionMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, Vector3D<float>.UnitY, Vector3D<float>.UnitZ);
 
-            irradianceConvolutionMat.Draw(cubeMesh, GetSceneParameters());
+            irradianceConvolutionMat.Draw([cubeMesh], GetSceneParameters());
         }
         skyPositiveY.Unbind();
 
@@ -345,7 +345,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
             irradianceConvolutionMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, -Vector3D<float>.UnitY, -Vector3D<float>.UnitZ);
 
-            irradianceConvolutionMat.Draw(cubeMesh, GetSceneParameters());
+            irradianceConvolutionMat.Draw([cubeMesh], GetSceneParameters());
         }
         skyNegativeY.Unbind();
 
@@ -356,7 +356,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
             irradianceConvolutionMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, Vector3D<float>.UnitZ, -Vector3D<float>.UnitY);
 
-            irradianceConvolutionMat.Draw(cubeMesh, GetSceneParameters());
+            irradianceConvolutionMat.Draw([cubeMesh], GetSceneParameters());
         }
         skyPositiveZ.Unbind();
 
@@ -367,7 +367,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
             irradianceConvolutionMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, -Vector3D<float>.UnitZ, -Vector3D<float>.UnitY);
 
-            irradianceConvolutionMat.Draw(cubeMesh, GetSceneParameters());
+            irradianceConvolutionMat.Draw([cubeMesh], GetSceneParameters());
         }
         skyNegativeZ.Unbind();
 
@@ -412,7 +412,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
                 prefilterMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, Vector3D<float>.UnitX, -Vector3D<float>.UnitY);
 
-                prefilterMat.Draw(cubeMesh, GetSceneParameters());
+                prefilterMat.Draw([cubeMesh], GetSceneParameters());
             }
             skyPositiveX.Unbind();
 
@@ -423,7 +423,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
                 prefilterMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, -Vector3D<float>.UnitX, -Vector3D<float>.UnitY);
 
-                prefilterMat.Draw(cubeMesh, GetSceneParameters());
+                prefilterMat.Draw([cubeMesh], GetSceneParameters());
             }
             skyNegativeX.Unbind();
 
@@ -434,7 +434,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
                 prefilterMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, Vector3D<float>.UnitY, Vector3D<float>.UnitZ);
 
-                prefilterMat.Draw(cubeMesh, GetSceneParameters());
+                prefilterMat.Draw([cubeMesh], GetSceneParameters());
             }
             skyPositiveY.Unbind();
 
@@ -445,7 +445,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
                 prefilterMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, -Vector3D<float>.UnitY, -Vector3D<float>.UnitZ);
 
-                prefilterMat.Draw(cubeMesh, GetSceneParameters());
+                prefilterMat.Draw([cubeMesh], GetSceneParameters());
             }
             skyNegativeY.Unbind();
 
@@ -456,7 +456,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
                 prefilterMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, Vector3D<float>.UnitZ, -Vector3D<float>.UnitY);
 
-                prefilterMat.Draw(cubeMesh, GetSceneParameters());
+                prefilterMat.Draw([cubeMesh], GetSceneParameters());
             }
             skyPositiveZ.Unbind();
 
@@ -467,7 +467,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
                 prefilterMat.View = Matrix4X4.CreateLookAt(Vector3D<float>.Zero, -Vector3D<float>.UnitZ, -Vector3D<float>.UnitY);
 
-                prefilterMat.Draw(cubeMesh, GetSceneParameters());
+                prefilterMat.Draw([cubeMesh], GetSceneParameters());
             }
             skyNegativeZ.Unbind();
 
@@ -493,7 +493,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         {
             Context.Clear();
 
-            brdfMat.Draw(canvasMesh, GetSceneParameters());
+            brdfMat.Draw([cubeMesh], GetSceneParameters());
         }
         skyPositiveX.Unbind();
 

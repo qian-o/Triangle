@@ -42,7 +42,7 @@ public class IrradianceConvolutionMat(TrContext context) : GlobalMat(context, "I
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(TrMesh mesh, GlobalParameters globalParameters)
+    protected override void DrawCore(IList<TrMesh> meshes, GlobalParameters globalParameters)
     {
         TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
 
@@ -56,7 +56,11 @@ public class IrradianceConvolutionMat(TrContext context) : GlobalMat(context, "I
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);
 
-        mesh.Draw();
+        foreach (TrMesh mesh in meshes)
+        {
+            Bind(mesh);
+            mesh.Draw();
+        }
 
         renderPipeline.Unbind();
     }
