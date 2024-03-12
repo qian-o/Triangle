@@ -61,7 +61,7 @@ public class BlinnPhongMat(TrContext context) : GlobalMat(context, "BlinnPhong")
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboMaterial);
-        
+
         foreach (TrMesh mesh in meshes)
         {
             Bind(mesh);
