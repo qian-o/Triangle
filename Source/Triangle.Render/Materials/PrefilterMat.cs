@@ -64,7 +64,7 @@ public class PrefilterMat(TrContext context) : GlobalMat(context, "Prefilter")
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

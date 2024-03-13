@@ -80,7 +80,7 @@ public class MaskTextureMat(TrContext context) : GlobalMat(context, "MaskTexture
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

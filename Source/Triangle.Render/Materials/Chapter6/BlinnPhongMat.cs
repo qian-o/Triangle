@@ -64,7 +64,7 @@ public class BlinnPhongMat(TrContext context) : GlobalMat(context, "BlinnPhong")
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

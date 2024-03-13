@@ -73,7 +73,7 @@ public class NormalMapWorldSpaceMat(TrContext context) : GlobalMat(context, "Nor
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

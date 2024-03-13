@@ -66,7 +66,7 @@ public class RampTextureMat(TrContext context) : GlobalMat(context, "RampTexture
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

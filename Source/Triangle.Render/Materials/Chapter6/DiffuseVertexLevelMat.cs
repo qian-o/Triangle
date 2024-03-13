@@ -52,7 +52,7 @@ public class DiffuseVertexLevelMat(TrContext context) : GlobalMat(context, "Diff
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

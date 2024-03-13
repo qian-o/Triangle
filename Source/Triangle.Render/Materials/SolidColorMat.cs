@@ -52,7 +52,7 @@ public class SolidColorMat(TrContext context) : GlobalMat(context, "SolidColor")
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

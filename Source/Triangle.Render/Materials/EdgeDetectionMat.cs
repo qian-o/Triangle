@@ -52,7 +52,7 @@ public class EdgeDetectionMat(TrContext context) : GlobalMat(context, "EdgeDetec
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

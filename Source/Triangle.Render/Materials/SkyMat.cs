@@ -65,7 +65,7 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

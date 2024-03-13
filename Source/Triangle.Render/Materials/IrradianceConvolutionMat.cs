@@ -58,7 +58,7 @@ public class IrradianceConvolutionMat(TrContext context) : GlobalMat(context, "I
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

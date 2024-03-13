@@ -54,7 +54,7 @@ public class PBRMat(TrContext context) : GlobalMat(context, "PBR")
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

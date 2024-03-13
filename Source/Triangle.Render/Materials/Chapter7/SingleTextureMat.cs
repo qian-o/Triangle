@@ -66,7 +66,7 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

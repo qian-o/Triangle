@@ -28,7 +28,7 @@ public class BoxFrameDistance3DMat(TrContext context) : GlobalMat(context, "BoxF
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

@@ -52,7 +52,7 @@ public class HalfLambertMat(TrContext context) : GlobalMat(context, "HalfLambert
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

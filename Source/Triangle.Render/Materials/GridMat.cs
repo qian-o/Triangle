@@ -85,7 +85,7 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

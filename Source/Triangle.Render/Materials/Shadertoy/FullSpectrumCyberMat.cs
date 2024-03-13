@@ -28,7 +28,7 @@ public class FullSpectrumCyberMat(TrContext context) : GlobalMat(context, "FullS
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

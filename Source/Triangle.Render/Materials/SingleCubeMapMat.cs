@@ -28,7 +28,7 @@ public class SingleCubeMapMat(TrContext context) : GlobalMat(context, "SingleCub
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 

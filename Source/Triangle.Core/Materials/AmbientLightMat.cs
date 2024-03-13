@@ -4,7 +4,6 @@ using Triangle.Core.Enums;
 using Triangle.Core.GameObjects;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
-using Triangle.Core.Structs;
 using AttribLocation = uint;
 
 namespace Triangle.Core.Materials;

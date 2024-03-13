@@ -76,7 +76,7 @@ public class EquirectangularToCubemapMat(TrContext context) : GlobalMat(context,
 
         foreach (TrMesh mesh in meshes)
         {
-            
+
             mesh.Draw();
         }
 
