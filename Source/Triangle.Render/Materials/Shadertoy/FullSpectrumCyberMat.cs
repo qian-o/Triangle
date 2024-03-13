@@ -9,7 +9,7 @@ namespace Triangle.Render.Materials.Shadertoy;
 
 public class FullSpectrumCyberMat(TrContext context) : GlobalMat(context, "FullSpectrumCyber")
 {
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Shadertoy/FullSpectrumCyber/FullSpectrumCyber.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Shadertoy/FullSpectrumCyber/FullSpectrumCyber.frag.spv".Path());

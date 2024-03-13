@@ -24,7 +24,7 @@ public class DiffuseVertexLevelMat(TrContext context) : GlobalMat(context, "Diff
 
     public Vector4D<float> Diffuse { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboMaterial = new(Context);
 

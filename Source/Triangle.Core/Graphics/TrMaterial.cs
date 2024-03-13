@@ -1,5 +1,6 @@
 ﻿using Hexa.NET.ImGui;
 using Triangle.Core.Contracts.Graphics;
+using Triangle.Core.GameObjects;
 
 namespace Triangle.Core.Graphics;
 
@@ -11,9 +12,11 @@ public abstract class TrMaterial(TrContext context, string name) : TrGraphics<Tr
 
     public TrRenderPass RenderPass => renderPass ??= CreateRenderPass();
 
-    public abstract TrRenderPass CreateRenderPass();
+    protected abstract TrRenderPass CreateRenderPass();
 
     public abstract void Draw(IEnumerable<TrMesh> meshes, params object[] args);
+
+    public abstract void Draw(IEnumerable<TrModel> models, params object[] args);
 
     public void Controller(string name = "")
     {

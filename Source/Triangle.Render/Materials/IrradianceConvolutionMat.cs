@@ -29,7 +29,7 @@ public class IrradianceConvolutionMat(TrContext context) : GlobalMat(context, "I
 
     public Matrix4X4<float> Projection { get; set; }
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboParameters = new(Context);
 

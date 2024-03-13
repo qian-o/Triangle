@@ -24,7 +24,7 @@ public class SimpleMat(TrContext context) : GlobalMat(context, "Simple")
 
     public Vector4D<float> Color { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboParameters = new(Context);
 

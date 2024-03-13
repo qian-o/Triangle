@@ -41,7 +41,7 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
 
     public float Distance { get; set; } = 6.0f;
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboParameters = new(Context);
 

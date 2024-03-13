@@ -90,7 +90,7 @@ public unsafe class TrTexture : TrGraphics<TrContext>
 
         GL gl = Context.GL;
 
-        (GLEnum Target, GLEnum Format, GLEnum Type) = pixelFormat.ToGL();
+        (GLEnum Target, GLEnum Format, GLEnum Type) = PixelFormat.ToGL();
 
         gl.BindTexture(GLEnum.Texture2D, Handle);
         gl.TexImage2D(GLEnum.Texture2D, 0, (int)Target, Width, Height, 0, Format, Type, data);

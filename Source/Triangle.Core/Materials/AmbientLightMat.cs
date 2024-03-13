@@ -46,7 +46,7 @@ internal sealed class AmbientLightMat(TrContext context) : TrMaterial(context, "
     private TrBuffer<UniTransforms> uboTransforms = null!;
     private TrBuffer<UniParameters> uboParameters = null!;
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboTransforms = new(Context);
         uboParameters = new(Context);
@@ -104,6 +104,23 @@ internal sealed class AmbientLightMat(TrContext context) : TrMaterial(context, "
             }
 
             renderPipeline.Unbind();
+        }
+    }
+
+    /// <summary>
+    /// Draw ambient light model.
+    /// </summary>
+    /// <param name="models">models</param>
+    /// <param name="args">
+    /// args:
+    /// args[0] - Camera
+    /// args[1] - Color vec3
+    /// </param>
+    public override void Draw(IEnumerable<TrModel> models, params object[] args)
+    {
+        foreach (TrModel model in models)
+        {
+            Draw(model.Meshes, [model.Transform.Model, .. args]);
         }
     }
 

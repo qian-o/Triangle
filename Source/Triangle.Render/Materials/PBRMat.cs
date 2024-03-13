@@ -25,7 +25,7 @@ public class PBRMat(TrContext context) : GlobalMat(context, "PBR")
 
     public TrTexture? BRDF { get; set; }
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboParameters = new(Context);
 

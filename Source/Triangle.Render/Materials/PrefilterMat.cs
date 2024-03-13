@@ -34,7 +34,7 @@ public class PrefilterMat(TrContext context) : GlobalMat(context, "Prefilter")
 
     public float Roughness { get; set; }
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboParameters = new(Context);
 

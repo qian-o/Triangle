@@ -52,7 +52,7 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
     private TrBuffer<UniTransforms> uboTransforms = null!;
     private TrBuffer<UniParameters> uboParameters = null!;
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboTransforms = new(Context);
         uboParameters = new(Context);
@@ -119,6 +119,25 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
             }
 
             renderPipeline.Unbind();
+        }
+    }
+
+    /// <summary>
+    /// Draw point light model.
+    /// </summary>
+    /// <param name="models">meshes</param>
+    /// <param name="args">
+    /// args:
+    /// args[0] - Camera
+    /// args[1] - Color vec3
+    /// args[2] - Intensity float
+    /// args[3] - Range float
+    /// </param>
+    public override void Draw(IEnumerable<TrModel> models, params object[] args)
+    {
+        foreach (TrModel model in models)
+        {
+            Draw(model.Meshes, [model.Transform.Model, .. args]);
         }
     }
 

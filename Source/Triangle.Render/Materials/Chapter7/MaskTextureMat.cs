@@ -44,7 +44,7 @@ public class MaskTextureMat(TrContext context) : GlobalMat(context, "MaskTexture
 
     public float Gloss { get; set; } = 20.0f;
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboMaterial = new(Context);
 

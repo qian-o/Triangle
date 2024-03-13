@@ -9,7 +9,7 @@ namespace Triangle.Render.Materials.Shadertoy;
 
 public class BoxFrameDistance3DMat(TrContext context) : GlobalMat(context, "BoxFrameDistance3D")
 {
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Shadertoy/BoxFrameDistance3D/BoxFrameDistance3D.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Shadertoy/BoxFrameDistance3D/BoxFrameDistance3D.frag.spv".Path());

@@ -34,7 +34,7 @@ public class RampTextureMat(TrContext context) : GlobalMat(context, "RampTexture
 
     public float Gloss { get; set; } = 20.0f;
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboMaterial = new(Context);
 

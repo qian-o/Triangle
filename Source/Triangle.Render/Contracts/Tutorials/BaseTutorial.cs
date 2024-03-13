@@ -122,6 +122,8 @@ public abstract class BaseTutorial : ITutorial
         SceneController.Controller();
 
         SceneController.PropertyEditor();
+
+        PickupController.ShowFrame();
     }
 
     protected abstract void Loaded();

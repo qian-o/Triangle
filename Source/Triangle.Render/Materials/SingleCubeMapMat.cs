@@ -9,7 +9,7 @@ namespace Triangle.Render.Materials;
 
 public class SingleCubeMapMat(TrContext context) : GlobalMat(context, "SingleCubeMap")
 {
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/SingleCubeMap/SingleCubeMap.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/SingleCubeMap/SingleCubeMap.frag.spv".Path());

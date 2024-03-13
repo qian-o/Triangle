@@ -33,7 +33,7 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
 
     public float Exposure { get; set; } = 1.0f;
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboParameters = new(Context);
 

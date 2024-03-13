@@ -8,7 +8,7 @@ using Triangle.Render.Models;
 namespace Triangle.Render.Materials.Shadertoy;
 public class RaymarchingPrimitivesMat(TrContext context) : GlobalMat(context, "RaymarchingPrimitives")
 {
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Shadertoy/RaymarchingPrimitives/RaymarchingPrimitives.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Shadertoy/RaymarchingPrimitives/RaymarchingPrimitives.frag.spv".Path());

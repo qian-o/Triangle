@@ -1,4 +1,5 @@
-﻿using Silk.NET.Input;
+﻿using Hexa.NET.ImGui;
+using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Contracts;
@@ -28,7 +29,7 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
     private readonly SceneController _sceneController = sceneController;
 
     private readonly TrFrame _frame = new(context);
-    private readonly SolidColorMat _solidColorMat = new(context);
+    private readonly SolidColorInstancedMat _solidColorInstancedMat = new(context);
 
     private readonly TrFrame _pickupFrame = new(context);
     private readonly TrMesh _pickupMesh = context.CreateCanvas();
@@ -118,12 +119,8 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
         {
             _context.Clear();
 
-            foreach (TrModel model in models)
-            {
-                _solidColorMat.Color = model.ColorId.ToSingle();
-
-                model.Render(_solidColorMat, baseParameters);
-            }
+            _solidColorInstancedMat.Color = models.Select(x => x.ColorId.ToSingle()).ToArray();
+            _solidColorInstancedMat.Draw(models, baseParameters);
         }
         _frame.Unbind();
 
@@ -131,20 +128,33 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
         {
             _context.Clear();
 
-            foreach (TrModel model in selectedModels)
-            {
-                _solidColorMat.Color = PickupColor.ToSingle();
-
-                model.Render(_solidColorMat, baseParameters);
-            }
+            _solidColorInstancedMat.Color = selectedModels.Select(x => PickupColor.ToSingle()).ToArray();
+            _solidColorInstancedMat.Draw(selectedModels, baseParameters);
         }
         _pickupFrame.Unbind();
+    }
+
+    public void ShowFrame()
+    {
+        if (ImGui.Begin("Pickup Frame 1"))
+        {
+            ImGuiHelper.Frame(_frame);
+
+            ImGui.End();
+        }
+
+        if (ImGui.Begin("Pickup Frame 2"))
+        {
+            ImGuiHelper.Frame(_pickupFrame);
+
+            ImGui.End();
+        }
     }
 
     protected override void Destroy(bool disposing = false)
     {
         _frame.Dispose();
-        _solidColorMat.Dispose();
+        _solidColorInstancedMat.Dispose();
 
         _pickupFrame.Dispose();
         _pickupMesh.Dispose();

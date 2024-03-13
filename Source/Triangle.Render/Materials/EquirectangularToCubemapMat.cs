@@ -44,7 +44,7 @@ public class EquirectangularToCubemapMat(TrContext context) : GlobalMat(context,
 
     public float Exposure { get; set; } = 1.0f;
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboParameters = new(Context);
 

@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using Hexa.NET.ImGui;
 using Silk.NET.Maths;
 using Triangle.Core;
+using Triangle.Core.GameObjects;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Render.Models;
@@ -14,7 +15,7 @@ namespace Triangle.Render.Contracts.Materials;
 public abstract class GlobalMat : TrMaterial
 {
     public const uint UniformBufferBindingStart = 8;
-    public const uint UniformSamplerBindingStart = 10;
+    public const uint UniformSamplerBindingStart = 11;
     public const uint MaxPointLights = 50;
 
     #region Structs
@@ -378,6 +379,30 @@ public abstract class GlobalMat : TrMaterial
         }
 
         DrawCore(meshes, parameters);
+    }
+
+    /// <summary>
+    /// Draw the model with the material.
+    /// </summary>
+    /// <param name="models">models</param>
+    /// <param name="args">
+    /// args:
+    /// GlobalParameters parameters - Global parameters
+    /// </param>
+    /// <exception cref="ArgumentException">
+    /// If `GlobalParameters` is not found in the args.
+    /// </exception>
+    public override void Draw(IEnumerable<TrModel> models, params object[] args)
+    {
+        if (args.FirstOrDefault(item => item is GlobalParameters) is not GlobalParameters parameters)
+        {
+            throw new ArgumentException("Invalid arguments.");
+        }
+
+        foreach (TrModel model in models)
+        {
+            Draw(model.Meshes, model.Transform, parameters);
+        }
     }
 
     public void AdjustChannel(string label, int index)

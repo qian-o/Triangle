@@ -9,7 +9,7 @@ namespace Triangle.Render.Materials;
 
 public class BRDFMat(TrContext context) : GlobalMat(context, "BRDF")
 {
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/BRDF/BRDF.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/BRDF/BRDF.frag.spv".Path());

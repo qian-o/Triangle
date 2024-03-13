@@ -52,6 +52,13 @@ public unsafe class TrBuffer<TDataType> : TrGraphics<TrContext> where TDataType 
         gl.NamedBufferSubData(Handle, (int)(offset * sizeof(TDataType)), (uint)sizeof(TDataType), &data);
     }
 
+    public void SetData(uint offset, uint size, TDataType* data)
+    {
+        GL gl = Context.GL;
+
+        gl.NamedBufferSubData(Handle, (int)(offset * sizeof(TDataType)), (uint)(size * sizeof(TDataType)), data);
+    }
+
     public TDataType[] GetData()
     {
         GL gl = Context.GL;
