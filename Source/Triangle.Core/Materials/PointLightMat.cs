@@ -4,7 +4,6 @@ using Triangle.Core.Enums;
 using Triangle.Core.GameObjects;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
-using Triangle.Core.Structs;
 using AttribLocation = uint;
 
 namespace Triangle.Core.Materials;
@@ -79,7 +78,7 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
     /// args[3] - Intensity float
     /// args[4] - Range float
     /// </param>
-    public override void Draw(IList<TrMesh> meshes, params object[] args)
+    public override void Draw(IEnumerable<TrMesh> meshes, params object[] args)
     {
         if (args.Length != 5
             || args[0] is not Matrix4X4<float> model
@@ -116,8 +115,6 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
 
             foreach (TrMesh mesh in meshes)
             {
-                mesh.VertexAttributePointer(InPosition, 3, nameof(TrVertex.Position));
-
                 mesh.Draw();
             }
 

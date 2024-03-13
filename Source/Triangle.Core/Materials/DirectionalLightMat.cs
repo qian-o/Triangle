@@ -73,7 +73,7 @@ internal sealed class DirectionalLightMat(TrContext context) : TrMaterial(contex
     /// args[1] - Camera
     /// args[2] - Color vec3
     /// </param>
-    public override void Draw(IList<TrMesh> meshes, params object[] args)
+    public override void Draw(IEnumerable<TrMesh> meshes, params object[] args)
     {
         if (args.Length != 3 || args[0] is not Matrix4X4<float> model || args[1] is not TrCamera camera || args[2] is not Vector3D<float> color)
         {
@@ -103,8 +103,6 @@ internal sealed class DirectionalLightMat(TrContext context) : TrMaterial(contex
 
             foreach (TrMesh mesh in meshes)
             {
-                mesh.VertexAttributePointer(InPosition, 3, nameof(TrVertex.Position));
-
                 mesh.Draw();
             }
 

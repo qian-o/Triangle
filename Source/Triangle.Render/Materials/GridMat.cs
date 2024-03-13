@@ -54,7 +54,7 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(IList<TrMesh> meshes, GlobalParameters globalParameters)
+    protected override void DrawCore(IEnumerable<TrMesh> meshes, GlobalParameters globalParameters)
     {
         double logDistance = Math.Log2(Distance);
         double upperDistance = Math.Pow(2.0, Math.Floor(logDistance) + 1);
@@ -85,7 +85,7 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
 
         foreach (TrMesh mesh in meshes)
         {
-            Bind(mesh);
+            
             mesh.Draw();
         }
 

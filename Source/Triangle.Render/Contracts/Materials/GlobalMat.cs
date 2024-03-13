@@ -7,9 +7,7 @@ using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
-using Triangle.Core.Structs;
 using Triangle.Render.Models;
-using AttribLocation = uint;
 
 namespace Triangle.Render.Contracts.Materials;
 
@@ -18,13 +16,6 @@ public abstract class GlobalMat : TrMaterial
     public const uint UniformBufferBindingStart = 8;
     public const uint UniformSamplerBindingStart = 10;
     public const uint MaxPointLights = 50;
-
-    public const AttribLocation InPosition = 0;
-    public const AttribLocation InNormal = 1;
-    public const AttribLocation InTangent = 2;
-    public const AttribLocation InBitangent = 3;
-    public const AttribLocation InColor = 4;
-    public const AttribLocation InTexCoord = 5;
 
     #region Structs
     [StructLayout(LayoutKind.Explicit)]
@@ -246,7 +237,7 @@ public abstract class GlobalMat : TrMaterial
     /// <exception cref="ArgumentException">
     /// If `GlobalParameters` is not found in the args.
     /// </exception>
-    public override void Draw(IList<TrMesh> meshes, params object[] args)
+    public override void Draw(IEnumerable<TrMesh> meshes, params object[] args)
     {
         if (args.FirstOrDefault(item => item is Matrix4X4<float>) is not Matrix4X4<float> model)
         {
@@ -461,16 +452,6 @@ public abstract class GlobalMat : TrMaterial
         cache.ChannelST.SetValue(this, channelST);
     }
 
-    protected static void Bind(TrMesh mesh)
-    {
-        mesh.VertexAttributePointer(InPosition, 3, nameof(TrVertex.Position));
-        mesh.VertexAttributePointer(InNormal, 3, nameof(TrVertex.Normal));
-        mesh.VertexAttributePointer(InTangent, 3, nameof(TrVertex.Tangent));
-        mesh.VertexAttributePointer(InBitangent, 3, nameof(TrVertex.Bitangent));
-        mesh.VertexAttributePointer(InColor, 4, nameof(TrVertex.Color));
-        mesh.VertexAttributePointer(InTexCoord, 2, nameof(TrVertex.TexCoord));
-    }
-
     protected override void Destroy(bool disposing = false)
     {
         RenderPass.Dispose();
@@ -487,7 +468,7 @@ public abstract class GlobalMat : TrMaterial
         DestroyCore(disposing);
     }
 
-    protected abstract void DrawCore(IList<TrMesh> meshes, GlobalParameters globalParameters);
+    protected abstract void DrawCore(IEnumerable<TrMesh> meshes, GlobalParameters globalParameters);
 
     /// <summary>
     /// 此处应该清理材质中用到的其他缓冲区资源。

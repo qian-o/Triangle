@@ -37,7 +37,7 @@ public class EdgeDetectionMat(TrContext context) : GlobalMat(context, "EdgeDetec
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(IList<TrMesh> meshes, GlobalParameters globalParameters)
+    protected override void DrawCore(IEnumerable<TrMesh> meshes, GlobalParameters globalParameters)
     {
         TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
 
@@ -52,7 +52,7 @@ public class EdgeDetectionMat(TrContext context) : GlobalMat(context, "EdgeDetec
 
         foreach (TrMesh mesh in meshes)
         {
-            Bind(mesh);
+            
             mesh.Draw();
         }
 

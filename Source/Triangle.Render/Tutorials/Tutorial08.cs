@@ -32,7 +32,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
         solidColorMat = new(Context);
 
-        const int columns = 40;
+        const int columns = 10;
         const int rows = 20;
         List<TrModel> cubesList = [];
         for (int i = 0; i < columns; i++)
@@ -43,7 +43,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
                 for (int k = 0; k < columnCount; k++)
                 {
                     TrModel cube = new($"Cube {cubesList.Count}", [cubeMesh], solidColorMat);
-                    cube.Transform.Position = new Vector3D<float>((-columnCount * 0.5f) + k, j + 0.5f, i - (columns * 0.5f));
+                    cube.Transform.Position = new Vector3D<float>((-columnCount * 0.5f) + k, j + 0.5f, (i - (columns * 0.5f)) * 4.0f);
 
                     cubesList.Add(cube);
 

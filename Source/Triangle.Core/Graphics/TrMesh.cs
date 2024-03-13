@@ -2,15 +2,24 @@
 using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Structs;
+using AttribLocation = uint;
 
 namespace Triangle.Core.Graphics;
 
 public unsafe class TrMesh : TrGraphics<TrContext>
 {
-    public TrMesh(TrContext context, TrVertex[] vertices, uint[] indices) : base(context)
+    public const AttribLocation InPosition = 0;
+    public const AttribLocation InNormal = 1;
+    public const AttribLocation InTangent = 2;
+    public const AttribLocation InBitangent = 3;
+    public const AttribLocation InColor = 4;
+    public const AttribLocation InTexCoord = 5;
+
+    public TrMesh(TrContext context, string name, TrVertex[] vertices, uint[] indices) : base(context)
     {
         GL gl = Context.GL;
 
+        Name = name;
         Handle = gl.CreateVertexArray();
         VerticesBuffer = gl.CreateBuffer();
         IndicesBuffer = gl.CreateBuffer();
@@ -29,7 +38,16 @@ public unsafe class TrMesh : TrGraphics<TrContext>
 
         gl.VertexArrayVertexBuffer(Handle, 0, VerticesBuffer, 0, (uint)sizeof(TrVertex));
         gl.VertexArrayElementBuffer(Handle, IndicesBuffer);
+
+        VertexAttributePointer(InPosition, 3, nameof(TrVertex.Position));
+        VertexAttributePointer(InNormal, 3, nameof(TrVertex.Normal));
+        VertexAttributePointer(InTangent, 3, nameof(TrVertex.Tangent));
+        VertexAttributePointer(InBitangent, 3, nameof(TrVertex.Bitangent));
+        VertexAttributePointer(InColor, 4, nameof(TrVertex.Color));
+        VertexAttributePointer(InTexCoord, 2, nameof(TrVertex.TexCoord));
     }
+
+    public string Name { get; }
 
     public uint VerticesBuffer { get; }
 
@@ -48,7 +66,7 @@ public unsafe class TrMesh : TrGraphics<TrContext>
         gl.DeleteBuffer(IndicesBuffer);
     }
 
-    public void VertexAttributePointer(uint index, int size, string fieldName)
+    private void VertexAttributePointer(uint index, int size, string fieldName)
     {
         GL gl = Context.GL;
 

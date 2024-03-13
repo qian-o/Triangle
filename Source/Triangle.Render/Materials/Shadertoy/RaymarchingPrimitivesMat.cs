@@ -19,7 +19,7 @@ public class RaymarchingPrimitivesMat(TrContext context) : GlobalMat(context, "R
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(IList<TrMesh> meshes, GlobalParameters globalParameters)
+    protected override void DrawCore(IEnumerable<TrMesh> meshes, GlobalParameters globalParameters)
     {
         TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
 
@@ -27,7 +27,6 @@ public class RaymarchingPrimitivesMat(TrContext context) : GlobalMat(context, "R
 
         foreach (TrMesh mesh in meshes)
         {
-            Bind(mesh);
             mesh.Draw();
         }
 
