@@ -27,14 +27,18 @@ public class PickupController : Disposable
     private readonly TrMesh _pickupMesh;
     private readonly EdgeDetectionMat _edgeDetectionMat;
 
+    private TrModel[] models = null!;
     private Vector4D<float>[] modelColors = null!;
+
+    private TrModel[] selectedModels = null!;
 
     public PickupController(TrContext context, TrScene scene, SceneController sceneController)
     {
         _context = context;
         _scene = scene;
         _sceneController = sceneController;
-        _sceneController.GameObjectsChanged += UpdateModelColors;
+        _sceneController.ObjectsChanged += UpdateModels;
+        _sceneController.SelectedObjectsChanged += UpdateSelectedModels;
 
         _frame = new TrFrame(context);
         _solidColorInstancedMat = new SolidColorInstancedMat(context);
@@ -43,13 +47,18 @@ public class PickupController : Disposable
         _pickupMesh = context.CreateCanvas();
         _edgeDetectionMat = new EdgeDetectionMat(context);
 
-        UpdateModelColors();
+        UpdateModels();
+        UpdateSelectedModels();
 
-        void UpdateModelColors()
+        void UpdateModels()
         {
-            TrModel[] models = [.. _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>()];
-
+            models = [.. _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>()];
             modelColors = [.. models.Select(item => item.ColorId.ToSingle())];
+        }
+
+        void UpdateSelectedModels()
+        {
+            selectedModels = [.. _sceneController.SelectedObjects.Where(x => x is TrModel).Cast<TrModel>()];
         }
     }
 
@@ -80,8 +89,7 @@ public class PickupController : Disposable
 
             if (rectangle.Contains(point))
             {
-                TrModel[] models = [.. _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>()];
-                List<TrModel> selectedModels = [.. _sceneController.SelectedObjects.Where(x => x is TrModel).Cast<TrModel>()];
+                List<TrModel> temp = [.. selectedModels];
 
                 bool anySelected = false;
                 bool isMultiSelect = _scene.KeyPressed(Key.ControlLeft) || _scene.KeyPressed(Key.ControlRight);
@@ -94,20 +102,20 @@ public class PickupController : Disposable
                     {
                         anySelected = true;
 
-                        bool isSelected = selectedModels.Contains(model);
+                        bool isSelected = temp.Contains(model);
 
                         if (isMultiSelect)
                         {
-                            selectedModels.Remove(model);
+                            temp.Remove(model);
                         }
                         else
                         {
-                            selectedModels.Clear();
+                            temp.Clear();
                         }
 
                         if (!isMultiSelect || isMultiSelect && !isSelected)
                         {
-                            selectedModels.Add(model);
+                            temp.Add(model);
                         }
 
                         break;
@@ -116,10 +124,10 @@ public class PickupController : Disposable
 
                 if (!anySelected)
                 {
-                    selectedModels.Clear();
+                    temp.Clear();
                 }
 
-                _sceneController.SelectObjects([.. selectedModels]);
+                _sceneController.SelectObjects([.. temp]);
             }
         }
     }
@@ -130,9 +138,6 @@ public class PickupController : Disposable
     /// <param name="baseParameters"></param>
     public void Render(GlobalParameters baseParameters)
     {
-        TrModel[] models = [.. _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>()];
-        TrModel[] selectedModels = [.. _sceneController.SelectedObjects.Where(x => x is TrModel).Cast<TrModel>()];
-
         _frame.Bind();
         {
             _context.Clear();

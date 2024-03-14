@@ -97,6 +97,8 @@ public abstract class BaseTutorial : ITutorial
             return;
         }
 
+        GlobalParameters parameters = GetSceneParameters();
+
         Scene.Begin();
         {
             Context.Clear(new Vector4D<float>(0.2f, 0.2f, 0.2f, 1.0f));
@@ -107,14 +109,14 @@ public abstract class BaseTutorial : ITutorial
             _directionalLight.Render();
             _pointLights.ForEach(light => light.Render());
 
-            _sky.Render(GetSceneParameters());
-            _grid.Render(GetSceneParameters());
+            _sky.Render(parameters);
+            _grid.Render(parameters);
 
-            PickupController.PostEffects(GetSceneParameters());
+            PickupController.PostEffects(parameters);
         }
         Scene.End();
 
-        PickupController.Render(GetSceneParameters());
+        PickupController.Render(parameters);
     }
 
     public virtual void ImGuiRender()

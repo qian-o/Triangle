@@ -375,6 +375,8 @@ public abstract class GlobalMat : TrMaterial
             renderPipeline.BindUniformBlock(8, Map3);
             renderPipeline.BindUniformBlock(9, Map4);
 
+            AssemblePipeline(renderPipeline);
+
             renderPipeline.Unbind();
         }
 
@@ -492,6 +494,8 @@ public abstract class GlobalMat : TrMaterial
 
         DestroyCore(disposing);
     }
+
+    protected virtual void AssemblePipeline(TrRenderPipeline renderPipeline) { }
 
     protected abstract void DrawCore(TrMesh[] meshes, GlobalParameters globalParameters);
 

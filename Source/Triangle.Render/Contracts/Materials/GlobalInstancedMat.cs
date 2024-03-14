@@ -1,4 +1,5 @@
-﻿using Silk.NET.Maths;
+﻿using System.Collections.ObjectModel;
+using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.GameObjects;
@@ -9,7 +10,7 @@ namespace Triangle.Render.Contracts.Materials;
 
 public unsafe abstract class GlobalInstancedMat(TrContext context, string name) : GlobalMat(context, name)
 {
-    public const int MaxSamplerSize = 2048;
+    public const int MaxSamplerSize = 1024;
 
     private readonly TrTexture _matrixSampler = new(context);
 
@@ -37,49 +38,18 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
         {
             for (int i = 0; i < pages; i++)
             {
-                IEnumerable<TrModel> page = models.Skip(i * MaxSamplerSize).Take(MaxSamplerSize);
-
-                InternalDraw([.. page], i * MaxSamplerSize);
+                InternalDraw([.. models.Skip(i * MaxSamplerSize).Take(MaxSamplerSize)], i * MaxSamplerSize, parameters);
             }
         }
         else
         {
-            InternalDraw(models, 0);
+            InternalDraw(models, 0, parameters);
         }
+    }
 
-        void InternalDraw(TrModel[] models, int beginIndex)
-        {
-            foreach (string name in models.SelectMany(item => item.Meshes).Select(item => item.Name).Distinct())
-            {
-                List<TrModel> drawModels = [];
-                List<int> indices = [];
-                List<TrMesh> meshes = [];
-
-                for (int i = 0; i < models.Length; i++)
-                {
-                    if (models[i].Meshes.FirstOrDefault(item => item.Name == name) is TrMesh mesh)
-                    {
-                        drawModels.Add(models[i]);
-                        indices.Add(beginIndex + i);
-                        meshes.Add(mesh);
-                    }
-                }
-
-                UpdateMatrixSampler([.. drawModels.Select(item => item.Transform.Model)]);
-                UpdateSampler([.. indices]);
-
-                foreach (TrRenderPipeline renderPipeline in RenderPass.RenderPipelines)
-                {
-                    renderPipeline.Bind();
-
-                    renderPipeline.BindUniformBlock(10, _matrixSampler);
-
-                    renderPipeline.Unbind();
-                }
-
-                Draw([.. meshes], parameters);
-            }
-        }
+    protected override void AssemblePipeline(TrRenderPipeline renderPipeline)
+    {
+        renderPipeline.BindUniformBlock(10, _matrixSampler);
     }
 
     protected override void DrawCore(TrMesh[] meshes, GlobalParameters globalParameters)
@@ -103,6 +73,37 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
         fixed (Matrix4X4<float>* dataPtr = &models[0])
         {
             _matrixSampler.Write(4, (uint)models.Length, TrPixelFormat.RGBA16F, dataPtr);
+        }
+    }
+
+    private void InternalDraw(TrModel[] models, int beginIndex, GlobalParameters parameters)
+    {
+        (TrModel Model, ReadOnlyCollection<TrMesh> Meshes)[] map = [.. models.Select(item => (item, item.Meshes))];
+
+        List<TrModel> drawModels = new(map.Length);
+        List<int> indices = new(map.Length);
+        List<TrMesh> meshes = new(map.Length);
+
+        foreach (string name in map.SelectMany(item => item.Meshes).Select(item => item.Name).Distinct())
+        {
+            for (int i = 0; i < map.Length; i++)
+            {
+                if (map[i].Meshes.FirstOrDefault(item => item.Name == name) is TrMesh mesh)
+                {
+                    drawModels.Add(models[i]);
+                    indices.Add(beginIndex + i);
+                    meshes.Add(mesh);
+                }
+            }
+
+            UpdateMatrixSampler([.. drawModels.Select(item => item.Transform.Model)]);
+            UpdateSampler([.. indices]);
+
+            Draw([.. meshes], parameters);
+
+            drawModels.Clear();
+            indices.Clear();
+            meshes.Clear();
         }
     }
 }

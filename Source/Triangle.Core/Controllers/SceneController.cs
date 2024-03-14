@@ -17,7 +17,8 @@ public class SceneController
     private readonly Dictionary<string, TrGameObject> _cache;
     private readonly List<string> _selectedObjects;
 
-    public event GameObjectsChanged? GameObjectsChanged;
+    public event GameObjectsChanged? ObjectsChanged;
+    public event GameObjectsChanged? SelectedObjectsChanged;
 
     public SceneController(TrScene scene)
     {
@@ -45,14 +46,14 @@ public class SceneController
     {
         _cache.Add(gameObject.Name, gameObject);
 
-        GameObjectsChanged?.Invoke();
+        ObjectsChanged?.Invoke();
     }
 
     public void Remove(TrGameObject gameObject)
     {
         _cache.Remove(gameObject.Name);
 
-        GameObjectsChanged?.Invoke();
+        ObjectsChanged?.Invoke();
     }
 
     public void SelectObjects(TrGameObject[] gameObjects)
@@ -64,6 +65,8 @@ public class SceneController
 
         _selectedObjects.Clear();
         _selectedObjects.AddRange(gameObjects.Select(x => x.Name));
+
+        SelectedObjectsChanged?.Invoke();
     }
 
     public void Clear()
