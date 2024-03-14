@@ -31,22 +31,20 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
             throw new ArgumentException("Invalid arguments.");
         }
 
-        TrModel[] arr = [.. models];
-
-        int pages = (int)Math.Ceiling((double)arr.Length / MaxSamplerSize);
+        int pages = (int)Math.Ceiling((double)models.Length / MaxSamplerSize);
 
         if (pages > 1)
         {
             for (int i = 0; i < pages; i++)
             {
-                IEnumerable<TrModel> page = arr.Skip(i * MaxSamplerSize).Take(MaxSamplerSize);
+                IEnumerable<TrModel> page = models.Skip(i * MaxSamplerSize).Take(MaxSamplerSize);
 
-                InternalDraw(page.ToArray(), i * MaxSamplerSize);
+                InternalDraw([.. page], i * MaxSamplerSize);
             }
         }
         else
         {
-            InternalDraw(arr, 0);
+            InternalDraw(models, 0);
         }
 
         void InternalDraw(TrModel[] models, int beginIndex)
@@ -67,7 +65,7 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
                     }
                 }
 
-                UpdateMatrixSampler(drawModels.Select(item => item.Transform.Model).ToArray());
+                UpdateMatrixSampler([.. drawModels.Select(item => item.Transform.Model)]);
                 UpdateSampler([.. indices]);
 
                 foreach (TrRenderPipeline renderPipeline in RenderPass.RenderPipelines)

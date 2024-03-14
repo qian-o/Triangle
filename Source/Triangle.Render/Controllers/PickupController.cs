@@ -1,5 +1,4 @@
-﻿using Hexa.NET.ImGui;
-using Silk.NET.Input;
+﻿using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Contracts;
@@ -48,9 +47,9 @@ public class PickupController : Disposable
 
         void UpdateModelColors()
         {
-            TrModel[] models = _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>().ToArray();
+            TrModel[] models = [.. _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>()];
 
-            modelColors = models.Select(item => item.ColorId.ToSingle()).ToArray();
+            modelColors = [.. models.Select(item => item.ColorId.ToSingle())];
         }
     }
 
@@ -81,7 +80,7 @@ public class PickupController : Disposable
 
             if (rectangle.Contains(point))
             {
-                TrModel[] models = _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>().ToArray();
+                TrModel[] models = [.. _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>()];
                 List<TrModel> selectedModels = [.. _sceneController.SelectedObjects.Where(x => x is TrModel).Cast<TrModel>()];
 
                 bool anySelected = false;
@@ -120,7 +119,7 @@ public class PickupController : Disposable
                     selectedModels.Clear();
                 }
 
-                _sceneController.SelectObjects(selectedModels.ToArray());
+                _sceneController.SelectObjects([.. selectedModels]);
             }
         }
     }
@@ -131,7 +130,7 @@ public class PickupController : Disposable
     /// <param name="baseParameters"></param>
     public void Render(GlobalParameters baseParameters)
     {
-        TrModel[] models = _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>().ToArray();
+        TrModel[] models = [.. _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>()];
         TrModel[] selectedModels = [.. _sceneController.SelectedObjects.Where(x => x is TrModel).Cast<TrModel>()];
 
         _frame.Bind();
@@ -151,23 +150,6 @@ public class PickupController : Disposable
             _solidColorInstancedMat.Draw(selectedModels, baseParameters);
         }
         _pickupFrame.Unbind();
-    }
-
-    public void ShowFrame()
-    {
-        if (ImGui.Begin("Pickup Frame 1"))
-        {
-            ImGuiHelper.Frame(_frame);
-
-            ImGui.End();
-        }
-
-        if (ImGui.Begin("Pickup Frame 2"))
-        {
-            ImGuiHelper.Frame(_pickupFrame);
-
-            ImGui.End();
-        }
     }
 
     protected override void Destroy(bool disposing = false)

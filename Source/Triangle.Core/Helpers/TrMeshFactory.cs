@@ -61,7 +61,7 @@ public static unsafe class TrMeshFactory
             new(new(-size, size, size), new(0.0f, 1.0f, 0.0f), texCoord: new(0.0f, 0.0f))
         ];
 
-        return new(context, $"Cube {size}", vertices, vertices.Select((a, b) => (uint)b).ToArray());
+        return new(context, $"Cube {size}", vertices, [.. vertices.Select((a, b) => (uint)b)]);
     }
 
     public static TrMesh CreateCapsule(this TrContext context)
@@ -125,7 +125,7 @@ public static unsafe class TrMeshFactory
             new(new(-1.0f, 1.0f, 0.0f), new(0.0f, 0.0f, 0.0f), texCoord: new(0.0f, 1.0f))
         ];
 
-        return new(context, "Canvas", vertices, vertices.Select((a, b) => (uint)b).ToArray());
+        return new(context, "Canvas", vertices, [.. vertices.Select((a, b) => (uint)b)]);
     }
 
     public static TrMesh[] AssimpParsing(this TrContext context, string file)

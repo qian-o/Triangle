@@ -56,7 +56,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
         }
         cubes = [.. cubesList];
 
-        solidColorInstancedMat.Color = cubes.Select(item => item.ColorId.ToSingle()).ToArray();
+        solidColorInstancedMat.Color = [.. cubes.Select(item => item.ColorId.ToSingle())];
     }
 
     protected override void UpdateScene(double deltaSeconds)
