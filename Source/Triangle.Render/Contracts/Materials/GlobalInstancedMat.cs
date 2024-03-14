@@ -9,7 +9,7 @@ namespace Triangle.Render.Contracts.Materials;
 
 public unsafe abstract class GlobalInstancedMat(TrContext context, string name) : GlobalMat(context, name)
 {
-    public const int MaxSamplerSize = 4096;
+    public const int MaxSamplerSize = 2048;
 
     private readonly TrTexture _matrixSampler = new(context);
 
@@ -35,11 +35,18 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
 
         int pages = (int)Math.Ceiling((double)arr.Length / MaxSamplerSize);
 
-        for (int i = 0; i < pages; i++)
+        if (pages > 1)
         {
-            IEnumerable<TrModel> page = arr.Skip(i * MaxSamplerSize).Take(MaxSamplerSize);
+            for (int i = 0; i < pages; i++)
+            {
+                IEnumerable<TrModel> page = arr.Skip(i * MaxSamplerSize).Take(MaxSamplerSize);
 
-            InternalDraw(page.ToArray(), i * MaxSamplerSize);
+                InternalDraw(page.ToArray(), i * MaxSamplerSize);
+            }
+        }
+        else
+        {
+            InternalDraw(arr, 0);
         }
 
         void InternalDraw(TrModel[] models, int beginIndex)
