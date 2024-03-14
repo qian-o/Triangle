@@ -39,7 +39,7 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
         {
             IEnumerable<TrModel> page = arr.Skip(i * MaxSamplerSize).Take(MaxSamplerSize);
 
-            InternalDraw(page.ToArray(), i * 4096);
+            InternalDraw(page.ToArray(), i * MaxSamplerSize);
         }
 
         void InternalDraw(TrModel[] models, int beginIndex)
