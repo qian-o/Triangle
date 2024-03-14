@@ -47,13 +47,9 @@ public class PrefilterMat(TrContext context) : GlobalMat(context, "Prefilter")
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(TrMesh[] meshes, GlobalParameters globalParameters)
+    protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)
     {
-        TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
-
-        renderPipeline.Bind();
-
-        uboParameters.SetData(new UniParameters
+        uboParameters.SetData(new UniParameters()
         {
             View = View,
             Projection = Projection,
@@ -61,14 +57,14 @@ public class PrefilterMat(TrContext context) : GlobalMat(context, "Prefilter")
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);
+    }
 
+    protected override void RenderPipeline(TrRenderPipeline renderPipeline, TrMesh[] meshes, GlobalParameters globalParameters)
+    {
         foreach (TrMesh mesh in meshes)
         {
-
             mesh.Draw();
         }
-
-        renderPipeline.Unbind();
     }
 
     protected override void ControllerCore()

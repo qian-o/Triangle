@@ -375,12 +375,12 @@ public abstract class GlobalMat : TrMaterial
             renderPipeline.BindUniformBlock(8, Map3);
             renderPipeline.BindUniformBlock(9, Map4);
 
-            AssemblePipeline(renderPipeline);
+            AssemblePipeline(renderPipeline, parameters);
+
+            RenderPipeline(renderPipeline, meshes, parameters);
 
             renderPipeline.Unbind();
         }
-
-        DrawCore(meshes, parameters);
     }
 
     /// <summary>
@@ -495,9 +495,9 @@ public abstract class GlobalMat : TrMaterial
         DestroyCore(disposing);
     }
 
-    protected virtual void AssemblePipeline(TrRenderPipeline renderPipeline) { }
+    protected abstract void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters);
 
-    protected abstract void DrawCore(TrMesh[] meshes, GlobalParameters globalParameters);
+    protected abstract void RenderPipeline(TrRenderPipeline renderPipeline, TrMesh[] meshes, GlobalParameters globalParameters);
 
     /// <summary>
     /// 此处应该清理材质中用到的其他缓冲区资源。

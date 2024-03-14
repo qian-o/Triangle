@@ -47,19 +47,12 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
         }
     }
 
-    protected override void AssemblePipeline(TrRenderPipeline renderPipeline)
+    protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)
     {
         renderPipeline.BindUniformBlock(10, _matrixSampler);
     }
 
-    protected override void DrawCore(TrMesh[] meshes, GlobalParameters globalParameters)
-    {
-        InstancedCore(meshes, globalParameters);
-    }
-
     protected abstract void UpdateSampler(int[] indices);
-
-    protected abstract void InstancedCore(TrMesh[] meshes, GlobalParameters globalParameters);
 
     protected override void Destroy(bool disposing = false)
     {

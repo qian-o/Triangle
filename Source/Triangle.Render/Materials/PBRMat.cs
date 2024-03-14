@@ -38,11 +38,8 @@ public class PBRMat(TrContext context) : GlobalMat(context, "PBR")
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(TrMesh[] meshes, GlobalParameters globalParameters)
+    protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)
     {
-        TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
-        renderPipeline.Bind();
-
         uboParameters.SetData(new UniParameters
         {
             MaxMipLevels = MaxMipLevels
@@ -51,14 +48,14 @@ public class PBRMat(TrContext context) : GlobalMat(context, "PBR")
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);
 
         renderPipeline.BindUniformBlock(UniformSamplerBindingStart + 0, BRDF);
+    }
 
+    protected override void RenderPipeline(TrRenderPipeline renderPipeline, TrMesh[] meshes, GlobalParameters globalParameters)
+    {
         foreach (TrMesh mesh in meshes)
         {
-
             mesh.Draw();
         }
-
-        renderPipeline.Unbind();
     }
 
     protected override void ControllerCore()

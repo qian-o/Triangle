@@ -50,22 +50,16 @@ public unsafe class SolidColorInstancedMat(TrContext context) : GlobalInstancedM
         }
     }
 
-    protected override void AssemblePipeline(TrRenderPipeline renderPipeline)
+    protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)
     {
-        base.AssemblePipeline(renderPipeline);
+        base.AssemblePipeline(renderPipeline, globalParameters);
 
         renderPipeline.BindUniformBlock(UniformSamplerBindingStart + 0, _colorSampler);
     }
 
-    protected override void InstancedCore(TrMesh[] meshes, GlobalParameters globalParameters)
+    protected override void RenderPipeline(TrRenderPipeline renderPipeline, TrMesh[] meshes, GlobalParameters globalParameters)
     {
-        TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
-
-        renderPipeline.Bind();
-
         meshes.First().DrawInstanced(meshes.Length);
-
-        renderPipeline.Unbind();
     }
 
     protected override void ControllerCore()

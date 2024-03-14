@@ -54,7 +54,7 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(TrMesh[] meshes, GlobalParameters globalParameters)
+    protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)
     {
         double logDistance = Math.Log2(Distance);
         double upperDistance = Math.Pow(2.0, Math.Floor(logDistance) + 1);
@@ -65,10 +65,6 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
         float primaryScale = Convert.ToSingle(Math.Pow(2.0, level));
         float secondaryScale = Convert.ToSingle(Math.Pow(2.0, level + 1));
         float axisIntensity = 0.3f / primaryScale;
-
-        TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
-
-        renderPipeline.Bind();
 
         uboParameters.SetData(new UniParameters()
         {
@@ -82,14 +78,14 @@ public class GridMat(TrContext context) : GlobalMat(context, "Grid")
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);
+    }
 
+    protected override void RenderPipeline(TrRenderPipeline renderPipeline, TrMesh[] meshes, GlobalParameters globalParameters)
+    {
         foreach (TrMesh mesh in meshes)
         {
-
             mesh.Draw();
         }
-
-        renderPipeline.Unbind();
     }
 
     protected override void ControllerCore()

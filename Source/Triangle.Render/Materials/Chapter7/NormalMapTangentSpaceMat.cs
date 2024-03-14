@@ -55,12 +55,8 @@ public class NormalMapTangentSpaceMat(TrContext context) : GlobalMat(context, "N
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(TrMesh[] meshes, GlobalParameters globalParameters)
+    protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)
     {
-        TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
-
-        renderPipeline.Bind();
-
         uboMaterial.SetData(new UniMaterial()
         {
             Color = Color,
@@ -70,13 +66,14 @@ public class NormalMapTangentSpaceMat(TrContext context) : GlobalMat(context, "N
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboMaterial);
+    }
 
+    protected override void RenderPipeline(TrRenderPipeline renderPipeline, TrMesh[] meshes, GlobalParameters globalParameters)
+    {
         foreach (TrMesh mesh in meshes)
         {
             mesh.Draw();
         }
-
-        renderPipeline.Unbind();
     }
 
     protected override void ControllerCore()
