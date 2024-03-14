@@ -9,7 +9,7 @@ namespace Triangle.Render.Materials.Shadertoy;
 
 public class BoxFrameDistance3DMat(TrContext context) : GlobalMat(context, "BoxFrameDistance3D")
 {
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Shadertoy/BoxFrameDistance3D/BoxFrameDistance3D.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Shadertoy/BoxFrameDistance3D/BoxFrameDistance3D.frag.spv".Path());
@@ -20,19 +20,16 @@ public class BoxFrameDistance3DMat(TrContext context) : GlobalMat(context, "BoxF
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(IList<TrMesh> meshes, GlobalParameters globalParameters)
+    protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)
     {
-        TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
+    }
 
-        renderPipeline.Bind();
-
+    protected override void RenderPipeline(TrRenderPipeline renderPipeline, TrMesh[] meshes, GlobalParameters globalParameters)
+    {
         foreach (TrMesh mesh in meshes)
         {
-            Bind(mesh);
             mesh.Draw();
         }
-
-        renderPipeline.Unbind();
     }
 
     protected override void ControllerCore()

@@ -29,7 +29,7 @@ public class IrradianceConvolutionMat(TrContext context) : GlobalMat(context, "I
 
     public Matrix4X4<float> Projection { get; set; }
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboParameters = new(Context);
 
@@ -42,27 +42,23 @@ public class IrradianceConvolutionMat(TrContext context) : GlobalMat(context, "I
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(IList<TrMesh> meshes, GlobalParameters globalParameters)
+    protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)
     {
-        TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
-
-        renderPipeline.Bind();
-
-        uboParameters.SetData(new UniParameters
+        uboParameters.SetData(new UniParameters()
         {
             View = View,
             Projection = Projection
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);
+    }
 
+    protected override void RenderPipeline(TrRenderPipeline renderPipeline, TrMesh[] meshes, GlobalParameters globalParameters)
+    {
         foreach (TrMesh mesh in meshes)
         {
-            Bind(mesh);
             mesh.Draw();
         }
-
-        renderPipeline.Unbind();
     }
 
     protected override void ControllerCore()

@@ -11,28 +11,56 @@ using Triangle.Render.Models;
 
 namespace Triangle.Render.Controllers;
 
-/// <summary>
-/// 拾取控制器。
-/// 基于场景控制器进行拾取。
-/// </summary>
-/// <param name="context">context</param>
-/// <param name="scene">scene</param>
-/// <param name="sceneController">sceneController</param>
-public class PickupController(TrContext context, TrScene scene, SceneController sceneController) : Disposable
+public class PickupController : Disposable
 {
     // 选中的颜色。
     public static readonly Vector4D<byte> PickupColor = new(255, 255, 255, 255);
 
-    private readonly TrContext _context = context;
-    private readonly TrScene _scene = scene;
-    private readonly SceneController _sceneController = sceneController;
+    private readonly TrContext _context;
+    private readonly TrScene _scene;
+    private readonly SceneController _sceneController;
 
-    private readonly TrFrame _frame = new(context);
-    private readonly SolidColorMat _solidColorMat = new(context);
+    private readonly TrFrame _frame;
+    private readonly SolidColorInstancedMat _solidColorInstancedMat;
 
-    private readonly TrFrame _pickupFrame = new(context);
-    private readonly TrMesh _pickupMesh = context.CreateCanvas();
-    private readonly EdgeDetectionMat _edgeDetectionMat = new(context);
+    private readonly TrFrame _pickupFrame;
+    private readonly TrMesh _pickupMesh;
+    private readonly EdgeDetectionMat _edgeDetectionMat;
+
+    private TrModel[] models = null!;
+    private Vector4D<float>[] modelColors = null!;
+
+    private TrModel[] selectedModels = null!;
+
+    public PickupController(TrContext context, TrScene scene, SceneController sceneController)
+    {
+        _context = context;
+        _scene = scene;
+        _sceneController = sceneController;
+        _sceneController.ObjectsChanged += UpdateModels;
+        _sceneController.SelectedObjectsChanged += UpdateSelectedModels;
+
+        _frame = new TrFrame(context);
+        _solidColorInstancedMat = new SolidColorInstancedMat(context);
+
+        _pickupFrame = new TrFrame(context);
+        _pickupMesh = context.CreateCanvas();
+        _edgeDetectionMat = new EdgeDetectionMat(context);
+
+        UpdateModels();
+        UpdateSelectedModels();
+
+        void UpdateModels()
+        {
+            models = [.. _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>()];
+            modelColors = [.. models.Select(item => item.ColorId.ToSingle())];
+        }
+
+        void UpdateSelectedModels()
+        {
+            selectedModels = [.. _sceneController.SelectedObjects.Where(x => x is TrModel).Cast<TrModel>()];
+        }
+    }
 
     /// <summary>
     /// 绘制描边效果。
@@ -61,8 +89,7 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
 
             if (rectangle.Contains(point))
             {
-                TrModel[] models = _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>().ToArray();
-                List<TrModel> selectedModels = [.. _sceneController.SelectedObjects.Where(x => x is TrModel).Cast<TrModel>()];
+                List<TrModel> temp = [.. selectedModels];
 
                 bool anySelected = false;
                 bool isMultiSelect = _scene.KeyPressed(Key.ControlLeft) || _scene.KeyPressed(Key.ControlRight);
@@ -75,20 +102,20 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
                     {
                         anySelected = true;
 
-                        bool isSelected = selectedModels.Contains(model);
+                        bool isSelected = temp.Contains(model);
 
                         if (isMultiSelect)
                         {
-                            selectedModels.Remove(model);
+                            temp.Remove(model);
                         }
                         else
                         {
-                            selectedModels.Clear();
+                            temp.Clear();
                         }
 
                         if (!isMultiSelect || isMultiSelect && !isSelected)
                         {
-                            selectedModels.Add(model);
+                            temp.Add(model);
                         }
 
                         break;
@@ -97,10 +124,10 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
 
                 if (!anySelected)
                 {
-                    selectedModels.Clear();
+                    temp.Clear();
                 }
 
-                _sceneController.SelectObjects(selectedModels.ToArray());
+                _sceneController.SelectObjects([.. temp]);
             }
         }
     }
@@ -111,19 +138,12 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
     /// <param name="baseParameters"></param>
     public void Render(GlobalParameters baseParameters)
     {
-        TrModel[] models = _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>().ToArray();
-        List<TrModel> selectedModels = [.. _sceneController.SelectedObjects.Where(x => x is TrModel).Cast<TrModel>()];
-
         _frame.Bind();
         {
             _context.Clear();
 
-            foreach (TrModel model in models)
-            {
-                _solidColorMat.Color = model.ColorId.ToSingle();
-
-                model.Render(_solidColorMat, baseParameters);
-            }
+            _solidColorInstancedMat.Color = modelColors;
+            _solidColorInstancedMat.Draw(models, baseParameters);
         }
         _frame.Unbind();
 
@@ -131,12 +151,8 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
         {
             _context.Clear();
 
-            foreach (TrModel model in selectedModels)
-            {
-                _solidColorMat.Color = PickupColor.ToSingle();
-
-                model.Render(_solidColorMat, baseParameters);
-            }
+            _solidColorInstancedMat.Color = [PickupColor.ToSingle()];
+            _solidColorInstancedMat.Draw(selectedModels, baseParameters);
         }
         _pickupFrame.Unbind();
     }
@@ -144,7 +160,7 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
     protected override void Destroy(bool disposing = false)
     {
         _frame.Dispose();
-        _solidColorMat.Dispose();
+        _solidColorInstancedMat.Dispose();
 
         _pickupFrame.Dispose();
         _pickupMesh.Dispose();

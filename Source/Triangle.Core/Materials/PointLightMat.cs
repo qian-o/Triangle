@@ -4,7 +4,6 @@ using Triangle.Core.Enums;
 using Triangle.Core.GameObjects;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
-using Triangle.Core.Structs;
 using AttribLocation = uint;
 
 namespace Triangle.Core.Materials;
@@ -53,7 +52,7 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
     private TrBuffer<UniTransforms> uboTransforms = null!;
     private TrBuffer<UniParameters> uboParameters = null!;
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboTransforms = new(Context);
         uboParameters = new(Context);
@@ -79,7 +78,7 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
     /// args[3] - Intensity float
     /// args[4] - Range float
     /// </param>
-    public override void Draw(IList<TrMesh> meshes, params object[] args)
+    public override void Draw(TrMesh[] meshes, params object[] args)
     {
         if (args.Length != 5
             || args[0] is not Matrix4X4<float> model
@@ -116,12 +115,29 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
 
             foreach (TrMesh mesh in meshes)
             {
-                mesh.VertexAttributePointer(InPosition, 3, nameof(TrVertex.Position));
-
                 mesh.Draw();
             }
 
             renderPipeline.Unbind();
+        }
+    }
+
+    /// <summary>
+    /// Draw point light model.
+    /// </summary>
+    /// <param name="models">meshes</param>
+    /// <param name="args">
+    /// args:
+    /// args[0] - Camera
+    /// args[1] - Color vec3
+    /// args[2] - Intensity float
+    /// args[3] - Range float
+    /// </param>
+    public override void Draw(TrModel[] models, params object[] args)
+    {
+        foreach (TrModel model in models)
+        {
+            Draw([.. model.Meshes], [model.Transform.Model, .. args]);
         }
     }
 

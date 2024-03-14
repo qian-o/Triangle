@@ -9,11 +9,16 @@ using Triangle.Core.Helpers;
 
 namespace Triangle.Core.Controllers;
 
+public delegate void GameObjectsChanged();
+
 public class SceneController
 {
     private readonly TrScene _scene;
     private readonly Dictionary<string, TrGameObject> _cache;
     private readonly List<string> _selectedObjects;
+
+    public event GameObjectsChanged? ObjectsChanged;
+    public event GameObjectsChanged? SelectedObjectsChanged;
 
     public SceneController(TrScene scene)
     {
@@ -33,18 +38,22 @@ public class SceneController
 
     public TrGameObject this[string name] => _cache[name];
 
-    public ReadOnlyCollection<TrGameObject> Objects => _cache.Values.ToList().AsReadOnly();
+    public ReadOnlyCollection<TrGameObject> Objects => _cache.Values.ToArray().AsReadOnly();
 
-    public ReadOnlyCollection<TrGameObject> SelectedObjects => _selectedObjects.Select(name => _cache[name]).ToList().AsReadOnly();
+    public ReadOnlyCollection<TrGameObject> SelectedObjects => _selectedObjects.Select(name => _cache[name]).ToArray().AsReadOnly();
 
     public void Add(TrGameObject gameObject)
     {
         _cache.Add(gameObject.Name, gameObject);
+
+        ObjectsChanged?.Invoke();
     }
 
     public void Remove(TrGameObject gameObject)
     {
         _cache.Remove(gameObject.Name);
+
+        ObjectsChanged?.Invoke();
     }
 
     public void SelectObjects(TrGameObject[] gameObjects)
@@ -56,6 +65,8 @@ public class SceneController
 
         _selectedObjects.Clear();
         _selectedObjects.AddRange(gameObjects.Select(x => x.Name));
+
+        SelectedObjectsChanged?.Invoke();
     }
 
     public void Clear()

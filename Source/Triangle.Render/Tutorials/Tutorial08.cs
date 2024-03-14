@@ -19,7 +19,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
     #endregion
 
     #region Materials
-    private SolidColorMat solidColorMat = null!;
+    private SolidColorInstancedMat solidColorInstancedMat = null!;
     #endregion
 
     #region Models
@@ -28,9 +28,12 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Loaded()
     {
+        Scene.Camera.Transform.Position = new Vector3D<float>(50.0f, 15.0f, 100.0f);
+        Scene.Camera.Transform.EulerAngles = new Vector3D<float>(0.0f, 40.0f, 0.0f);
+
         cubeMesh = Context.CreateCube();
 
-        solidColorMat = new(Context);
+        solidColorInstancedMat = new(Context);
 
         const int columns = 40;
         const int rows = 20;
@@ -42,8 +45,8 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
                 int columnCount = rows - j;
                 for (int k = 0; k < columnCount; k++)
                 {
-                    TrModel cube = new($"Cube {cubesList.Count}", [cubeMesh], solidColorMat);
-                    cube.Transform.Position = new Vector3D<float>((-columnCount * 0.5f) + k, j + 0.5f, i - (columns * 0.5f));
+                    TrModel cube = new($"Cube {cubesList.Count}", [cubeMesh], solidColorInstancedMat);
+                    cube.Transform.Position = new Vector3D<float>((-columnCount * 0.5f) + k, j + 0.5f, (i - (columns * 0.5f)) * 4.0f);
 
                     cubesList.Add(cube);
 
@@ -52,22 +55,27 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
             }
         }
         cubes = [.. cubesList];
+
+        solidColorInstancedMat.Color = [.. cubes.Select(item => item.ColorId.ToSingle())];
     }
 
     protected override void UpdateScene(double deltaSeconds)
     {
-        solidColorMat.Color = new Vector4D<float>(1, 0, 0, 1);
     }
 
     protected override void RenderScene(double deltaSeconds)
     {
-        foreach (TrModel cube in cubes)
-        {
-            cube.Render(GetSceneParameters());
-        }
+        solidColorInstancedMat.Draw(cubes, GetSceneParameters());
     }
 
     protected override void Destroy(bool disposing = false)
     {
+        cubeMesh.Dispose();
+        solidColorInstancedMat.Dispose();
+
+        foreach (TrModel cube in cubes)
+        {
+            cube.Dispose();
+        }
     }
 }

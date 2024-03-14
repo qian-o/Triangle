@@ -1,3 +1,9 @@
+#ifdef VULKAN
+#define INSTANCE_ID gl_InstanceIndex
+#else
+#define INSTANCE_ID gl_InstanceID
+#endif
+
 #define TANGENT_SPACE_ROTATION                                                                                         \
     vec3 binormal = cross(normalize(In_Normal), normalize(In_Tangent));                                                \
     mat3 rotation = transpose(mat3(In_Tangent, binormal, In_Normal));

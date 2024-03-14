@@ -24,7 +24,7 @@ public class EdgeDetectionMat(TrContext context) : GlobalMat(context, "EdgeDetec
 
     public Vector4D<float> EdgeColor { get; set; } = new(0.9215686274509803f, 0.6352941176470588f, 0.0392156862745098f, 1.0f);
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboParameters = new(Context);
 
@@ -37,26 +37,22 @@ public class EdgeDetectionMat(TrContext context) : GlobalMat(context, "EdgeDetec
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(IList<TrMesh> meshes, GlobalParameters globalParameters)
+    protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)
     {
-        TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
-
-        renderPipeline.Bind();
-
         uboParameters.SetData(new UniParameters()
         {
             EdgeColor = EdgeColor
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);
+    }
 
+    protected override void RenderPipeline(TrRenderPipeline renderPipeline, TrMesh[] meshes, GlobalParameters globalParameters)
+    {
         foreach (TrMesh mesh in meshes)
         {
-            Bind(mesh);
             mesh.Draw();
         }
-
-        renderPipeline.Unbind();
     }
 
     protected override void ControllerCore()

@@ -8,7 +8,7 @@
 #define INV_HALF_PI 0.636619772367
 
 #define UNIFORM_BUFFER_BINDING_START 8
-#define UNIFORM_SAMPLER_BINDING_START 10
+#define UNIFORM_SAMPLER_BINDING_START 11
 #define MAX_POINT_LIGHTS 50
 #define ANTI_ALIASING 4
 
@@ -20,6 +20,14 @@ struct PointLight
     vec3 Position;
     float Intensity;
     float Range;
+};
+
+struct SampleTransforms
+{
+    mat4 Model;
+    mat4 ObjectToWorld;
+    mat4 ObjectToClip;
+    mat4 WorldToObject;
 };
 
 layout(std140, binding = 0) uniform Transforms
@@ -104,6 +112,8 @@ layout(binding = 6) uniform samplerCube Map1;
 layout(binding = 7) uniform samplerCube Map2;
 layout(binding = 8) uniform samplerCube Map3;
 layout(binding = 9) uniform samplerCube Map4;
+
+layout(binding = 10) uniform sampler2D MatrixSampler;
 
 /// <summary>
 /// computes depth from position
@@ -240,6 +250,14 @@ vec4 SampleTexture(sampler2D tex, vec2 uv, float lod)
 /// <summary>
 /// Samples a texture.
 /// </summary>
+vec4 SampleTexture(sampler2D tex, ivec2 uv, int lod)
+{
+    return texelFetch(tex, uv, lod);
+}
+
+/// <summary>
+/// Samples a texture.
+/// </summary>
 vec4 SampleTexture(samplerCube tex, vec3 uv)
 {
     return texture(tex, uv);
@@ -277,4 +295,25 @@ vec2 SampleSphericalMap(vec3 dir)
     uv += 0.5;
 
     return uv;
+}
+
+mat4 SampleMatrix(int index)
+{
+    vec4 row0 = SampleTexture(MatrixSampler, ivec2(0, index), 0);
+    vec4 row1 = SampleTexture(MatrixSampler, ivec2(1, index), 0);
+    vec4 row2 = SampleTexture(MatrixSampler, ivec2(2, index), 0);
+    vec4 row3 = SampleTexture(MatrixSampler, ivec2(3, index), 0);
+
+    return mat4(row0, row1, row2, row3);
+}
+
+SampleTransforms GetSampleTransforms(int index)
+{
+    SampleTransforms transforms;
+    transforms.Model = SampleMatrix(index);
+    transforms.ObjectToWorld = transforms.Model;
+    transforms.ObjectToClip = Uni_Transforms.Projection * Uni_Transforms.View * transforms.Model;
+    transforms.WorldToObject = inverse(transforms.ObjectToWorld);
+
+    return transforms;
 }

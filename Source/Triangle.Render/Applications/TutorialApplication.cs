@@ -22,7 +22,7 @@ public class TutorialApplication : BaseApplication
 
     public override void Loaded()
     {
-        Type[] types = Assembly.GetExecutingAssembly().GetTypes().Where(x => x.GetInterfaces().Contains(typeof(ITutorial)) && !x.IsAbstract).ToArray();
+        Type[] types = [.. Assembly.GetExecutingAssembly().GetTypes().Where(x => x.GetInterfaces().Contains(typeof(ITutorial)) && !x.IsAbstract)];
 
         _allTutorials.Clear();
         foreach (Type type in types)

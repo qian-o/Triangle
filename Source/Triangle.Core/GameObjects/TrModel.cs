@@ -95,7 +95,7 @@ public class TrModel(string name) : TrGameObject(name)
     /// <param name="args">Before passing to the material, the model's transformation matrix will be added to the list of arguments.</param>
     public void Render(TrMaterial material, params object[] args)
     {
-        material.Draw(Meshes, [Transform.Model, .. args]);
+        material.Draw([.. Meshes], [Transform.Model, .. args]);
     }
 
     protected override void Destroy(bool disposing = false)

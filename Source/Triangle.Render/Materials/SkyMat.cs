@@ -33,7 +33,7 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
 
     public float Exposure { get; set; } = 1.0f;
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboParameters = new(Context);
 
@@ -48,12 +48,8 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(IList<TrMesh> meshes, GlobalParameters globalParameters)
+    protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)
     {
-        TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
-
-        renderPipeline.Bind();
-
         uboParameters.SetData(new UniParameters()
         {
             GammaCorrection = GammaCorrection,
@@ -62,14 +58,14 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);
+    }
 
+    protected override void RenderPipeline(TrRenderPipeline renderPipeline, TrMesh[] meshes, GlobalParameters globalParameters)
+    {
         foreach (TrMesh mesh in meshes)
         {
-            Bind(mesh);
             mesh.Draw();
         }
-
-        renderPipeline.Unbind();
     }
 
     protected override void ControllerCore()

@@ -24,7 +24,7 @@ public class DiffuseVertexLevelMat(TrContext context) : GlobalMat(context, "Diff
 
     public Vector4D<float> Diffuse { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboMaterial = new(Context);
 
@@ -37,26 +37,22 @@ public class DiffuseVertexLevelMat(TrContext context) : GlobalMat(context, "Diff
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(IList<TrMesh> meshes, GlobalParameters globalParameters)
+    protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)
     {
-        TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
-
-        renderPipeline.Bind();
-
         uboMaterial.SetData(new UniMaterial()
         {
             Diffuse = Diffuse
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboMaterial);
+    }
 
+    protected override void RenderPipeline(TrRenderPipeline renderPipeline, TrMesh[] meshes, GlobalParameters globalParameters)
+    {
         foreach (TrMesh mesh in meshes)
         {
-            Bind(mesh);
             mesh.Draw();
         }
-
-        renderPipeline.Unbind();
     }
 
     protected override void ControllerCore()

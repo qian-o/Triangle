@@ -39,7 +39,7 @@ public class NormalMapWorldSpaceMat(TrContext context) : GlobalMat(context, "Nor
 
     public float Gloss { get; set; } = 20.0f;
 
-    public override TrRenderPass CreateRenderPass()
+    protected override TrRenderPass CreateRenderPass()
     {
         uboMaterial = new(Context);
 
@@ -55,12 +55,8 @@ public class NormalMapWorldSpaceMat(TrContext context) : GlobalMat(context, "Nor
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(IList<TrMesh> meshes, GlobalParameters globalParameters)
+    protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)
     {
-        TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
-
-        renderPipeline.Bind();
-
         uboMaterial.SetData(new UniMaterial()
         {
             Color = Color,
@@ -70,14 +66,14 @@ public class NormalMapWorldSpaceMat(TrContext context) : GlobalMat(context, "Nor
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboMaterial);
+    }
 
+    protected override void RenderPipeline(TrRenderPipeline renderPipeline, TrMesh[] meshes, GlobalParameters globalParameters)
+    {
         foreach (TrMesh mesh in meshes)
         {
-            Bind(mesh);
             mesh.Draw();
         }
-
-        renderPipeline.Unbind();
     }
 
     protected override void ControllerCore()

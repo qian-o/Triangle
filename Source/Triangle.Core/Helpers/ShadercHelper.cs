@@ -15,6 +15,7 @@ public static unsafe class ShadercHelper
 
         shaderc.CompileOptionsSetSourceLanguage(options, SourceLanguage.Glsl);
         shaderc.CompileOptionsSetAutoCombinedImageSampler(options, true);
+        shaderc.CompileOptionsSetTargetEnv(options, TargetEnv.Opengl, 460);
 
         foreach (string file in Directory.GetFiles(folder, "*.vert", SearchOption.AllDirectories))
         {
