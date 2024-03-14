@@ -37,9 +37,9 @@ public class SceneController
 
     public TrGameObject this[string name] => _cache[name];
 
-    public ReadOnlyCollection<TrGameObject> Objects => _cache.Values.ToList().AsReadOnly();
+    public ReadOnlyCollection<TrGameObject> Objects => _cache.Values.ToArray().AsReadOnly();
 
-    public ReadOnlyCollection<TrGameObject> SelectedObjects => _selectedObjects.Select(name => _cache[name]).ToList().AsReadOnly();
+    public ReadOnlyCollection<TrGameObject> SelectedObjects => _selectedObjects.Select(name => _cache[name]).ToArray().AsReadOnly();
 
     public void Add(TrGameObject gameObject)
     {
