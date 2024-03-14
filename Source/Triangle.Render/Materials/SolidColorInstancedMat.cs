@@ -25,11 +25,17 @@ public unsafe class SolidColorInstancedMat(TrContext context) : GlobalInstancedM
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void UpdateSampler(int skip, int length)
+    protected override void UpdateSampler(int[] indices)
     {
-        Vector4D<float>[] color = new Vector4D<float>[length];
+        Vector4D<float>[] color = new Vector4D<float>[indices.Length];
 
-        Color?.Skip(skip).Take(length).ToArray().CopyTo(color, 0);
+        if (Color != null)
+        {
+            for (int i = 0; i < indices.Length; i++)
+            {
+                color[i] = Color[indices[i]];
+            }
+        }
 
         fixed (Vector4D<float>* dataPtr = &color[0])
         {
@@ -37,7 +43,7 @@ public unsafe class SolidColorInstancedMat(TrContext context) : GlobalInstancedM
         }
     }
 
-    protected override void InstancedCore(IEnumerable<TrMesh> meshes, GlobalParameters globalParameters)
+    protected override void InstancedCore(TrMesh[] meshes, GlobalParameters globalParameters)
     {
         TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
 
@@ -45,7 +51,7 @@ public unsafe class SolidColorInstancedMat(TrContext context) : GlobalInstancedM
 
         renderPipeline.BindUniformBlock(UniformSamplerBindingStart + 0, _colorSampler);
 
-        meshes.First().DrawInstanced(meshes.Count());
+        meshes.First().DrawInstanced(meshes.Length);
 
         renderPipeline.Unbind();
     }

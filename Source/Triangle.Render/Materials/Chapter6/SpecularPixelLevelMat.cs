@@ -47,7 +47,7 @@ public class SpecularPixelLevelMat(TrContext context) : GlobalMat(context, "Spec
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(IEnumerable<TrMesh> meshes, GlobalParameters globalParameters)
+    protected override void DrawCore(TrMesh[] meshes, GlobalParameters globalParameters)
     {
         TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
 

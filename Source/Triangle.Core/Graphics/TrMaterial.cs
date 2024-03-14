@@ -14,9 +14,9 @@ public abstract class TrMaterial(TrContext context, string name) : TrGraphics<Tr
 
     protected abstract TrRenderPass CreateRenderPass();
 
-    public abstract void Draw(IEnumerable<TrMesh> meshes, params object[] args);
+    public abstract void Draw(TrMesh[] meshes, params object[] args);
 
-    public abstract void Draw(IEnumerable<TrModel> models, params object[] args);
+    public abstract void Draw(TrModel[] models, params object[] args);
 
     public void Controller(string name = "")
     {

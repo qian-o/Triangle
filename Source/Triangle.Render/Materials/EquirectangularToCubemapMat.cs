@@ -57,7 +57,7 @@ public class EquirectangularToCubemapMat(TrContext context) : GlobalMat(context,
         return new TrRenderPass(Context, [renderPipeline]);
     }
 
-    protected override void DrawCore(IEnumerable<TrMesh> meshes, GlobalParameters globalParameters)
+    protected override void DrawCore(TrMesh[] meshes, GlobalParameters globalParameters)
     {
         TrRenderPipeline renderPipeline = RenderPass.RenderPipelines[0];
 

@@ -69,5 +69,12 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Destroy(bool disposing = false)
     {
+        cubeMesh.Dispose();
+        solidColorInstancedMat.Dispose();
+
+        foreach (TrModel cube in cubes)
+        {
+            cube.Dispose();
+        }
     }
 }

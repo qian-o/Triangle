@@ -113,7 +113,7 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
     public void Render(GlobalParameters baseParameters)
     {
         TrModel[] models = _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>().ToArray();
-        List<TrModel> selectedModels = [.. _sceneController.SelectedObjects.Where(x => x is TrModel).Cast<TrModel>()];
+        TrModel[] selectedModels = [.. _sceneController.SelectedObjects.Where(x => x is TrModel).Cast<TrModel>()];
 
         _frame.Bind();
         {

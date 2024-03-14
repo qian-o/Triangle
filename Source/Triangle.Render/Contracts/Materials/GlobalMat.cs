@@ -238,7 +238,7 @@ public abstract class GlobalMat : TrMaterial
     /// <exception cref="ArgumentException">
     /// If `GlobalParameters` is not found in the args.
     /// </exception>
-    public override void Draw(IEnumerable<TrMesh> meshes, params object[] args)
+    public override void Draw(TrMesh[] meshes, params object[] args)
     {
         if (args.FirstOrDefault(item => item is Matrix4X4<float>) is not Matrix4X4<float> model)
         {
@@ -392,7 +392,7 @@ public abstract class GlobalMat : TrMaterial
     /// <exception cref="ArgumentException">
     /// If `GlobalParameters` is not found in the args.
     /// </exception>
-    public override void Draw(IEnumerable<TrModel> models, params object[] args)
+    public override void Draw(TrModel[] models, params object[] args)
     {
         if (args.FirstOrDefault(item => item is GlobalParameters) is not GlobalParameters parameters)
         {
@@ -401,7 +401,7 @@ public abstract class GlobalMat : TrMaterial
 
         foreach (TrModel model in models)
         {
-            Draw(model.Meshes, model.Transform, parameters);
+            Draw([.. model.Meshes], model.Transform, parameters);
         }
     }
 
@@ -493,7 +493,7 @@ public abstract class GlobalMat : TrMaterial
         DestroyCore(disposing);
     }
 
-    protected abstract void DrawCore(IEnumerable<TrMesh> meshes, GlobalParameters globalParameters);
+    protected abstract void DrawCore(TrMesh[] meshes, GlobalParameters globalParameters);
 
     /// <summary>
     /// 此处应该清理材质中用到的其他缓冲区资源。

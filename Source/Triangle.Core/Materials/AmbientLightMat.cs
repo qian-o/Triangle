@@ -70,7 +70,7 @@ internal sealed class AmbientLightMat(TrContext context) : TrMaterial(context, "
     /// args[1] - Camera
     /// args[2] - Color vec3
     /// </param>
-    public override void Draw(IEnumerable<TrMesh> meshes, params object[] args)
+    public override void Draw(TrMesh[] meshes, params object[] args)
     {
         if (args.Length != 3 || args[0] is not Matrix4X4<float> model || args[1] is not TrCamera camera || args[2] is not Vector3D<float> color)
         {
@@ -116,11 +116,11 @@ internal sealed class AmbientLightMat(TrContext context) : TrMaterial(context, "
     /// args[0] - Camera
     /// args[1] - Color vec3
     /// </param>
-    public override void Draw(IEnumerable<TrModel> models, params object[] args)
+    public override void Draw(TrModel[] models, params object[] args)
     {
         foreach (TrModel model in models)
         {
-            Draw(model.Meshes, [model.Transform.Model, .. args]);
+            Draw([.. model.Meshes], [model.Transform.Model, .. args]);
         }
     }
 

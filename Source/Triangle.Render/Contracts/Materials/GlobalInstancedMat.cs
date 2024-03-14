@@ -9,6 +9,8 @@ namespace Triangle.Render.Contracts.Materials;
 
 public unsafe abstract class GlobalInstancedMat(TrContext context, string name) : GlobalMat(context, name)
 {
+    public const int MaxSamplerSize = 4096;
+
     private readonly TrTexture _matrixSampler = new(context);
 
     /// <summary>
@@ -22,7 +24,7 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
     /// <exception cref="ArgumentException">
     /// If `GlobalParameters` is not found in the args.
     /// </exception>
-    public override void Draw(IEnumerable<TrModel> models, params object[] args)
+    public override void Draw(TrModel[] models, params object[] args)
     {
         if (args.FirstOrDefault(item => item is GlobalParameters) is not GlobalParameters parameters)
         {
@@ -31,47 +33,58 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
 
         TrModel[] arr = [.. models];
 
-        int pages = (int)Math.Ceiling((double)arr.Length / 4096);
+        int pages = (int)Math.Ceiling((double)arr.Length / MaxSamplerSize);
 
         for (int i = 0; i < pages; i++)
         {
-            IEnumerable<TrModel> page = arr.Skip(i * 4096).Take(4096);
+            IEnumerable<TrModel> page = arr.Skip(i * MaxSamplerSize).Take(MaxSamplerSize);
 
-            InternalDraw(page, i * 4096, page.Count());
+            InternalDraw(page.ToArray(), i * 4096);
         }
 
-        void InternalDraw(IEnumerable<TrModel> models, int skip, int length)
+        void InternalDraw(TrModel[] models, int beginIndex)
         {
-            UpdateMatrixSampler(models.Select(item => item.Transform.Model).ToArray());
-
-            UpdateSampler(skip, length);
-
-            foreach (TrRenderPipeline renderPipeline in RenderPass.RenderPipelines)
+            foreach (string name in models.SelectMany(item => item.Meshes).Select(item => item.Name).Distinct())
             {
-                renderPipeline.Bind();
+                List<TrModel> drawModels = [];
+                List<int> indices = [];
+                List<TrMesh> meshes = [];
 
-                renderPipeline.BindUniformBlock(10, _matrixSampler);
+                for (int i = 0; i < models.Length; i++)
+                {
+                    if (models[i].Meshes.FirstOrDefault(item => item.Name == name) is TrMesh mesh)
+                    {
+                        drawModels.Add(models[i]);
+                        indices.Add(beginIndex + i);
+                        meshes.Add(mesh);
+                    }
+                }
 
-                renderPipeline.Unbind();
-            }
+                UpdateMatrixSampler(drawModels.Select(item => item.Transform.Model).ToArray());
+                UpdateSampler([.. indices]);
 
-            string[] names = models.SelectMany(item => item.Meshes).Select(item => item.Name).Distinct().ToArray();
+                foreach (TrRenderPipeline renderPipeline in RenderPass.RenderPipelines)
+                {
+                    renderPipeline.Bind();
 
-            foreach (string name in names)
-            {
-                // TODO: 应该按照 Mesh 进行分组，然后更新 Sampler 再去绘制。
+                    renderPipeline.BindUniformBlock(10, _matrixSampler);
+
+                    renderPipeline.Unbind();
+                }
+
+                Draw([.. meshes], parameters);
             }
         }
     }
 
-    protected override void DrawCore(IEnumerable<TrMesh> meshes, GlobalParameters globalParameters)
+    protected override void DrawCore(TrMesh[] meshes, GlobalParameters globalParameters)
     {
         InstancedCore(meshes, globalParameters);
     }
 
-    protected abstract void UpdateSampler(int skip, int length);
+    protected abstract void UpdateSampler(int[] indices);
 
-    protected abstract void InstancedCore(IEnumerable<TrMesh> meshes, GlobalParameters globalParameters);
+    protected abstract void InstancedCore(TrMesh[] meshes, GlobalParameters globalParameters);
 
     protected override void Destroy(bool disposing = false)
     {

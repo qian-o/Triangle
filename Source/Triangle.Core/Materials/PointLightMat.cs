@@ -78,7 +78,7 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
     /// args[3] - Intensity float
     /// args[4] - Range float
     /// </param>
-    public override void Draw(IEnumerable<TrMesh> meshes, params object[] args)
+    public override void Draw(TrMesh[] meshes, params object[] args)
     {
         if (args.Length != 5
             || args[0] is not Matrix4X4<float> model
@@ -133,11 +133,11 @@ internal sealed class PointLightMat(TrContext context) : TrMaterial(context, "Po
     /// args[2] - Intensity float
     /// args[3] - Range float
     /// </param>
-    public override void Draw(IEnumerable<TrModel> models, params object[] args)
+    public override void Draw(TrModel[] models, params object[] args)
     {
         foreach (TrModel model in models)
         {
-            Draw(model.Meshes, [model.Transform.Model, .. args]);
+            Draw([.. model.Meshes], [model.Transform.Model, .. args]);
         }
     }
 
