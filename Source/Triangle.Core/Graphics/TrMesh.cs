@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Collections.ObjectModel;
+using System.Runtime.InteropServices;
 using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Structs;
@@ -15,16 +16,20 @@ public unsafe class TrMesh : TrGraphics<TrContext>
     public const AttribLocation InColor = 4;
     public const AttribLocation InTexCoord = 5;
 
+    private readonly TrVertex[] _vertices;
+    private readonly uint[] _indices;
+
     public TrMesh(TrContext context, string name, TrVertex[] vertices, uint[] indices) : base(context)
     {
+        _vertices = vertices;
+        _indices = indices;
+
         GL gl = Context.GL;
 
         Name = name;
         Handle = gl.CreateVertexArray();
         VerticesBuffer = gl.CreateBuffer();
         IndicesBuffer = gl.CreateBuffer();
-        VerticesLength = vertices.Length;
-        IndicesLength = indices.Length;
 
         fixed (TrVertex* verticesPtr = vertices)
         {
@@ -53,9 +58,13 @@ public unsafe class TrMesh : TrGraphics<TrContext>
 
     public uint IndicesBuffer { get; }
 
-    public int VerticesLength { get; }
+    public int VerticesLength => _vertices.Length;
 
-    public int IndicesLength { get; }
+    public int IndicesLength => _indices.Length;
+
+    public ReadOnlyCollection<TrVertex> Vertices => _vertices.AsReadOnly();
+
+    public ReadOnlyCollection<uint> Indices => _indices.AsReadOnly();
 
     protected override void Destroy(bool disposing = false)
     {
