@@ -1,10 +1,16 @@
 ﻿using System.ComponentModel;
+using System.Numerics;
+using BepuPhysics;
+using BepuPhysics.Constraints;
+using BepuUtilities;
+using BepuUtilities.Memory;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.GameObjects;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
+using Triangle.Core.Physics;
 using Triangle.Render.Contracts.Tutorials;
 using Triangle.Render.Materials;
 
@@ -14,6 +20,12 @@ namespace Triangle.Render.Tutorials;
 [Description("演示如何使用 BepuPhysics 进行物理模拟。")]
 public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
+    #region Physics
+    private BufferPool bufferPool = null!;
+    private ThreadDispatcher dispatcher = null!;
+    private Simulation simulation = null!;
+    #endregion
+
     #region Meshes
     private TrMesh cubeMesh = null!;
     #endregion
@@ -30,6 +42,10 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
     {
         Scene.Camera.Transform.Position = new Vector3D<float>(50.0f, 15.0f, 100.0f);
         Scene.Camera.Transform.EulerAngles = new Vector3D<float>(0.0f, 40.0f, 0.0f);
+
+        bufferPool = new BufferPool();
+        dispatcher = new ThreadDispatcher(int.Max(1, Environment.ProcessorCount > 4 ? Environment.ProcessorCount - 2 : Environment.ProcessorCount - 1));
+        simulation = Simulation.Create(bufferPool, new NarrowPhaseCallbacks(new SpringSettings(30.0f, 1.0f)), new PoseIntegratorCallbacks(new Vector3(0.0f, -10.0f, 0.0f)), new SolveDescription(8, 1));
 
         cubeMesh = Context.CreateCube();
 
@@ -70,6 +86,10 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Destroy(bool disposing = false)
     {
+        bufferPool.Clear();
+        dispatcher.Dispose();
+        simulation.Dispose();
+
         cubeMesh.Dispose();
         solidColorInstancedMat.Dispose();
 
