@@ -21,6 +21,8 @@ namespace Triangle.Render.Tutorials;
 [Description("演示如何使用 BepuPhysics 进行物理模拟。")]
 public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
+    public const float TimestepDuration = 1.0f / 60.0f;
+
     #region Physics
     private BufferPool bufferPool = null!;
     private ThreadDispatcher dispatcher = null!;
@@ -76,22 +78,25 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
         // Physics scene building
         {
-            simulation.Statics.Add(new StaticDescription(new Vector3(0, -0.5f, 0), simulation.Shapes.Add(new Box(2500, 1, 2500))));
+            Box box = new(1.0f, 1.0f, 1.0f);
+            BodyInertia bodyInertia = box.ComputeInertia(1.0f);
+            TypedIndex boxIndex = simulation.Shapes.Add(box);
 
             map = new (TrModel, BodyHandle)[cubes.Length];
+
             for (int i = 0; i < cubes.Length; i++)
             {
                 TrModel cube = cubes[i];
 
-                Box box = new(1.0f, 1.0f, 1.0f);
-
-                BodyHandle bodyHandle = simulation.Bodies.Add(BodyDescription.CreateDynamic(cube.Transform.Position.ToSystem(),
-                                                                                            box.ComputeInertia(1.0f),
-                                                                                            simulation.Shapes.Add(box),
+                BodyHandle bodyHandle = simulation.Bodies.Add(BodyDescription.CreateDynamic(new RigidPose(cube.Transform.Position.ToSystem(), cube.Transform.Rotation.ToSystem()),
+                                                                                            bodyInertia,
+                                                                                            boxIndex,
                                                                                             0.01f));
 
                 map[i] = (cube, bodyHandle);
             }
+
+            simulation.Statics.Add(new StaticDescription(new Vector3(0, -0.5f, 0), simulation.Shapes.Add(new Box(2500, 1, 2500))));
         }
 
         solidColorInstancedMat.Color = [.. cubes.Select(item => item.ColorId.ToSingle())];
@@ -99,7 +104,18 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void UpdateScene(double deltaSeconds)
     {
-        simulation.Timestep((float)deltaSeconds, dispatcher);
+        foreach ((TrModel Model, BodyHandle BodyHandle) in map)
+        {
+            BodyReference body = simulation.Bodies[BodyHandle];
+
+            body.Pose.Position = Model.Transform.Position.ToSystem();
+            body.Pose.Orientation = Model.Transform.Rotation.ToSystem();
+
+            body.Awake = true;
+            body.UpdateBounds();
+        }
+
+        simulation.Timestep(TimestepDuration, dispatcher);
 
         foreach ((TrModel Model, BodyHandle BodyHandle) in map)
         {
