@@ -31,9 +31,16 @@ public unsafe class SolidColorInstancedMat(TrContext context) : GlobalInstancedM
 
         if (Color != null)
         {
-            for (int i = 0; i < indices.Length; i++)
+            if (Color.Length == 1)
             {
-                color[i] = Color[indices[i]];
+                Array.Fill(color, Color[0]);
+            }
+            else
+            {
+                for (int i = 0; i < indices.Length; i++)
+                {
+                    color[i] = Color[indices[i]];
+                }
             }
         }
 

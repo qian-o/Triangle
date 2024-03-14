@@ -12,28 +12,47 @@ using Triangle.Render.Models;
 
 namespace Triangle.Render.Controllers;
 
-/// <summary>
-/// 拾取控制器。
-/// 基于场景控制器进行拾取。
-/// </summary>
-/// <param name="context">context</param>
-/// <param name="scene">scene</param>
-/// <param name="sceneController">sceneController</param>
-public class PickupController(TrContext context, TrScene scene, SceneController sceneController) : Disposable
+public class PickupController : Disposable
 {
     // 选中的颜色。
     public static readonly Vector4D<byte> PickupColor = new(255, 255, 255, 255);
 
-    private readonly TrContext _context = context;
-    private readonly TrScene _scene = scene;
-    private readonly SceneController _sceneController = sceneController;
+    private readonly TrContext _context;
+    private readonly TrScene _scene;
+    private readonly SceneController _sceneController;
 
-    private readonly TrFrame _frame = new(context);
-    private readonly SolidColorInstancedMat _solidColorInstancedMat = new(context);
+    private readonly TrFrame _frame;
+    private readonly SolidColorInstancedMat _solidColorInstancedMat;
 
-    private readonly TrFrame _pickupFrame = new(context);
-    private readonly TrMesh _pickupMesh = context.CreateCanvas();
-    private readonly EdgeDetectionMat _edgeDetectionMat = new(context);
+    private readonly TrFrame _pickupFrame;
+    private readonly TrMesh _pickupMesh;
+    private readonly EdgeDetectionMat _edgeDetectionMat;
+
+    private Vector4D<float>[] modelColors = null!;
+
+    public PickupController(TrContext context, TrScene scene, SceneController sceneController)
+    {
+        _context = context;
+        _scene = scene;
+        _sceneController = sceneController;
+        _sceneController.GameObjectsChanged += UpdateModelColors;
+
+        _frame = new TrFrame(context);
+        _solidColorInstancedMat = new SolidColorInstancedMat(context);
+
+        _pickupFrame = new TrFrame(context);
+        _pickupMesh = context.CreateCanvas();
+        _edgeDetectionMat = new EdgeDetectionMat(context);
+
+        UpdateModelColors();
+
+        void UpdateModelColors()
+        {
+            TrModel[] models = _sceneController.Objects.Where(x => x is TrModel).Cast<TrModel>().ToArray();
+
+            modelColors = models.Select(item => item.ColorId.ToSingle()).ToArray();
+        }
+    }
 
     /// <summary>
     /// 绘制描边效果。
@@ -119,7 +138,7 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
         {
             _context.Clear();
 
-            _solidColorInstancedMat.Color = models.Select(x => x.ColorId.ToSingle()).ToArray();
+            _solidColorInstancedMat.Color = modelColors;
             _solidColorInstancedMat.Draw(models, baseParameters);
         }
         _frame.Unbind();
@@ -128,7 +147,7 @@ public class PickupController(TrContext context, TrScene scene, SceneController 
         {
             _context.Clear();
 
-            _solidColorInstancedMat.Color = selectedModels.Select(x => PickupColor.ToSingle()).ToArray();
+            _solidColorInstancedMat.Color = [PickupColor.ToSingle()];
             _solidColorInstancedMat.Draw(selectedModels, baseParameters);
         }
         _pickupFrame.Unbind();
