@@ -85,7 +85,7 @@ public class SkyMat(TrContext context) : GlobalMat(context, "Sky")
             Exposure = exposure;
         }
 
-        AdjustChannel("Sky Tex", 0);
+        AdjustChannel("Sky Tex", 0, "Resources/Textures/Skies".Path());
     }
 
     protected override void DestroyCore(bool disposing = false)

@@ -407,7 +407,7 @@ public abstract class GlobalMat : TrMaterial
         }
     }
 
-    public void AdjustChannel(string label, int index)
+    public void AdjustChannel(string label, int index, string root = "")
     {
         if (!_channelCache.TryGetValue(index, out (PropertyInfo Channel, PropertyInfo ChannelST) cache))
         {
@@ -467,7 +467,7 @@ public abstract class GlobalMat : TrMaterial
 
                 ImGui.SetCursorPosX(ImGui.GetCursorPosX() + offsetX + 1.0f);
 
-                TrTextureManager.TextureSelection(label, imageSize, ref channel);
+                TrTextureManager.TextureSelection(label, root, imageSize, ref channel);
 
                 ImGui.Columns(1);
             }

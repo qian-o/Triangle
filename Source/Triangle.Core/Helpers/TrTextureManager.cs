@@ -43,7 +43,7 @@ public static class TrTextureManager
 
         foreach (KeyValuePair<string, TrTexture> file in sortedFiles)
         {
-            _textures.Add(file.Key, file.Value);
+            _textures.Add(file.Key.Path(), file.Value);
         }
 
         foreach (IGrouping<string, KeyValuePair<string, TrTexture>> gorup in _textures.GroupBy(item => Path.DirectorySeparatorChar + Path.GetDirectoryName(item.Key)))
@@ -153,14 +153,16 @@ public static class TrTextureManager
         }
     }
 
-    public static void TextureSelection(string label, Vector2D<float> size, ref TrTexture? texture)
+    public static void TextureSelection(string label, string root, Vector2D<float> size, ref TrTexture? texture)
     {
+        Dictionary<string, TrTexture> keyValuePairs = _textures.Where(item => item.Key.StartsWith(root, StringComparison.CurrentCulture)).ToDictionary();
+
         ImGuiHelper.ImageButton(label, texture, () => ImGui.OpenPopup(label), size);
 
-        ImGui.SetNextWindowSizeConstraints(new Vector2(100.0f, 200.0f), new Vector2(300.0f, 200.0f));
+        ImGui.SetNextWindowSizeConstraints(new Vector2(100.0f, 200.0f), new Vector2(800.0f, 200.0f));
         if (ImGui.BeginPopup(label, ImGuiWindowFlags.AlwaysAutoResize))
         {
-            foreach (KeyValuePair<string, TrTexture> item in _textures)
+            foreach (KeyValuePair<string, TrTexture> item in keyValuePairs)
             {
                 if (ImGui.Selectable(item.Key, item.Value == texture))
                 {
