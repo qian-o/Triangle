@@ -69,7 +69,7 @@ public static unsafe class TrMeshFactory
         return AssimpParsing(context, Path.Combine("Resources", "Models", "Capsule.glb"))[0];
     }
 
-    public static TrMesh CreateSphere(this TrContext context)
+    public static TrMesh CreateSphere(this TrContext context, float radius = 0.5f)
     {
         const int X_SEGMENTS = 64;
         const int Y_SEGMENTS = 64;
@@ -87,7 +87,7 @@ public static unsafe class TrMeshFactory
                 float yPos = (float)Math.Cos(ySegment * Math.PI);
                 float zPos = (float)(Math.Sin(xSegment * 2.0 * Math.PI) * Math.Sin(ySegment * Math.PI));
 
-                vertices.Add(new(new(xPos, yPos, zPos), new(xPos, yPos, zPos), texCoord: new(xSegment, ySegment)));
+                vertices.Add(new(new(xPos * radius, yPos * radius, zPos * radius), new(xPos, yPos, zPos), texCoord: new(xSegment, ySegment)));
             }
         }
 
@@ -105,7 +105,7 @@ public static unsafe class TrMeshFactory
             }
         }
 
-        return new(context, $"Sphere", [.. vertices], [.. indices]);
+        return new(context, $"Sphere {radius}", [.. vertices], [.. indices]);
     }
 
     public static TrMesh CreateStar(this TrContext context)

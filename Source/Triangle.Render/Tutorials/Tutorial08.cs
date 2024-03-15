@@ -27,7 +27,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
     private BufferPool bufferPool = null!;
     private ThreadDispatcher dispatcher = null!;
     private Simulation simulation = null!;
-    private (TrModel Model, BodyHandle BodyHandle)[] map = null!;
+    private Dictionary<TrModel, BodyHandle> map = null!;
     #endregion
 
     #region Meshes
@@ -39,8 +39,10 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
     #endregion
 
     #region Models
-    private TrModel[] cubes = null!;
+    private List<TrModel> models = null!;
     #endregion
+
+    private Random random = null!;
 
     protected override void Loaded()
     {
@@ -55,9 +57,10 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
         solidColorInstancedMat = new(Context);
 
+        models = [];
+
         const int columns = 40;
         const int rows = 20;
-        List<TrModel> models = [];
         for (int i = 0; i < columns; i++)
         {
             for (int j = 0; j < rows; j++)
@@ -74,32 +77,33 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
                 }
             }
         }
-        cubes = [.. models];
+
+        solidColorInstancedMat.Color = [.. models.Select(item => item.ColorId.ToSingle())];
 
         // Physics scene building
         {
+            simulation.Statics.Add(new StaticDescription(new Vector3(0, -0.5f, 0), simulation.Shapes.Add(new Box(2500, 1, 2500))));
+
             Box box = new(1.0f, 1.0f, 1.0f);
             BodyInertia bodyInertia = box.ComputeInertia(1.0f);
             TypedIndex boxIndex = simulation.Shapes.Add(box);
 
-            map = new (TrModel, BodyHandle)[cubes.Length];
+            map = [];
 
-            for (int i = 0; i < cubes.Length; i++)
+            for (int i = 0; i < models.Count; i++)
             {
-                TrModel cube = cubes[i];
+                TrModel cube = models[i];
 
-                BodyHandle bodyHandle = simulation.Bodies.Add(BodyDescription.CreateDynamic(new RigidPose(cube.Transform.Position.ToSystem(), cube.Transform.Rotation.ToSystem()),
+                BodyHandle bodyHandle = simulation.Bodies.Add(BodyDescription.CreateDynamic(cube.Transform.Position.ToSystem(),
                                                                                             bodyInertia,
                                                                                             boxIndex,
                                                                                             0.01f));
 
-                map[i] = (cube, bodyHandle);
+                map.Add(cube, bodyHandle);
             }
-
-            simulation.Statics.Add(new StaticDescription(new Vector3(0, -0.5f, 0), simulation.Shapes.Add(new Box(2500, 1, 2500))));
         }
 
-        solidColorInstancedMat.Color = [.. cubes.Select(item => item.ColorId.ToSingle())];
+        random = new();
     }
 
     protected override void UpdateScene(double deltaSeconds)
@@ -124,11 +128,35 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
             Model.Transform.Position = pose.Position.ToGeneric();
             Model.Transform.Rotation = pose.Orientation.ToGeneric();
         }
+
+        if (Scene.KeyPressed(Key.Z))
+        {
+            float radius = 0.5f + 5 * random.NextSingle();
+
+            TrMesh sphereMesh = Context.CreateSphere(radius);
+            TrModel model = new($"Sphere {models.Count}", [sphereMesh], solidColorInstancedMat);
+            model.Transform.Position = new Vector3D<float>(0.0f, 8.0f, 130.0f);
+
+            models.Add(model);
+
+            SceneController.Add(model);
+
+            Sphere shape = new(radius);
+
+            BodyHandle bodyHandle = simulation.Bodies.Add(BodyDescription.CreateConvexDynamic(model.Transform.Position.ToSystem(),
+                                                                                              new Vector3(0, 0, -150),
+                                                                                              radius * radius * radius,
+                                                                                              simulation.Shapes,
+                                                                                              shape));
+            map.Add(model, bodyHandle);
+
+            solidColorInstancedMat.Color = [.. models.Select(item => item.ColorId.ToSingle())];
+        }
     }
 
     protected override void RenderScene(double deltaSeconds)
     {
-        solidColorInstancedMat.Draw(cubes, GetSceneParameters());
+        solidColorInstancedMat.Draw([.. models], GetSceneParameters());
     }
 
     protected override void Destroy(bool disposing = false)
@@ -140,9 +168,9 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
         cubeMesh.Dispose();
         solidColorInstancedMat.Dispose();
 
-        foreach (TrModel cube in cubes)
+        foreach (TrModel model in models)
         {
-            cube.Dispose();
+            model.Dispose();
         }
     }
 }
