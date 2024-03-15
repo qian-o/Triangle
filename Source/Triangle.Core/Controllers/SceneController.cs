@@ -114,6 +114,8 @@ public class SceneController
                             {
                                 _selectedObjects.Add(name);
                             }
+
+                            SelectedObjectsChanged?.Invoke();
                         }
                     }
                     ImGui.PopID();
