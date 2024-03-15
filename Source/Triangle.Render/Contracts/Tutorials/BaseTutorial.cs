@@ -30,6 +30,7 @@ public abstract class BaseTutorial : ITutorial
         Input = input;
         Context = context;
         Scene = new TrScene(input, context, GetType().GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? GetType().Name);
+        Scene.DrawContentInWindow += SceneDrawContentInWindow;
 
         SceneController = new(Scene);
         PickupController = new(Context, Scene, SceneController);
@@ -127,6 +128,10 @@ public abstract class BaseTutorial : ITutorial
     }
 
     protected abstract void Loaded();
+
+    protected virtual void SceneDrawContentInWindow()
+    {
+    }
 
     protected abstract void UpdateScene(double deltaSeconds);
 

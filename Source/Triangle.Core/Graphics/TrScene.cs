@@ -301,6 +301,8 @@ public class TrScene : TrGraphics<TrContext>
                     IsOperationTools |= ImGuizmo.IsOver();
                 }
 
+                ImGui.SetCursorPos(startPos);
+
                 DrawContentInWindow?.Invoke();
 
                 ImGui.End();

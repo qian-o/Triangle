@@ -5,6 +5,7 @@ using BepuPhysics.Collidables;
 using BepuPhysics.Constraints;
 using BepuUtilities;
 using BepuUtilities.Memory;
+using Hexa.NET.ImGui;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
@@ -104,6 +105,16 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
         }
 
         random = new();
+    }
+
+    protected override void SceneDrawContentInWindow()
+    {
+        Vector2 size = ImGui.GetContentRegionMax();
+        size.Y -= 20;
+
+        ImGui.SetCursorPos(new Vector2(10, size.Y));
+
+        ImGui.Text("按 Z 键添加球体");
     }
 
     protected override void UpdateScene(double deltaSeconds)
