@@ -42,6 +42,8 @@ public class SceneController
 
     public ReadOnlyCollection<TrGameObject> SelectedObjects => _selectedObjects.Select(name => _cache[name]).ToArray().AsReadOnly();
 
+    public bool IsTransformObject { get; private set; }
+
     public void Add(TrGameObject gameObject)
     {
         _cache.Add(gameObject.Name, gameObject);
@@ -161,7 +163,7 @@ public class SceneController
         float[] viewArray = _scene.Camera.View.ToArray();
         float[] projectionArray = _scene.Camera.Projection.ToArray();
         float[] showMatrixArray = showMatrix.ToArray();
-        if (ImGuizmo.Manipulate(ref viewArray[0], ref projectionArray[0], _scene.GizmosOperation, _scene.GizmosSpace, ref showMatrixArray[0]))
+        if (IsTransformObject = ImGuizmo.Manipulate(ref viewArray[0], ref projectionArray[0], _scene.GizmosOperation, _scene.GizmosSpace, ref showMatrixArray[0]))
         {
             Matrix4X4.Decompose(showMatrixArray.ToMatrix(), out Vector3D<float> scale, out Quaternion<float> rotation, out Vector3D<float> translation);
 

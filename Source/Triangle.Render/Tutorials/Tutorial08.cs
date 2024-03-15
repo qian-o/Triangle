@@ -119,15 +119,18 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void UpdateScene(double deltaSeconds)
     {
-        foreach ((TrModel Model, BodyHandle BodyHandle) in map)
+        if (SceneController.IsTransformObject)
         {
-            BodyReference body = simulation.Bodies[BodyHandle];
+            foreach ((TrModel Model, BodyHandle BodyHandle) in map)
+            {
+                BodyReference body = simulation.Bodies[BodyHandle];
 
-            body.Pose.Position = Model.Transform.Position.ToSystem();
-            body.Pose.Orientation = Model.Transform.Rotation.ToSystem();
+                body.Pose.Position = Model.Transform.Position.ToSystem();
+                body.Pose.Orientation = Model.Transform.Rotation.ToSystem();
 
-            body.Awake = true;
-            body.UpdateBounds();
+                body.Awake = true;
+                body.UpdateBounds();
+            }
         }
 
         simulation.Timestep(TimestepDuration, dispatcher);
