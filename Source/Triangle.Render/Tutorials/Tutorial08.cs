@@ -14,7 +14,7 @@ using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Core.Physics;
 using Triangle.Render.Contracts.Tutorials;
-using Triangle.Render.Materials;
+using Triangle.Render.Materials.Chapter6;
 
 namespace Triangle.Render.Tutorials;
 
@@ -36,7 +36,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
     #endregion
 
     #region Materials
-    private SolidColorInstancedMat solidColorInstancedMat = null!;
+    private DiffusePixelLevelInstancedMat diffusePixelLevelInstancedMat = null!;
     #endregion
 
     #region Models
@@ -56,7 +56,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
         cubeMesh = Context.CreateCube();
 
-        solidColorInstancedMat = new(Context);
+        diffusePixelLevelInstancedMat = new(Context);
 
         models = [];
 
@@ -69,7 +69,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
                 int columnCount = rows - j;
                 for (int k = 0; k < columnCount; k++)
                 {
-                    TrModel cube = new($"Cube {models.Count}", [cubeMesh], solidColorInstancedMat);
+                    TrModel cube = new($"Cube {models.Count}", [cubeMesh], diffusePixelLevelInstancedMat);
                     cube.Transform.Position = new Vector3D<float>((-columnCount * 0.5f) + k, j + 0.5f, (i - (columns * 0.5f)) * 4.0f);
 
                     models.Add(cube);
@@ -79,7 +79,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
             }
         }
 
-        solidColorInstancedMat.Color = [.. models.Select(item => item.ColorId.ToSingle())];
+        diffusePixelLevelInstancedMat.Diffuse = [.. models.Select(item => item.ColorId.ToSingle())];
 
         // Physics scene building
         {
@@ -148,7 +148,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
             float radius = 0.5f + 5 * random.NextSingle();
 
             TrMesh sphereMesh = Context.CreateSphere(radius);
-            TrModel model = new($"Sphere {models.Count}", [sphereMesh], solidColorInstancedMat);
+            TrModel model = new($"Sphere {models.Count}", [sphereMesh], diffusePixelLevelInstancedMat);
             model.Transform.Position = new Vector3D<float>(0.0f, 8.0f, 130.0f);
 
             models.Add(model);
@@ -164,13 +164,13 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
                                                                                               shape));
             map.Add(model, bodyHandle);
 
-            solidColorInstancedMat.Color = [.. models.Select(item => item.ColorId.ToSingle())];
+            diffusePixelLevelInstancedMat.Diffuse = [.. models.Select(item => item.ColorId.ToSingle())];
         }
     }
 
     protected override void RenderScene(double deltaSeconds)
     {
-        solidColorInstancedMat.Draw([.. models], GetSceneParameters());
+        diffusePixelLevelInstancedMat.Draw([.. models], GetSceneParameters());
     }
 
     protected override void Destroy(bool disposing = false)
@@ -180,7 +180,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
         bufferPool.Clear();
 
         cubeMesh.Dispose();
-        solidColorInstancedMat.Dispose();
+        diffusePixelLevelInstancedMat.Dispose();
 
         foreach (TrModel model in models)
         {
