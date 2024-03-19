@@ -15,7 +15,10 @@ public class SceneController
 {
     private readonly TrScene _scene;
     private readonly Dictionary<string, TrGameObject> _cache;
+    private readonly Dictionary<string, List<TrGameObject>> _groupCache;
     private readonly List<string> _selectedObjects;
+
+    private string currentGroup;
 
     public event GameObjectsChanged? ObjectsChanged;
     public event GameObjectsChanged? SelectedObjectsChanged;
@@ -24,7 +27,13 @@ public class SceneController
     {
         _scene = scene;
         _cache = [];
+        _groupCache = new()
+        {
+            { string.Empty, [] }
+        };
         _selectedObjects = [];
+
+        currentGroup = string.Empty;
 
         Add(_scene.Camera);
 
@@ -44,9 +53,25 @@ public class SceneController
 
     public bool IsTransformObject { get; private set; }
 
+    public void BeginGroup(string name)
+    {
+        if (!_groupCache.ContainsKey(name))
+        {
+            _groupCache.Add(name, []);
+        }
+
+        currentGroup = name;
+    }
+
+    public void EndGroup()
+    {
+        currentGroup = string.Empty;
+    }
+
     public void Add(TrGameObject gameObject)
     {
         _cache.Add(gameObject.Name, gameObject);
+        _groupCache[currentGroup].Add(gameObject);
 
         ObjectsChanged?.Invoke();
     }
@@ -54,6 +79,7 @@ public class SceneController
     public void Remove(TrGameObject gameObject)
     {
         _cache.Remove(gameObject.Name);
+        _groupCache[currentGroup].Remove(gameObject);
 
         ObjectsChanged?.Invoke();
     }
@@ -95,29 +121,52 @@ public class SceneController
             {
                 bool isMultiSelect = _scene.KeyPressed(Key.ControlLeft) || _scene.KeyPressed(Key.ControlRight);
 
-                foreach (string name in _cache.Keys)
+                foreach (string group in _groupCache.Keys)
                 {
-                    ImGui.PushID(name.GetHashCode());
+                    ImGui.PushID(group);
                     {
-                        bool isSelected = _selectedObjects.Contains(name);
+                        bool isTreeNode = group != string.Empty && _groupCache[group].Count > 0;
 
-                        if (ImGui.Selectable(name, isSelected))
+                        if (isTreeNode)
                         {
-                            if (isMultiSelect)
+                            if (ImGui.TreeNode(group))
                             {
-                                _selectedObjects.Remove(name);
-                            }
-                            else
-                            {
-                                _selectedObjects.Clear();
-                            }
+                                _groupCache[group].ForEach(AddGameObjectNode);
 
-                            if (!isMultiSelect || isMultiSelect && !isSelected)
-                            {
-                                _selectedObjects.Add(name);
+                                ImGui.TreePop();
                             }
+                        }
+                        else
+                        {
+                            _groupCache[group].ForEach(AddGameObjectNode);
+                        }
 
-                            SelectedObjectsChanged?.Invoke();
+                        void AddGameObjectNode(TrGameObject gameObject)
+                        {
+                            ImGui.PushID(gameObject.Name);
+                            {
+                                bool isSelected = _selectedObjects.Contains(gameObject.Name);
+
+                                if (ImGui.Selectable(gameObject.Name, isSelected))
+                                {
+                                    if (isMultiSelect)
+                                    {
+                                        _selectedObjects.Remove(gameObject.Name);
+                                    }
+                                    else
+                                    {
+                                        _selectedObjects.Clear();
+                                    }
+
+                                    if (!isMultiSelect || isMultiSelect && !isSelected)
+                                    {
+                                        _selectedObjects.Add(gameObject.Name);
+                                    }
+
+                                    SelectedObjectsChanged?.Invoke();
+                                }
+                            }
+                            ImGui.PopID();
                         }
                     }
                     ImGui.PopID();

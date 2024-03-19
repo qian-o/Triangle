@@ -9,6 +9,7 @@ using Hexa.NET.ImGui;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Triangle.Core;
+using Triangle.Core.Controllers;
 using Triangle.Core.GameObjects;
 using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
@@ -62,22 +63,26 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
         const int columns = 40;
         const int rows = 20;
-        for (int i = 0; i < columns; i++)
+        SceneController.BeginGroup("Cubes");
         {
-            for (int j = 0; j < rows; j++)
+            for (int i = 0; i < columns; i++)
             {
-                int columnCount = rows - j;
-                for (int k = 0; k < columnCount; k++)
+                for (int j = 0; j < rows; j++)
                 {
-                    TrModel cube = new($"Cube {models.Count}", [cubeMesh], diffusePixelLevelInstancedMat);
-                    cube.Transform.Position = new Vector3D<float>((-columnCount * 0.5f) + k, j + 0.5f, (i - (columns * 0.5f)) * 4.0f);
+                    int columnCount = rows - j;
+                    for (int k = 0; k < columnCount; k++)
+                    {
+                        TrModel cube = new($"Cube {models.Count}", [cubeMesh], diffusePixelLevelInstancedMat);
+                        cube.Transform.Position = new Vector3D<float>((-columnCount * 0.5f) + k, j + 0.5f, (i - (columns * 0.5f)) * 4.0f);
 
-                    models.Add(cube);
+                        models.Add(cube);
 
-                    SceneController.Add(cube);
+                        SceneController.Add(cube);
+                    }
                 }
             }
         }
+        SceneController.EndGroup();
 
         diffusePixelLevelInstancedMat.Diffuse = [.. models.Select(item => item.ColorId.ToSingle())];
 
@@ -153,7 +158,9 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
             models.Add(model);
 
+            SceneController.BeginGroup("Spheres");
             SceneController.Add(model);
+            SceneController.EndGroup();
 
             Sphere shape = new(radius);
 
