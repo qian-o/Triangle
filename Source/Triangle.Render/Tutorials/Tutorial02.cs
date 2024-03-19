@@ -21,13 +21,13 @@ public class Tutorial02(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Loaded()
     {
-        star1 = new("Star 1", [Context.CreateStar()], new DiffuseVertexLevelMat(Context));
+        star1 = new("Star 1", [Context.GetStar()], new DiffuseVertexLevelMat(Context));
         star1.Transform.Translate(new Vector3D<float>(-2.0f, 0.0f, 0.0f));
 
-        star2 = new("Star 2", [Context.CreateStar()], new DiffusePixelLevelMat(Context));
+        star2 = new("Star 2", [Context.GetStar()], new DiffusePixelLevelMat(Context));
         star2.Transform.Translate(new Vector3D<float>(0.0f, 0.0f, 0.0f));
 
-        star3 = new("Star 3", [Context.CreateStar()], new HalfLambertMat(Context));
+        star3 = new("Star 3", [Context.GetStar()], new HalfLambertMat(Context));
         star3.Transform.Translate(new Vector3D<float>(2.0f, 0.0f, 0.0f));
 
         SceneController.Add(star1);

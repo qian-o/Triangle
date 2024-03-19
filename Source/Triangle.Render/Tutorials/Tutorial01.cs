@@ -18,7 +18,7 @@ public class Tutorial01(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Loaded()
     {
-        SceneController.Add(sphere = new("Sphere", [Context.CreateSphere()], new SimpleMat(Context)));
+        SceneController.Add(sphere = new("Sphere", [Context.GetSphere()], new SimpleMat(Context)));
     }
 
     protected override void UpdateScene(double deltaSeconds)

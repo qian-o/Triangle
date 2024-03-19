@@ -21,13 +21,13 @@ public class Tutorial03(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Loaded()
     {
-        capsule1 = new("Capsule 1", [Context.CreateCapsule()], new SpecularVertexLevelMat(Context));
+        capsule1 = new("Capsule 1", [Context.GetCapsule()], new SpecularVertexLevelMat(Context));
         capsule1.Transform.Translate(new Vector3D<float>(-3.0f, 0.0f, 0.0f));
 
-        capsule2 = new("Capsule 2", [Context.CreateCapsule()], new SpecularPixelLevelMat(Context));
+        capsule2 = new("Capsule 2", [Context.GetCapsule()], new SpecularPixelLevelMat(Context));
         capsule2.Transform.Translate(new Vector3D<float>(0.0f, 0.0f, 0.0f));
 
-        capsule3 = new("Capsule 3", [Context.CreateCapsule()], new BlinnPhongMat(Context));
+        capsule3 = new("Capsule 3", [Context.GetCapsule()], new BlinnPhongMat(Context));
         capsule3.Transform.Translate(new Vector3D<float>(3.0f, 0.0f, 0.0f));
 
         SceneController.Add(capsule1);

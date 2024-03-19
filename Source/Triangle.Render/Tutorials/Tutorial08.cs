@@ -55,7 +55,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
         dispatcher = new ThreadDispatcher(int.Max(1, Environment.ProcessorCount > 4 ? Environment.ProcessorCount - 2 : Environment.ProcessorCount - 1));
         simulation = Simulation.Create(bufferPool, new NarrowPhaseCallbacks(new SpringSettings(30.0f, 1.0f)), new PoseIntegratorCallbacks(new Vector3(0.0f, -10.0f, 0.0f)), new SolveDescription(8, 1));
 
-        cubeMesh = Context.CreateCube();
+        cubeMesh = Context.GetCube();
 
         diffusePixelLevelInstancedMat = new(Context);
 
@@ -152,7 +152,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
         {
             float radius = 0.5f + 5 * random.NextSingle();
 
-            TrMesh sphereMesh = Context.CreateSphere(radius);
+            TrMesh sphereMesh = Context.GetSphere(radius);
             TrModel model = new($"Sphere {models.Count}", [sphereMesh], diffusePixelLevelInstancedMat);
             model.Transform.Position = new Vector3D<float>(0.0f, 8.0f, 130.0f);
 
@@ -186,7 +186,6 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
         dispatcher.Dispose();
         bufferPool.Clear();
 
-        cubeMesh.Dispose();
         diffusePixelLevelInstancedMat.Dispose();
 
         foreach (TrModel model in models)

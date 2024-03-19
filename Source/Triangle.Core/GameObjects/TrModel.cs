@@ -100,11 +100,6 @@ public class TrModel(string name) : TrGameObject(name)
 
     protected override void Destroy(bool disposing = false)
     {
-        foreach (TrMesh mesh in _meshes)
-        {
-            mesh.Dispose();
-        }
-
         foreach (TrMaterial material in _materials)
         {
             material.Dispose();

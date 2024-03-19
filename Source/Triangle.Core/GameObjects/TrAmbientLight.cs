@@ -4,7 +4,7 @@ using Triangle.Core.Materials;
 
 namespace Triangle.Core.GameObjects;
 
-public class TrAmbientLight(TrContext context, TrCamera camera, string name) : TrModel(name, [context.CreateSphere()], new AmbientLightMat(context))
+public class TrAmbientLight(TrContext context, TrCamera camera, string name) : TrModel(name, [context.GetSphere()], new AmbientLightMat(context))
 {
     public Vector3D<float> Color { get; set; } = new(0.21176471f, 0.22745098f, 0.25882354f);
 

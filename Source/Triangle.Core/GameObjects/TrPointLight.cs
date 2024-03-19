@@ -4,7 +4,7 @@ using Triangle.Core.Materials;
 
 namespace Triangle.Core.GameObjects;
 
-public class TrPointLight(TrContext context, TrCamera camera, string name) : TrModel(name, [context.CreateSphere()], new PointLightMat(context))
+public class TrPointLight(TrContext context, TrCamera camera, string name) : TrModel(name, [context.GetSphere()], new PointLightMat(context))
 {
     public Vector3D<float> Color { get; set; } = new(1.0f, 0.9569f, 0.8392f);
 

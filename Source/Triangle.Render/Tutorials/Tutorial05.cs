@@ -26,7 +26,7 @@ public class Tutorial05(IInputContext input, TrContext context) : BaseTutorial(i
     {
         Scene.UseTools = false;
 
-        canvas = Context.CreateCanvas();
+        canvas = Context.GetCanvas();
 
         mats =
         [
@@ -55,7 +55,5 @@ public class Tutorial05(IInputContext input, TrContext context) : BaseTutorial(i
         {
             mat.Dispose();
         }
-
-        canvas.Dispose();
     }
 }

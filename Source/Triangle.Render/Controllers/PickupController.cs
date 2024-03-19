@@ -44,7 +44,7 @@ public class PickupController : Disposable
         _solidColorInstancedMat = new SolidColorInstancedMat(context);
 
         _pickupFrame = new TrFrame(context);
-        _pickupMesh = context.CreateCanvas();
+        _pickupMesh = context.GetCanvas();
         _edgeDetectionMat = new EdgeDetectionMat(context);
 
         UpdateModels();
@@ -163,7 +163,6 @@ public class PickupController : Disposable
         _solidColorInstancedMat.Dispose();
 
         _pickupFrame.Dispose();
-        _pickupMesh.Dispose();
         _edgeDetectionMat.Dispose();
     }
 }

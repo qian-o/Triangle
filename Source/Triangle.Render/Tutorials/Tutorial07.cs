@@ -54,8 +54,8 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Loaded()
     {
-        cubeMesh = Context.CreateCube(1.0f);
-        canvasMesh = Context.CreateCanvas();
+        cubeMesh = Context.GetCube(1.0f);
+        canvasMesh = Context.GetCanvas();
 
         equirectangularToCubemapMat = new(Context);
         irradianceConvolutionMat = new(Context);
@@ -114,7 +114,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
                 BRDF = brdfLUTT
             };
 
-            spheres[i] = new($"Sphere [{directory.Name}]", [Context.CreateSphere()], mat);
+            spheres[i] = new($"Sphere [{directory.Name}]", [Context.GetSphere()], mat);
             spheres[i].Transform.Translate(new Vector3D<float>(-4.0f + (i * 2.0f), 0.0f, 0.0f));
 
             SceneController.Add(spheres[i]);
@@ -162,9 +162,6 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Destroy(bool disposing = false)
     {
-        cubeMesh.Dispose();
-        canvasMesh.Dispose();
-
         equirectangularToCubemapMat.Dispose();
         irradianceConvolutionMat.Dispose();
         prefilterMat.Dispose();
