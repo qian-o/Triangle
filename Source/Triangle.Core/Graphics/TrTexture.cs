@@ -99,17 +99,6 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         UpdateParameters();
     }
 
-    public void SubWrite(int x, int y, uint width, uint height, TrPixelFormat pixelFormat, void* data)
-    {
-        GL gl = Context.GL;
-
-        (GLEnum _, GLEnum Format, GLEnum Type) = pixelFormat.ToGL();
-
-        gl.BindTexture(GLEnum.Texture2D, Handle);
-        gl.TexSubImage2D(GLEnum.Texture2D, 0, x, y, width, height, Format, Type, data);
-        gl.BindTexture(GLEnum.Texture2D, 0);
-    }
-
     public void Clear(uint width, uint height, TrPixelFormat pixelFormat)
     {
         Width = width;
