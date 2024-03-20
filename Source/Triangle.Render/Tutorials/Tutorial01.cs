@@ -27,7 +27,7 @@ public class Tutorial01(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        sphere.Render(GetSceneParameters());
+        sphere.Render(Parameters);
     }
 
     protected override void Destroy(bool disposing = false)

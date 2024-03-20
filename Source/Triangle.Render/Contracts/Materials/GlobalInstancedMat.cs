@@ -73,12 +73,12 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
     {
         (TrModel Model, ReadOnlyCollection<TrMesh> Meshes)[] map = [.. models.Select(item => (item, item.Meshes))];
 
-        List<TrModel> drawModels = new(map.Length);
-        List<int> indices = new(map.Length);
-        List<TrMesh> meshes = new(map.Length);
-
         foreach (string name in map.SelectMany(item => item.Meshes).Select(item => item.Name).Distinct())
         {
+            List<TrModel> drawModels = new(map.Length);
+            List<int> indices = new(map.Length);
+            List<TrMesh> meshes = new(map.Length);
+
             for (int i = 0; i < map.Length; i++)
             {
                 if (map[i].Meshes.FirstOrDefault(item => item.Name == name) is TrMesh mesh)
@@ -93,10 +93,6 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
             UpdateSampler([.. indices]);
 
             Draw([.. meshes], parameters);
-
-            drawModels.Clear();
-            indices.Clear();
-            meshes.Clear();
         }
     }
 }

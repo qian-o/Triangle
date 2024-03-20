@@ -58,6 +58,12 @@ public abstract class BaseTutorial : ITutorial
         SceneController.Add(_ambientLight);
         SceneController.Add(_directionalLight);
 
+        Parameters = new(Scene.Camera,
+                         Scene.SceneData,
+                         _ambientLight,
+                         _directionalLight,
+                         [.. _pointLights]);
+
         Loaded();
     }
 
@@ -76,6 +82,8 @@ public abstract class BaseTutorial : ITutorial
 
     public PickupController PickupController { get; }
 
+    protected GlobalParameters Parameters { get; }
+
     #region Materials
     protected SkyMat SkyMat { get; }
 
@@ -84,6 +92,9 @@ public abstract class BaseTutorial : ITutorial
 
     public void Update(double deltaSeconds)
     {
+        Parameters.SceneData = Scene.SceneData;
+        Parameters.PointLights = [.. _pointLights];
+
         Scene.Update(deltaSeconds);
 
         UpdateScene(deltaSeconds);
@@ -98,8 +109,6 @@ public abstract class BaseTutorial : ITutorial
             return;
         }
 
-        GlobalParameters parameters = GetSceneParameters();
-
         Scene.Begin();
         {
             Context.Clear(new Vector4D<float>(0.2f, 0.2f, 0.2f, 1.0f));
@@ -110,14 +119,14 @@ public abstract class BaseTutorial : ITutorial
             _directionalLight.Render();
             _pointLights.ForEach(light => light.Render());
 
-            _sky.Render(parameters);
-            _grid.Render(parameters);
+            _sky.Render(Parameters);
+            _grid.Render(Parameters);
 
-            PickupController.PostEffects(parameters);
+            PickupController.PostEffects(Parameters);
         }
         Scene.End();
 
-        PickupController.Render(parameters);
+        PickupController.Render(Parameters);
     }
 
     public virtual void ImGuiRender()
@@ -144,15 +153,6 @@ public abstract class BaseTutorial : ITutorial
         _pointLights.Add(pointLight);
 
         SceneController.Add(pointLight);
-    }
-
-    protected GlobalParameters GetSceneParameters()
-    {
-        return new(Scene.Camera,
-                   Scene.SceneData,
-                   _ambientLight,
-                   _directionalLight,
-                   [.. _pointLights]);
     }
 
     protected abstract void Destroy(bool disposing = false);

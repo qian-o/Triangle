@@ -177,7 +177,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        diffusePixelLevelInstancedMat.Draw([.. models], GetSceneParameters());
+        diffusePixelLevelInstancedMat.Draw([.. models], Parameters);
     }
 
     protected override void Destroy(bool disposing = false)

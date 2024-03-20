@@ -41,9 +41,9 @@ public class Tutorial02(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        star1.Render(GetSceneParameters());
-        star2.Render(GetSceneParameters());
-        star3.Render(GetSceneParameters());
+        star1.Render(Parameters);
+        star2.Render(Parameters);
+        star3.Render(Parameters);
     }
 
     protected override void Destroy(bool disposing = false)

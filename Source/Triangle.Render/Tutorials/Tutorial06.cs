@@ -33,7 +33,7 @@ public class Tutorial06(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        knot.Render(GetSceneParameters());
+        knot.Render(Parameters);
     }
 
     protected override void Destroy(bool disposing = false)

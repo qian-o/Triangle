@@ -3,7 +3,7 @@ using Triangle.Core.Structs;
 
 namespace Triangle.Render.Models;
 
-public class GlobalParameters(TrCamera camera, TrSceneData sceneData, TrAmbientLight ambientLight, TrDirectionalLight directionalLight, TrPointLight[]? pointLights = null)
+public class GlobalParameters(TrCamera camera, TrSceneData sceneData, TrAmbientLight ambientLight, TrDirectionalLight directionalLight, TrPointLight[] pointLights)
 {
     public TrCamera Camera { get; set; } = camera;
 
@@ -13,7 +13,5 @@ public class GlobalParameters(TrCamera camera, TrSceneData sceneData, TrAmbientL
 
     public TrDirectionalLight DirectionalLight { get; set; } = directionalLight;
 
-    public TrPointLight[] PointLights { get; set; } = pointLights ?? [];
-
-    public object? Tag { get; set; }
+    public TrPointLight[] PointLights { get; set; } = pointLights;
 }

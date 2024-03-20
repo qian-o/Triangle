@@ -46,10 +46,10 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        capsule1.Render(GetSceneParameters());
-        capsule2.Render(GetSceneParameters());
-        capsule3.Render(GetSceneParameters());
-        capsule4.Render(GetSceneParameters());
+        capsule1.Render(Parameters);
+        capsule2.Render(Parameters);
+        capsule3.Render(Parameters);
+        capsule4.Render(Parameters);
     }
 
     protected override void Destroy(bool disposing = false)
