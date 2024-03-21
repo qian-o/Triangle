@@ -82,5 +82,6 @@ public class Tutorial09(IInputContext input, TrContext context) : BaseTutorial(i
         depthFrame.Dispose();
 
         shadowMappingDepthMat.Dispose();
+        diffusePixelLevelMat.Dispose();
     }
 }
