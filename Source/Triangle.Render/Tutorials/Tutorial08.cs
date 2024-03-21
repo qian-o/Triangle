@@ -65,7 +65,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
         singleTextureMat = new(Context)
         {
             Channel0 = TrTextureManager.Texture("Resources/Textures/wood_floor.jpg".Path()),
-            Channel0ST = new Vector4D<float>(80.0f, 40.0f, 0.0f, 0.0f)
+            Channel0ST = new Vector4D<float>(60.0f, 40.0f, 0.0f, 0.0f)
         };
         diffusePixelLevelInstancedMat = new(Context);
 
@@ -203,6 +203,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
         dispatcher.Dispose();
         bufferPool.Clear();
 
+        singleTextureMat.Dispose();
         diffusePixelLevelInstancedMat.Dispose();
 
         foreach (TrModel model in physicsModels)
