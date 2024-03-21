@@ -199,16 +199,12 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Destroy(bool disposing = false)
     {
+        map.Clear();
         simulation.Dispose();
         dispatcher.Dispose();
         bufferPool.Clear();
 
         singleTextureMat.Dispose();
         diffusePixelLevelInstancedMat.Dispose();
-
-        foreach (TrModel model in physicsModels)
-        {
-            model.Dispose();
-        }
     }
 }

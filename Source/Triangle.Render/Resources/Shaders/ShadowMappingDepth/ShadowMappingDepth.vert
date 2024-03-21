@@ -7,11 +7,11 @@
 
 layout(std140, binding = UNIFORM_BUFFER_BINDING_START + 0) uniform Parameters
 {
-    mat4 LightSpaceMatrix;
+    mat4 LightSpace;
 }
 Uni_Parameters;
 
 void main()
 {
-    gl_Position = Uni_Parameters.LightSpaceMatrix * Uni_Transforms.ObjectToWorld * vec4(In_Position, 1.0);
+    gl_Position = Uni_Parameters.LightSpace * Uni_Transforms.ObjectToWorld * vec4(In_Position, 1.0);
 }

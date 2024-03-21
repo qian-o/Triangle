@@ -12,13 +12,19 @@ namespace Triangle.Render.Tutorials;
 [Description("Use simple material to render.")]
 public class Tutorial01(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
+    #region Materials
+    private SimpleMat simpleMat = null!;
+    #endregion
+
     #region Models
     private TrModel sphere = null!;
     #endregion
 
     protected override void Loaded()
     {
-        SceneController.Add(sphere = new("Sphere", [Context.GetSphere()], new SimpleMat(Context)));
+        simpleMat = new SimpleMat(Context);
+
+        SceneController.Add(sphere = new("Sphere", [Context.GetSphere()], simpleMat));
     }
 
     protected override void UpdateScene(double deltaSeconds)
@@ -32,6 +38,6 @@ public class Tutorial01(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Destroy(bool disposing = false)
     {
-        sphere.Dispose();
+        simpleMat.Dispose();
     }
 }

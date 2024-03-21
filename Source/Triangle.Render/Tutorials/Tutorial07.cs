@@ -28,6 +28,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
     private IrradianceConvolutionMat irradianceConvolutionMat = null!;
     private PrefilterMat prefilterMat = null!;
     private BRDFMat brdfMat = null!;
+    private PBRMat[] pbrMats = null!;
     #endregion
 
     #region Capture Skybox framebuffer
@@ -94,6 +95,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         DirectoryInfo pbrDir = new("Resources/Textures/PBR".Path());
         DirectoryInfo[] pbrMaterials = pbrDir.GetDirectories();
 
+        pbrMats = new PBRMat[pbrMaterials.Length];
         spheres = new TrModel[pbrMaterials.Length];
         for (int i = 0; i < pbrMaterials.Length; i++)
         {
@@ -111,6 +113,7 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
                 MaxMipLevels = MaxMipLevels,
                 BRDF = brdfLUTT
             };
+            pbrMats[i] = mat;
 
             spheres[i] = new($"Sphere [{directory.Name}]", [Context.GetSphere()], mat);
             spheres[i].Transform.Translate(new Vector3D<float>(-4.0f + (i * 2.0f), 0.0f, 0.0f));
@@ -164,6 +167,10 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         irradianceConvolutionMat.Dispose();
         prefilterMat.Dispose();
         brdfMat.Dispose();
+        foreach (PBRMat pbrMat in pbrMats)
+        {
+            pbrMat.Dispose();
+        }
 
         skyPositiveX.Dispose();
         skyNegativeX.Dispose();
@@ -177,11 +184,6 @@ public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(i
         irradianceMap.Dispose();
         prefilteredMap.Dispose();
         brdfLUTT.Dispose();
-
-        foreach (TrModel sphere in spheres)
-        {
-            sphere.Dispose();
-        }
     }
 
     private void TryGeneratePBRMaps()

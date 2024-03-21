@@ -166,8 +166,9 @@ public abstract class BaseTutorial : ITutorial
                 Destroy(disposing);
             }
 
-            _sky.Dispose();
-            _grid.Dispose();
+            SkyMat.Dispose();
+            GridMat.Dispose();
+
             _ambientLight.Dispose();
             _directionalLight.Dispose();
             _pointLights.ForEach(light => light.Dispose());

@@ -2,23 +2,25 @@
 
 public abstract class Disposable : IDisposable
 {
-    private bool disposedValue;
+    private volatile uint _isDisposed;
 
     ~Disposable()
     {
         Dispose(disposing: false);
     }
 
+    public bool IsDisposed => _isDisposed != 0;
+
     protected abstract void Destroy(bool disposing = false);
 
     protected virtual void Dispose(bool disposing)
     {
-        if (!disposedValue)
+        if (Interlocked.Exchange(ref _isDisposed, 1) != 0)
         {
-            Destroy(disposing);
-
-            disposedValue = true;
+            return;
         }
+
+        Destroy(disposing);
     }
 
     public void Dispose()

@@ -1,4 +1,5 @@
 ﻿using Silk.NET.Maths;
+using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Core.Materials;
 
@@ -20,5 +21,15 @@ public class TrAmbientLight(TrContext context, TrCamera camera, string name) : T
         ImGuiHelper.ColorEdit3("Color", ref c);
 
         Color = c;
+    }
+
+    protected override void Destroy(bool disposing = false)
+    {
+        foreach (TrMaterial material in Materials)
+        {
+            material.Dispose();
+        }
+
+        base.Destroy(disposing);
     }
 }

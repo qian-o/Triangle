@@ -9,6 +9,8 @@ namespace Triangle.Core.Graphics;
 
 public unsafe class TrFrame : TrGraphics<TrContext>
 {
+    private uint beforeFrameBuffer;
+
     public TrFrame(TrContext context) : base(context)
     {
         GL gl = Context.GL;
@@ -94,6 +96,9 @@ public unsafe class TrFrame : TrGraphics<TrContext>
     {
         GL gl = Context.GL;
 
+        gl.GetInteger(GLEnum.FramebufferBinding, out int currentFrameBuffer);
+        beforeFrameBuffer = (uint)currentFrameBuffer;
+
         gl.BindFramebuffer(GLEnum.Framebuffer, Framebuffer);
 
         gl.Viewport(0, 0, (uint)Width, (uint)Height);
@@ -103,7 +108,7 @@ public unsafe class TrFrame : TrGraphics<TrContext>
     {
         GL gl = Context.GL;
 
-        gl.BindFramebuffer(GLEnum.Framebuffer, 0);
+        gl.BindFramebuffer(GLEnum.Framebuffer, beforeFrameBuffer);
 
         gl.BlitNamedFramebuffer(Framebuffer, Handle, 0, 0, Width, Height, 0, 0, Width, Height, (uint)GLEnum.ColorBufferBit, GLEnum.Nearest);
     }

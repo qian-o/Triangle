@@ -13,6 +13,12 @@ namespace Triangle.Render.Tutorials;
 [Description("Use specular to render.")]
 public class Tutorial03(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
+    #region Materials
+    private SpecularVertexLevelMat specularVertexLevelMat = null!;
+    private SpecularPixelLevelMat specularPixelLevelMat = null!;
+    private BlinnPhongMat blinnPhongMat = null!;
+    #endregion
+
     #region Models
     private TrModel capsule1 = null!;
     private TrModel capsule2 = null!;
@@ -21,13 +27,17 @@ public class Tutorial03(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Loaded()
     {
-        capsule1 = new("Capsule 1", [Context.GetCapsule()], new SpecularVertexLevelMat(Context));
+        specularVertexLevelMat = new(Context);
+        specularPixelLevelMat = new(Context);
+        blinnPhongMat = new(Context);
+
+        capsule1 = new("Capsule 1", [Context.GetCapsule()], specularVertexLevelMat);
         capsule1.Transform.Translate(new Vector3D<float>(-3.0f, 0.0f, 0.0f));
 
-        capsule2 = new("Capsule 2", [Context.GetCapsule()], new SpecularPixelLevelMat(Context));
+        capsule2 = new("Capsule 2", [Context.GetCapsule()], specularPixelLevelMat);
         capsule2.Transform.Translate(new Vector3D<float>(0.0f, 0.0f, 0.0f));
 
-        capsule3 = new("Capsule 3", [Context.GetCapsule()], new BlinnPhongMat(Context));
+        capsule3 = new("Capsule 3", [Context.GetCapsule()], blinnPhongMat);
         capsule3.Transform.Translate(new Vector3D<float>(3.0f, 0.0f, 0.0f));
 
         SceneController.Add(capsule1);
@@ -48,8 +58,8 @@ public class Tutorial03(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Destroy(bool disposing = false)
     {
-        capsule1.Dispose();
-        capsule2.Dispose();
-        capsule3.Dispose();
+        specularVertexLevelMat.Dispose();
+        specularPixelLevelMat.Dispose();
+        blinnPhongMat.Dispose();
     }
 }

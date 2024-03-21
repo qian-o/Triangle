@@ -1,4 +1,5 @@
 ﻿using Silk.NET.Maths;
+using Triangle.Core.Graphics;
 using Triangle.Core.Helpers;
 using Triangle.Core.Materials;
 
@@ -30,5 +31,15 @@ public class TrPointLight(TrContext context, TrCamera camera, string name) : TrM
         Color = c;
         Intensity = i;
         Range = r;
+    }
+
+    protected override void Destroy(bool disposing = false)
+    {
+        foreach (TrMaterial material in Materials)
+        {
+            material.Dispose();
+        }
+
+        base.Destroy(disposing);
     }
 }

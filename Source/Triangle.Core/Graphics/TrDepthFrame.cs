@@ -5,6 +5,8 @@ namespace Triangle.Core.Graphics;
 
 public unsafe class TrDepthFrame : TrGraphics<TrContext>
 {
+    private uint beforeFrameBuffer;
+
     public TrDepthFrame(TrContext context) : base(context)
     {
         GL gl = Context.GL;
@@ -62,6 +64,9 @@ public unsafe class TrDepthFrame : TrGraphics<TrContext>
     {
         GL gl = Context.GL;
 
+        gl.GetInteger(GLEnum.FramebufferBinding, out int currentFrameBuffer);
+        beforeFrameBuffer = (uint)currentFrameBuffer;
+
         gl.BindFramebuffer(GLEnum.Framebuffer, Handle);
 
         gl.Viewport(0, 0, (uint)Width, (uint)Height);
@@ -71,6 +76,6 @@ public unsafe class TrDepthFrame : TrGraphics<TrContext>
     {
         GL gl = Context.GL;
 
-        gl.BindFramebuffer(GLEnum.Framebuffer, 0);
+        gl.BindFramebuffer(GLEnum.Framebuffer, beforeFrameBuffer);
     }
 }

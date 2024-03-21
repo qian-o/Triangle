@@ -13,6 +13,13 @@ namespace Triangle.Render.Tutorials;
 [Description("Use 2D texture to render.")]
 public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
+    #region Materials
+    private SingleTextureMat singleTextureMat = null!;
+    private NormalMapWorldSpaceMat normalMapWorldSpaceMat = null!;
+    private NormalMapTangentSpaceMat normalMapTangentSpaceMat = null!;
+    private MaskTextureMat maskTextureMat = null!;
+    #endregion
+
     #region Models
     private TrModel capsule1 = null!;
     private TrModel capsule2 = null!;
@@ -22,16 +29,21 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Loaded()
     {
-        capsule1 = new("Capsule 1", [Context.GetCapsule()], new SingleTextureMat(Context));
+        singleTextureMat = new(Context);
+        normalMapWorldSpaceMat = new(Context);
+        normalMapTangentSpaceMat = new(Context);
+        maskTextureMat = new(Context);
+
+        capsule1 = new("Capsule 1", [Context.GetCapsule()], singleTextureMat);
         capsule1.Transform.Translate(new Vector3D<float>(-4.5f, 0.0f, 0.0f));
 
-        capsule2 = new("Capsule 2", [Context.GetCapsule()], new NormalMapWorldSpaceMat(Context));
+        capsule2 = new("Capsule 2", [Context.GetCapsule()], normalMapWorldSpaceMat);
         capsule2.Transform.Translate(new Vector3D<float>(-1.5f, 0.0f, 0.0f));
 
-        capsule3 = new("Capsule 3", [Context.GetCapsule()], new NormalMapTangentSpaceMat(Context));
+        capsule3 = new("Capsule 3", [Context.GetCapsule()], normalMapTangentSpaceMat);
         capsule3.Transform.Translate(new Vector3D<float>(1.5f, 0.0f, 0.0f));
 
-        capsule4 = new("Capsule 4", [Context.GetCapsule()], new MaskTextureMat(Context));
+        capsule4 = new("Capsule 4", [Context.GetCapsule()], maskTextureMat);
         capsule4.Transform.Translate(new Vector3D<float>(4.5f, 0.0f, 0.0f));
 
         SceneController.Add(capsule1);
@@ -54,9 +66,9 @@ public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Destroy(bool disposing = false)
     {
-        capsule1.Dispose();
-        capsule2.Dispose();
-        capsule3.Dispose();
-        capsule4.Dispose();
+        singleTextureMat.Dispose();
+        normalMapWorldSpaceMat.Dispose();
+        normalMapTangentSpaceMat.Dispose();
+        maskTextureMat.Dispose();
     }
 }

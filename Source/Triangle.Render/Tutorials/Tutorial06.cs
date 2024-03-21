@@ -13,13 +13,19 @@ namespace Triangle.Render.Tutorials;
 [Description("Ramp texture achieves stylized shading.")]
 public class Tutorial06(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
+    #region Materials
+    private RampTextureMat rampTextureMat = null!;
+    #endregion
+
     #region Models
     private TrModel knot = null!;
     #endregion
 
     protected override void Loaded()
     {
-        knot = new("Knot", Context.AssimpParsing("Resources/Models/Knot.FBX".Path()), new RampTextureMat(Context));
+        rampTextureMat = new(Context);
+
+        knot = new("Knot", Context.AssimpParsing("Resources/Models/Knot.FBX".Path()), rampTextureMat);
         knot.Transform.Translate(new Vector3D<float>(0.0f, 2.0f, 0.0f));
         knot.Transform.Rotate(new Vector3D<float>(90.0f, 180.0f, 0.0f));
         knot.Transform.Scaled(new Vector3D<float>(0.05f, 0.05f, 0.05f));
@@ -38,6 +44,6 @@ public class Tutorial06(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Destroy(bool disposing = false)
     {
-        knot.Dispose();
+        rampTextureMat.Dispose();
     }
 }
