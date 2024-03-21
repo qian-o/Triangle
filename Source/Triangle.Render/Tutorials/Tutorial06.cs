@@ -9,8 +9,8 @@ using Triangle.Render.Materials.Chapter7;
 
 namespace Triangle.Render.Tutorials;
 
-[DisplayName("Ramp 贴图")]
-[Description("Ramp 贴图实现风格化渲染。")]
+[DisplayName("Ramp Texture")]
+[Description("Ramp texture achieves stylized shading.")]
 public class Tutorial06(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     #region Models

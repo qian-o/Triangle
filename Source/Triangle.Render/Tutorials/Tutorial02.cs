@@ -9,8 +9,8 @@ using Triangle.Render.Materials.Chapter6;
 
 namespace Triangle.Render.Tutorials;
 
-[DisplayName("漫反射")]
-[Description("使用 Diffuse 相关材质渲染五角星。")]
+[DisplayName("Diffuse")]
+[Description("Use diffuse to render.")]
 public class Tutorial02(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     #region Models

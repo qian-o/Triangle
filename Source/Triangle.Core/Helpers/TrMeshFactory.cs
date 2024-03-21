@@ -158,6 +158,30 @@ public static unsafe class TrMeshFactory
         return mesh;
     }
 
+    public static TrMesh GetPlane(this TrContext context, float size = 0.5f)
+    {
+        string name = $"Plane";
+
+        if (!_meshes.TryGetValue(name, out TrMesh? mesh))
+        {
+            TrVertex[] vertices =
+            [
+                new(new(-size, 0.0f, -size), new(0.0f, 1.0f, 0.0f), texCoord: new(0.0f, 1.0f)),
+                new(new(size, 0.0f, size), new(0.0f, 1.0f, 0.0f), texCoord: new(1.0f, 0.0f)),
+                new(new(size, 0.0f, -size), new(0.0f, 1.0f, 0.0f), texCoord: new(1.0f, 1.0f)),
+                new(new(size, 0.0f, size), new(0.0f, 1.0f, 0.0f), texCoord: new(1.0f, 0.0f)),
+                new(new(-size, 0.0f, -size), new(0.0f, 1.0f, 0.0f), texCoord: new(0.0f, 1.0f)),
+                new(new(-size, 0.0f, size), new(0.0f, 1.0f, 0.0f), texCoord: new(0.0f, 0.0f))
+            ];
+
+            mesh = new(context, name, vertices, [.. vertices.Select((a, b) => (uint)b)]);
+
+            _meshes.Add(name, mesh);
+        }
+
+        return mesh;
+    }
+
     public static TrMesh[] AssimpParsing(this TrContext context, string file)
     {
         if (!_models.TryGetValue(file, out TrMesh[]? meshes))

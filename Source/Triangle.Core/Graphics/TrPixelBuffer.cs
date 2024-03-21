@@ -15,10 +15,15 @@ public unsafe class TrPixelBuffer : TrGraphics<TrContext>
         Width = width;
         Height = height;
         PixelFormat = pixelFormat;
-        Texture = new TrTexture(Context);
+        Texture = new TrTexture(Context)
+        {
+            TextureMinFilter = TrTextureFilter.Nearest,
+            TextureMagFilter = TrTextureFilter.Nearest,
+            TextureWrap = TrTextureWrap.ClampToEdge
+        };
+        Texture.UpdateParameters();
 
         Texture.Clear((uint)Width, (uint)Height, PixelFormat);
-
         gl.NamedBufferStorage(Handle, (uint)(Width * Height * PixelFormat.Size()), null, (uint)GLEnum.DynamicStorageBit);
     }
 

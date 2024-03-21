@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Hexa.NET.ImGui;
 using Silk.NET.OpenGL;
 using StbiSharp;
@@ -15,7 +14,7 @@ public unsafe class TrTexture : TrGraphics<TrContext>
     {
         GL gl = Context.GL;
 
-        Handle = gl.GenTexture();
+        Handle = gl.CreateTexture(GLEnum.Texture2D);
         Name = $"Texture {Handle}";
 
         UpdateParameters();
@@ -69,7 +68,7 @@ public unsafe class TrTexture : TrGraphics<TrContext>
             {
                 Write(width, height, pixelFormat, (void*)data);
 
-                Marshal.FreeHGlobal(data);
+                Stbi.Free((void*)data);
             });
         });
     }
@@ -94,9 +93,18 @@ public unsafe class TrTexture : TrGraphics<TrContext>
 
         (GLEnum Target, GLEnum Format, GLEnum Type) = PixelFormat.ToGL();
 
-        gl.BindTexture(GLEnum.Texture2D, Handle);
-        gl.TexImage2D(GLEnum.Texture2D, 0, (int)Target, Width, Height, 0, Format, Type, data);
-        gl.BindTexture(GLEnum.Texture2D, 0);
+        uint levels = 1;
+        if (IsGenerateMipmap)
+        {
+            levels = (uint)MathF.Floor(MathF.Log2(MathF.Max(Width, Height))) + 1;
+        }
+
+        UnpackAlignment(width);
+        {
+            gl.TextureStorage2D(Handle, levels, Target, Width, Height);
+            gl.TextureSubImage2D(Handle, 0, 0, 0, Width, Height, Format, Type, data);
+        }
+        ReUnpackAlignment();
 
         UpdateParameters();
     }
@@ -107,7 +115,11 @@ public unsafe class TrTexture : TrGraphics<TrContext>
 
         (GLEnum _, GLEnum Format, GLEnum Type) = pixelFormat.ToGL();
 
-        gl.TextureSubImage2D(Handle, 0, x, y, width, height, Format, Type, data);
+        UnpackAlignment(width);
+        {
+            gl.TextureSubImage2D(Handle, 0, x, y, width, height, Format, Type, data);
+        }
+        ReUnpackAlignment();
     }
 
     public void SubWrite(int x, int y, uint width, uint height, TrPixelFormat pixelFormat, TrPixelBuffer pixelBuffer)
@@ -116,9 +128,13 @@ public unsafe class TrTexture : TrGraphics<TrContext>
 
         (GLEnum _, GLEnum Format, GLEnum Type) = pixelFormat.ToGL();
 
-        gl.BindBuffer(GLEnum.PixelUnpackBuffer, pixelBuffer.Handle);
-        gl.TextureSubImage2D(Handle, 0, x, y, width, height, Format, Type, (void*)0);
-        gl.BindBuffer(GLEnum.PixelUnpackBuffer, 0);
+        UnpackAlignment(width);
+        {
+            gl.BindBuffer(GLEnum.PixelUnpackBuffer, pixelBuffer.Handle);
+            gl.TextureSubImage2D(Handle, 0, x, y, width, height, Format, Type, (void*)0);
+            gl.BindBuffer(GLEnum.PixelUnpackBuffer, 0);
+        }
+        ReUnpackAlignment();
     }
 
     public void Clear(uint width, uint height, TrPixelFormat pixelFormat)
@@ -266,13 +282,21 @@ public unsafe class TrTexture : TrGraphics<TrContext>
                 }
             }
 
-            nint data = Marshal.AllocHGlobal(width * height * pixelFormat.Size());
-
-            Unsafe.CopyBlock((void*)data, pixels, (uint)(width * height * pixelFormat.Size()));
-
-            Stbi.Free(pixels);
-
-            return ((uint)width, (uint)height, pixelFormat, data);
+            return ((uint)width, (uint)height, pixelFormat, (nint)pixels);
         }
+    }
+
+    private void UnpackAlignment(uint width)
+    {
+        GL gl = Context.GL;
+
+        gl.PixelStore(GLEnum.UnpackAlignment, width % 4 == 0 ? 4 : 1);
+    }
+
+    private void ReUnpackAlignment()
+    {
+        GL gl = Context.GL;
+
+        gl.PixelStore(GLEnum.UnpackAlignment, 4);
     }
 }

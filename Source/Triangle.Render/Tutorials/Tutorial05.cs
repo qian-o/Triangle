@@ -10,7 +10,7 @@ using Triangle.Render.Materials.Shadertoy;
 namespace Triangle.Render.Tutorials;
 
 [DisplayName("Shadertoy")]
-[Description("从 Shadertoy 上移植的着色器, 鼠标中键按下切换着色器。")]
+[Description("Shaders ported from Shadertoy, middle-click to switch shaders.")]
 public class Tutorial05(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     #region Meshes

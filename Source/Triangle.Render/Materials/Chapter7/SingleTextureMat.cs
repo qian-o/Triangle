@@ -38,7 +38,7 @@ public class SingleTextureMat(TrContext context) : GlobalMat(context, "SingleTex
     {
         uboMaterial = new(Context);
 
-        Channel0 = TrTextureManager.Texture("Resources/Textures/Chapter07/Brick_Diffuse.JPG".Path());
+        Channel0 ??= TrTextureManager.Texture("Resources/Textures/Chapter07/Brick_Diffuse.JPG".Path());
 
         using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/Chapter7/SingleTexture/SingleTexture.vert.spv".Path());
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/Chapter7/SingleTexture/SingleTexture.frag.spv".Path());

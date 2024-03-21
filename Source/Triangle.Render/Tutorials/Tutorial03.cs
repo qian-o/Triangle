@@ -9,8 +9,8 @@ using Triangle.Render.Materials.Chapter6;
 
 namespace Triangle.Render.Tutorials;
 
-[DisplayName("高光反射")]
-[Description("使用 Specular 相关材质渲染胶囊体。")]
+[DisplayName("Specular")]
+[Description("Use specular to render.")]
 public class Tutorial03(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     #region Models

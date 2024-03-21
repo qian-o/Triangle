@@ -16,11 +16,12 @@ using Triangle.Core.Helpers;
 using Triangle.Core.Physics;
 using Triangle.Render.Contracts.Tutorials;
 using Triangle.Render.Materials.Chapter6;
+using Triangle.Render.Materials.Chapter7;
 
 namespace Triangle.Render.Tutorials;
 
-[DisplayName("物理模拟")]
-[Description("演示如何使用 BepuPhysics 进行物理模拟。")]
+[DisplayName("Physics Simulation")]
+[Description("Demonstrate how to use BepuPhysics to simulate physics.")]
 public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     public const float TimestepDuration = 1.0f / 60.0f;
@@ -33,15 +34,18 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
     #endregion
 
     #region Meshes
+    private TrMesh floorMesh = null!;
     private TrMesh cubeMesh = null!;
     #endregion
 
     #region Materials
+    private SingleTextureMat singleTextureMat = null!;
     private DiffusePixelLevelInstancedMat diffusePixelLevelInstancedMat = null!;
     #endregion
 
     #region Models
-    private List<TrModel> models = null!;
+    private TrModel floor = null!;
+    private List<TrModel> physicsModels = null!;
     #endregion
 
     private Random random = null!;
@@ -55,11 +59,22 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
         dispatcher = new ThreadDispatcher(int.Max(1, Environment.ProcessorCount > 4 ? Environment.ProcessorCount - 2 : Environment.ProcessorCount - 1));
         simulation = Simulation.Create(bufferPool, new NarrowPhaseCallbacks(new SpringSettings(30.0f, 1.0f)), new PoseIntegratorCallbacks(new Vector3(0.0f, -10.0f, 0.0f)), new SolveDescription(8, 1));
 
+        floorMesh = Context.GetPlane();
         cubeMesh = Context.GetCube();
 
+        singleTextureMat = new(Context)
+        {
+            Channel0 = TrTextureManager.Texture("Resources/Textures/wood_floor.jpg".Path()),
+            Channel0ST = new Vector4D<float>(80.0f, 40.0f, 0.0f, 0.0f)
+        };
         diffusePixelLevelInstancedMat = new(Context);
 
-        models = [];
+        floor = new("Floor", [floorMesh], singleTextureMat);
+        floor.Transform.Scaled(new Vector3D<float>(250.0f, 1.0f, 250.0f));
+
+        SceneController.Add(floor);
+
+        physicsModels = [];
 
         const int columns = 40;
         const int rows = 20;
@@ -72,10 +87,10 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
                     int columnCount = rows - j;
                     for (int k = 0; k < columnCount; k++)
                     {
-                        TrModel cube = new($"Cube {models.Count}", [cubeMesh], diffusePixelLevelInstancedMat);
+                        TrModel cube = new($"Cube {physicsModels.Count}", [cubeMesh], diffusePixelLevelInstancedMat);
                         cube.Transform.Position = new Vector3D<float>((-columnCount * 0.5f) + k, j + 0.5f, (i - (columns * 0.5f)) * 4.0f);
 
-                        models.Add(cube);
+                        physicsModels.Add(cube);
 
                         SceneController.Add(cube);
                     }
@@ -84,11 +99,11 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
         }
         SceneController.EndGroup();
 
-        diffusePixelLevelInstancedMat.Diffuse = [.. models.Select(item => item.ColorId.ToSingle())];
+        diffusePixelLevelInstancedMat.Diffuse = [.. physicsModels.Select(item => item.ColorId.ToSingle())];
 
         // Physics scene building
         {
-            simulation.Statics.Add(new StaticDescription(new Vector3(0, -0.5f, 0), simulation.Shapes.Add(new Box(2500, 1, 2500))));
+            simulation.Statics.Add(new StaticDescription(new Vector3(0.0f, -0.5f, 0.0f), simulation.Shapes.Add(new Box(floor.Transform.Scale.X, 1.0f, floor.Transform.Scale.Z))));
 
             Box box = new(1.0f, 1.0f, 1.0f);
             BodyInertia bodyInertia = box.ComputeInertia(1.0f);
@@ -96,9 +111,9 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
             map = [];
 
-            for (int i = 0; i < models.Count; i++)
+            for (int i = 0; i < physicsModels.Count; i++)
             {
-                TrModel cube = models[i];
+                TrModel cube = physicsModels[i];
 
                 BodyHandle bodyHandle = simulation.Bodies.Add(BodyDescription.CreateDynamic(cube.Transform.Position.ToSystem(),
                                                                                             bodyInertia,
@@ -119,7 +134,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
         ImGui.SetCursorPos(new Vector2(10, size.Y));
 
-        ImGui.Text("按 Z 键添加球体");
+        ImGui.Text("Press 'Z' to add a sphere.");
     }
 
     protected override void UpdateScene(double deltaSeconds)
@@ -153,10 +168,10 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
             float radius = 0.5f + 5 * random.NextSingle();
 
             TrMesh sphereMesh = Context.GetSphere(radius);
-            TrModel model = new($"Sphere {models.Count}", [sphereMesh], diffusePixelLevelInstancedMat);
+            TrModel model = new($"Sphere {physicsModels.Count}", [sphereMesh], diffusePixelLevelInstancedMat);
             model.Transform.Position = new Vector3D<float>(0.0f, 8.0f, 130.0f);
 
-            models.Add(model);
+            physicsModels.Add(model);
 
             SceneController.BeginGroup("Spheres");
             SceneController.Add(model);
@@ -171,13 +186,15 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
                                                                                               shape));
             map.Add(model, bodyHandle);
 
-            diffusePixelLevelInstancedMat.Diffuse = [.. models.Select(item => item.ColorId.ToSingle())];
+            diffusePixelLevelInstancedMat.Diffuse = [.. physicsModels.Select(item => item.ColorId.ToSingle())];
         }
     }
 
     protected override void RenderScene(double deltaSeconds)
     {
-        diffusePixelLevelInstancedMat.Draw([.. models], Parameters);
+        floor.Render(Parameters);
+
+        diffusePixelLevelInstancedMat.Draw([.. physicsModels], Parameters);
     }
 
     protected override void Destroy(bool disposing = false)
@@ -188,7 +205,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
         diffusePixelLevelInstancedMat.Dispose();
 
-        foreach (TrModel model in models)
+        foreach (TrModel model in physicsModels)
         {
             model.Dispose();
         }

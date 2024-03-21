@@ -9,8 +9,8 @@ using Triangle.Render.Materials.Chapter7;
 
 namespace Triangle.Render.Tutorials;
 
-[DisplayName("2D 纹理")]
-[Description("使用 Texture 相关材质渲染胶囊体。")]
+[DisplayName("2D Texture")]
+[Description("Use 2D texture to render.")]
 public class Tutorial04(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     #region Models

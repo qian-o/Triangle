@@ -12,8 +12,8 @@ using Triangle.Render.Materials;
 
 namespace Triangle.Render.Tutorials;
 
-[DisplayName("PBR 渲染")]
-[Description("Physically Based Rendering (PBR) 渲染光照模型。")]
+[DisplayName("PBR with IBL")]
+[Description("Physically Based Rendering (PBR) with Image-Based Lighting (IBL).")]
 public class Tutorial07(IInputContext input, TrContext context) : BaseTutorial(input, context)
 {
     // PBR: Maximum number of mip levels for prefiltered map (0 to 4)
