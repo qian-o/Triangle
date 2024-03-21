@@ -74,11 +74,6 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         Samples = samples;
         PixelFormat = pixelFormat;
 
-        if (Handle == 0)
-        {
-            return;
-        }
-
         GL gl = Context.GL;
 
         Texture.Clear((uint)Width, (uint)Height, PixelFormat);

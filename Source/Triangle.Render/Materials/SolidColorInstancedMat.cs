@@ -10,7 +10,7 @@ namespace Triangle.Render.Materials;
 
 public unsafe class SolidColorInstancedMat(TrContext context) : GlobalInstancedMat(context, "SolidColorInstanced")
 {
-    private readonly TrTexture _colorSampler = new(context);
+    private readonly TrPixelBuffer _colorSampler = new(context, 1, MaxSamplerSize, TrPixelFormat.RGBA16F);
 
     public Vector4D<float>[]? Color { get; set; }
 
@@ -44,10 +44,7 @@ public unsafe class SolidColorInstancedMat(TrContext context) : GlobalInstancedM
             }
         }
 
-        fixed (Vector4D<float>* dataPtr = &color[0])
-        {
-            _colorSampler.Write(1, (uint)color.Length, TrPixelFormat.RGBA16F, dataPtr);
-        }
+        _colorSampler.Update(1, color.Length, color);
     }
 
     protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)

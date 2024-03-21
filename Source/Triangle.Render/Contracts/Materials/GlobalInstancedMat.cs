@@ -12,7 +12,7 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
 {
     public const int MaxSamplerSize = 1024;
 
-    private readonly TrTexture _matrixSampler = new(context);
+    private readonly TrPixelBuffer _matrixSampler = new(context, 4, MaxSamplerSize, TrPixelFormat.RGBA16F);
 
     /// <summary>
     /// Draw the model with the material.
@@ -63,10 +63,7 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
 
     private void UpdateMatrixSampler(Matrix4X4<float>[] models)
     {
-        fixed (Matrix4X4<float>* dataPtr = &models[0])
-        {
-            _matrixSampler.Write(4, (uint)models.Length, TrPixelFormat.RGBA16F, dataPtr);
-        }
+        _matrixSampler.Update(4, models.Length, models);
     }
 
     private void InternalDraw(TrModel[] models, int beginIndex, GlobalParameters parameters)

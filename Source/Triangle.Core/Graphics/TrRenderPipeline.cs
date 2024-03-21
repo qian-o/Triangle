@@ -242,6 +242,14 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
         gl.BindTexture(GLEnum.TextureCubeMap, cubeMap != null ? cubeMap.Handle : 0);
     }
 
+    public void BindUniformBlock(uint bindingPoint, TrPixelBuffer? pixelBuffer)
+    {
+        GL gl = Context.GL;
+
+        gl.ActiveTexture(GLEnum.Texture0 + (int)bindingPoint);
+        gl.BindTexture(GLEnum.Texture2D, pixelBuffer != null ? pixelBuffer.Texture.Handle : 0);
+    }
+
     public void Bind()
     {
         GL gl = Context.GL;

@@ -10,7 +10,7 @@ namespace Triangle.Render.Materials.Chapter6;
 
 public unsafe class DiffusePixelLevelInstancedMat(TrContext context) : GlobalInstancedMat(context, "DiffusePixelLevelInstanced")
 {
-    private readonly TrTexture _diffuseSampler = new(context);
+    private readonly TrPixelBuffer _diffuseSampler = new(context, 1, MaxSamplerSize, TrPixelFormat.RGBA16F);
 
     public Vector4D<float>[]? Diffuse { get; set; }
 
@@ -44,10 +44,7 @@ public unsafe class DiffusePixelLevelInstancedMat(TrContext context) : GlobalIns
             }
         }
 
-        fixed (Vector4D<float>* dataPtr = &diffuse[0])
-        {
-            _diffuseSampler.Write(1, (uint)diffuse.Length, TrPixelFormat.RGBA16F, dataPtr);
-        }
+        _diffuseSampler.Update(1, diffuse.Length, diffuse);
     }
 
     protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)

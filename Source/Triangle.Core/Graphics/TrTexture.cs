@@ -17,6 +17,8 @@ public unsafe class TrTexture : TrGraphics<TrContext>
 
         Handle = gl.GenTexture();
         Name = $"Texture {Handle}";
+
+        UpdateParameters();
     }
 
     public string Name { get; set; }
@@ -97,6 +99,15 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         gl.BindTexture(GLEnum.Texture2D, 0);
 
         UpdateParameters();
+    }
+
+    public void SubWrite(int x, int y, uint width, uint height, TrPixelFormat pixelFormat, void* data)
+    {
+        GL gl = Context.GL;
+
+        (GLEnum _, GLEnum Format, GLEnum Type) = pixelFormat.ToGL();
+
+        gl.TextureSubImage2D(Handle, 0, x, y, width, height, Format, Type, data);
     }
 
     public void Clear(uint width, uint height, TrPixelFormat pixelFormat)
