@@ -19,9 +19,7 @@ public unsafe class TrPixelBuffer : TrGraphics<TrContext>
 
         Texture.Clear((uint)Width, (uint)Height, PixelFormat);
 
-        gl.BindBuffer(GLEnum.PixelUnpackBuffer, Handle);
-        gl.BufferData(GLEnum.PixelUnpackBuffer, (uint)(Width * Height * PixelFormat.Size()), null, GLEnum.StreamDraw);
-        gl.BindBuffer(GLEnum.PixelUnpackBuffer, 0);
+        gl.NamedBufferStorage(Handle, (uint)(Width * Height * PixelFormat.Size()), null, (uint)GLEnum.DynamicStorageBit);
     }
 
     public int Width { get; }
@@ -43,11 +41,10 @@ public unsafe class TrPixelBuffer : TrGraphics<TrContext>
 
         fixed (T* dataPtr = data)
         {
-            gl.BindBuffer(GLEnum.PixelUnpackBuffer, Handle);
-            gl.BufferSubData(GLEnum.PixelUnpackBuffer, 0, (uint)(data.Length * sizeof(T)), dataPtr);
-            Texture.SubWrite(0, 0, (uint)Width, (uint)Height, PixelFormat, (void*)0);
-            gl.BindBuffer(GLEnum.PixelUnpackBuffer, 0);
+            gl.NamedBufferSubData(Handle, 0, (uint)(data.Length * sizeof(T)), dataPtr);
         }
+
+        Texture.SubWrite(0, 0, (uint)width, (uint)height, PixelFormat, this);
     }
 
     protected override void Destroy(bool disposing = false)
@@ -55,5 +52,7 @@ public unsafe class TrPixelBuffer : TrGraphics<TrContext>
         GL gl = Context.GL;
 
         gl.DeleteBuffer(Handle);
+
+        Texture.Dispose();
     }
 }

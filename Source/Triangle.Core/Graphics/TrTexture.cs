@@ -110,6 +110,17 @@ public unsafe class TrTexture : TrGraphics<TrContext>
         gl.TextureSubImage2D(Handle, 0, x, y, width, height, Format, Type, data);
     }
 
+    public void SubWrite(int x, int y, uint width, uint height, TrPixelFormat pixelFormat, TrPixelBuffer pixelBuffer)
+    {
+        GL gl = Context.GL;
+
+        (GLEnum _, GLEnum Format, GLEnum Type) = pixelFormat.ToGL();
+
+        gl.BindBuffer(GLEnum.PixelUnpackBuffer, pixelBuffer.Handle);
+        gl.TextureSubImage2D(Handle, 0, x, y, width, height, Format, Type, (void*)0);
+        gl.BindBuffer(GLEnum.PixelUnpackBuffer, 0);
+    }
+
     public void Clear(uint width, uint height, TrPixelFormat pixelFormat)
     {
         Width = width;
