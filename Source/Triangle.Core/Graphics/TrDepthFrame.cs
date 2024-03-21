@@ -1,4 +1,5 @@
-﻿using Silk.NET.OpenGL;
+﻿using Silk.NET.Maths;
+using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
 
 namespace Triangle.Core.Graphics;
@@ -6,6 +7,7 @@ namespace Triangle.Core.Graphics;
 public unsafe class TrDepthFrame : TrGraphics<TrContext>
 {
     private uint beforeFrameBuffer;
+    private Vector4D<int> beforeViewport;
 
     public TrDepthFrame(TrContext context) : base(context)
     {
@@ -67,6 +69,10 @@ public unsafe class TrDepthFrame : TrGraphics<TrContext>
         gl.GetInteger(GLEnum.FramebufferBinding, out int currentFrameBuffer);
         beforeFrameBuffer = (uint)currentFrameBuffer;
 
+        Span<int> viewport = stackalloc int[4];
+        gl.GetInteger(GLEnum.Viewport, viewport);
+        beforeViewport = new Vector4D<int>(viewport[0], viewport[1], viewport[2], viewport[3]);
+
         gl.BindFramebuffer(GLEnum.Framebuffer, Handle);
 
         gl.Viewport(0, 0, (uint)Width, (uint)Height);
@@ -77,5 +83,7 @@ public unsafe class TrDepthFrame : TrGraphics<TrContext>
         GL gl = Context.GL;
 
         gl.BindFramebuffer(GLEnum.Framebuffer, beforeFrameBuffer);
+
+        gl.Viewport(beforeViewport.X, beforeViewport.Y, (uint)beforeViewport.Z, (uint)beforeViewport.W);
     }
 }

@@ -28,8 +28,8 @@ public class ShadowMappingDepthMat(TrContext context) : GlobalMat(context, "Shad
     {
         uboParameters = new(Context);
 
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/ShadowMapping/Depth.vert.spv".Path());
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/ShadowMapping/Depth.frag.spv".Path());
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/ShadowMappingDepth/ShadowMappingDepth.vert.spv".Path());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/ShadowMappingDepth/ShadowMappingDepth.frag.spv".Path());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);

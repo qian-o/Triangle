@@ -10,6 +10,7 @@ namespace Triangle.Core.Graphics;
 public unsafe class TrFrame : TrGraphics<TrContext>
 {
     private uint beforeFrameBuffer;
+    private Vector4D<int> beforeViewport;
 
     public TrFrame(TrContext context) : base(context)
     {
@@ -99,6 +100,10 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         gl.GetInteger(GLEnum.FramebufferBinding, out int currentFrameBuffer);
         beforeFrameBuffer = (uint)currentFrameBuffer;
 
+        Span<int> viewport = stackalloc int[4];
+        gl.GetInteger(GLEnum.Viewport, viewport);
+        beforeViewport = new Vector4D<int>(viewport[0], viewport[1], viewport[2], viewport[3]);
+
         gl.BindFramebuffer(GLEnum.Framebuffer, Framebuffer);
 
         gl.Viewport(0, 0, (uint)Width, (uint)Height);
@@ -111,6 +116,8 @@ public unsafe class TrFrame : TrGraphics<TrContext>
         gl.BindFramebuffer(GLEnum.Framebuffer, beforeFrameBuffer);
 
         gl.BlitNamedFramebuffer(Framebuffer, Handle, 0, 0, Width, Height, 0, 0, Width, Height, (uint)GLEnum.ColorBufferBit, GLEnum.Nearest);
+
+        gl.Viewport(beforeViewport.X, beforeViewport.Y, (uint)beforeViewport.Z, (uint)beforeViewport.W);
     }
 
     public Vector4D<byte> GetPixel(int x, int y)

@@ -403,7 +403,7 @@ public abstract class GlobalMat : TrMaterial
 
         foreach (TrModel model in models)
         {
-            Draw([.. model.Meshes], model.Transform, parameters);
+            Draw([.. model.Meshes], model.Transform.Model, parameters);
         }
     }
 
