@@ -99,7 +99,7 @@ public unsafe class TrTexture : TrGraphics<TrContext>
             levels = (uint)MathF.Floor(MathF.Log2(MathF.Max(Width, Height))) + 1;
         }
 
-        UnpackAlignment(width);
+        UnpackAlignment(Width);
         {
             gl.TextureStorage2D(Handle, levels, Target, Width, Height);
             gl.TextureSubImage2D(Handle, 0, 0, 0, Width, Height, Format, Type, data);
