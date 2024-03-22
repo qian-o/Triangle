@@ -250,6 +250,13 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
         gl.BindTexture(GLEnum.Texture2D, pixelBuffer != null ? pixelBuffer.Texture.Handle : 0);
     }
 
+    public void BindBufferBlock<T>(uint bindingPoint, TrBuffer<T> ssbo) where T : unmanaged
+    {
+        GL gl = Context.GL;
+
+        gl.BindBufferBase(GLEnum.ShaderStorageBuffer, bindingPoint, ssbo.Handle);
+    }
+
     public void Bind()
     {
         GL gl = Context.GL;

@@ -2,7 +2,7 @@
 
 #extension GL_GOOGLE_include_directive : require
 
-#include "../TrUtils.glsl"
+#include "../TrUtilInstanced.glsl"
 
 layout(location = 0) in VertexData
 {
@@ -12,9 +12,13 @@ In;
 
 layout(location = 0) out vec4 Out_Color;
 
-layout(binding = UNIFORM_SAMPLER_BINDING_START + 0) uniform sampler2D ColorSampler;
+layout(std140, binding = BUFFEER_BINDING_START + 0) buffer Color
+{
+    vec4 Data[];
+}
+Buffer_Color;
 
 void main()
 {
-    Out_Color = SampleTexture(ColorSampler, ivec2(0, In.InstanceID), 0);
+    Out_Color = Buffer_Color.Data[In.InstanceID];
 }

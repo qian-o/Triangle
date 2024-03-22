@@ -10,7 +10,7 @@ namespace Triangle.Render.Materials;
 
 public unsafe class SolidColorInstancedMat(TrContext context) : GlobalInstancedMat(context, "SolidColorInstanced")
 {
-    private readonly TrPixelBuffer _colorSampler = new(context, 1, MaxSamplerSize, TrPixelFormat.RGBA16F);
+    private readonly TrBuffer<Vector4D<float>> _bufferColor = new(context, MaxSamplerSize);
 
     public Vector4D<float>[]? Color { get; set; }
 
@@ -44,14 +44,14 @@ public unsafe class SolidColorInstancedMat(TrContext context) : GlobalInstancedM
             }
         }
 
-        _colorSampler.Update(1, color.Length, color);
+        _bufferColor.SetData(color);
     }
 
     protected override void AssemblePipeline(TrRenderPipeline renderPipeline, GlobalParameters globalParameters)
     {
         base.AssemblePipeline(renderPipeline, globalParameters);
 
-        renderPipeline.BindUniformBlock(UniformSamplerBindingStart + 0, _colorSampler);
+        renderPipeline.BindBufferBlock(BufferBindingStart + 0, _bufferColor);
     }
 
     protected override void RenderPipeline(TrRenderPipeline renderPipeline, TrMesh[] meshes, GlobalParameters globalParameters)
@@ -65,6 +65,6 @@ public unsafe class SolidColorInstancedMat(TrContext context) : GlobalInstancedM
 
     protected override void DestroyCore(bool disposing = false)
     {
-        _colorSampler.Dispose();
+        _bufferColor.Dispose();
     }
 }

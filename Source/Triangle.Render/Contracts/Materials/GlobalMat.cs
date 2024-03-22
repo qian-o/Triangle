@@ -15,7 +15,7 @@ namespace Triangle.Render.Contracts.Materials;
 public abstract class GlobalMat : TrMaterial
 {
     public const uint UniformBufferBindingStart = 8;
-    public const uint UniformSamplerBindingStart = 11;
+    public const uint UniformSamplerBindingStart = 10;
     public const uint MaxPointLights = 50;
 
     #region Structs

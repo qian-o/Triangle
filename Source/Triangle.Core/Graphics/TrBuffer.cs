@@ -1,6 +1,5 @@
 ﻿using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
-using Triangle.Core.Exceptions;
 
 namespace Triangle.Core.Graphics;
 
@@ -27,22 +26,22 @@ public unsafe class TrBuffer<TDataType> : TrGraphics<TrContext> where TDataType 
 
     public void SetData(TDataType[] data, uint offset = 0)
     {
-        if (data.Length != Length)
-        {
-            throw new TrException("数据长度必须等于缓冲区长度。");
-        }
-
         fixed (TDataType* dataPtr = data)
         {
-            SetData(dataPtr, offset);
+            SetData(dataPtr, data.Length, offset);
         }
     }
 
-    public void SetData(TDataType* data, uint offset = 0)
+    public void SetData(TDataType* data, int length, uint offset = 0)
     {
+        if (length > Length)
+        {
+            throw new ArgumentOutOfRangeException(nameof(length), "Length is greater than buffer length.");
+        }
+
         GL gl = Context.GL;
 
-        gl.NamedBufferSubData(Handle, (int)(offset * sizeof(TDataType)), (uint)(Length * sizeof(TDataType)), data);
+        gl.NamedBufferSubData(Handle, (int)(offset * sizeof(TDataType)), (uint)(length * sizeof(TDataType)), data);
     }
 
     public void SetData(TDataType data, uint offset = 0)
