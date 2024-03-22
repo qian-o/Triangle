@@ -16,6 +16,5 @@ public enum TrPixelFormat
     RGBA16F,
     DepthComponent16,
     DepthComponent24,
-    DepthComponent32,
     DepthComponent32F
 }

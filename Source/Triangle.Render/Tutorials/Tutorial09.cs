@@ -81,12 +81,12 @@ public class Tutorial09(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void RenderScene(double deltaSeconds)
     {
-        Matrix4X4<float> lightProjection = Matrix4X4.CreateOrthographicOffCenter(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 40.0f);
+        Matrix4X4<float> lightProjection = Matrix4X4.CreateOrthographic(40.0f, 40.0f, 0.0f, 100.0f);
         Matrix4X4<float> lightView = Matrix4X4.CreateLookAt(new Vector3D<float>(0.0f, 0.0f, 0.0f), DirectionalLight.Direction, new Vector3D<float>(0.0f, 1.0f, 0.0f));
         Matrix4X4<float> lightSpace = lightView * lightProjection;
         Matrix4X4<float> bias = Matrix4X4.CreateScale(new Vector3D<float>(0.5f, 0.5f, 0.5f)) * Matrix4X4.CreateTranslation(new Vector3D<float>(0.5f, 0.5f, 0.5f));
 
-        depthFrame.Update(2048, 2048);
+        depthFrame.Update(4096, 4096);
         depthFrame.Bind();
         {
             Context.Clear();
@@ -96,13 +96,13 @@ public class Tutorial09(IInputContext input, TrContext context) : BaseTutorial(i
         }
         depthFrame.Unbind();
 
-        debugFrame.Update(2048, 2048);
+        debugFrame.Update(4096, 4096);
         debugFrame.Bind();
         {
             Context.Clear();
 
-            depthDebugMat.NearPlane = 0.1f;
-            depthDebugMat.FarPlane = 40.0f;
+            depthDebugMat.NearPlane = 0.0f;
+            depthDebugMat.FarPlane = 100.0f;
             depthDebugMat.Channel0 = depthFrame.Texture;
             depthDebugMat.Draw([canvas], [Parameters]);
         }

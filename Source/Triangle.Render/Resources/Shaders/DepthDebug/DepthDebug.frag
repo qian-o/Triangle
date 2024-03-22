@@ -25,5 +25,5 @@ void main()
 
     float depth = LinearizeDepth(depthValue, Uni_Parameters.NearPlane, Uni_Parameters.FarPlane);
 
-    Out_Color = vec4(vec3(depth), 1.0);
+    Out_Color = vec4(vec3(depthValue), 1.0);
 }
