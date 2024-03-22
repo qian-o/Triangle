@@ -288,7 +288,7 @@ public class TrScene : TrGraphics<TrContext>
                     ImGuiHelper.ShowHelpMarker(GizmosSpace.ToString());
                     IsOperationTools |= ImGui.IsItemClicked();
 
-                    float[] view = Camera.View.ToArray();
+                    float[] view = Camera.Transform.View.ToArray();
 
                     ImGuizmo.ViewManipulate(ref view[0],
                                             Camera.Transform.Position.Length,

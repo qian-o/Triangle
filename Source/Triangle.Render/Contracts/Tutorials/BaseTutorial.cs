@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Reflection;
 using Silk.NET.Input;
 using Silk.NET.Maths;
@@ -88,6 +89,14 @@ public abstract class BaseTutorial : ITutorial
     protected SkyMat SkyMat { get; }
 
     protected GridMat GridMat { get; }
+    #endregion
+
+    #region Lights
+    protected TrAmbientLight AmbientLight => _ambientLight;
+
+    protected TrDirectionalLight DirectionalLight => _directionalLight;
+
+    protected ReadOnlyCollection<TrPointLight> PointLights => _pointLights.AsReadOnly();
     #endregion
 
     public void Update(double deltaSeconds)

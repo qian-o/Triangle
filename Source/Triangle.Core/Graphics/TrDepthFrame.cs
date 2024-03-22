@@ -1,6 +1,7 @@
 ﻿using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Triangle.Core.Contracts.Graphics;
+using Triangle.Core.Enums;
 
 namespace Triangle.Core.Graphics;
 
@@ -15,29 +16,28 @@ public unsafe class TrDepthFrame : TrGraphics<TrContext>
 
         Handle = gl.CreateFramebuffer();
 
-        DepthBuffer = gl.GenTexture();
-
-        gl.BindTexture(GLEnum.Texture2D, DepthBuffer);
-        gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureMinFilter, (int)GLEnum.Nearest);
-        gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureMagFilter, (int)GLEnum.Nearest);
-        gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureWrapS, (int)GLEnum.ClampToEdge);
-        gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureWrapT, (int)GLEnum.ClampToEdge);
-        gl.BindTexture(GLEnum.Texture2D, 0);
+        Texture = new TrTexture(Context)
+        {
+            TextureMinFilter = TrTextureFilter.Linear,
+            TextureMagFilter = TrTextureFilter.Linear,
+            TextureWrap = TrTextureWrap.ClampToEdge
+        };
+        Texture.UpdateParameters();
     }
 
     public int Width { get; private set; }
 
     public int Height { get; private set; }
 
-    public uint DepthBuffer { get; }
+    public TrTexture Texture { get; }
 
     protected override void Destroy(bool disposing = false)
     {
         GL gl = Context.GL;
 
-        gl.DeleteTexture(DepthBuffer);
-
         gl.DeleteFramebuffer(Handle);
+
+        Texture.Dispose();
     }
 
     public void Update(int width, int height)
@@ -52,11 +52,9 @@ public unsafe class TrDepthFrame : TrGraphics<TrContext>
 
         GL gl = Context.GL;
 
-        gl.BindTexture(GLEnum.Texture2D, DepthBuffer);
-        gl.TexImage2D(GLEnum.Texture2D, 0, (int)GLEnum.DepthComponent32, (uint)Width, (uint)Height, 0, GLEnum.DepthComponent, GLEnum.Float, null);
-        gl.BindTexture(GLEnum.Texture2D, 0);
+        Texture.Clear((uint)Width, (uint)Height, TrPixelFormat.DepthComponent32F);
 
-        gl.NamedFramebufferTexture(Handle, GLEnum.DepthAttachment, DepthBuffer, 0);
+        gl.NamedFramebufferTexture(Handle, GLEnum.DepthAttachment, Texture.Handle, 0);
 
         gl.NamedFramebufferDrawBuffer(Handle, GLEnum.None);
         gl.NamedFramebufferReadBuffer(Handle, GLEnum.None);

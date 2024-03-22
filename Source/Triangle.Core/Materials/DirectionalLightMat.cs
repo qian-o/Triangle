@@ -86,10 +86,10 @@ internal sealed class DirectionalLightMat(TrContext context) : TrMaterial(contex
             uboTransforms.SetData(new UniTransforms()
             {
                 Model = model,
-                View = camera.View,
+                View = camera.Transform.View,
                 Projection = camera.Projection,
                 ObjectToWorld = model,
-                ObjectToClip = model * camera.View * camera.Projection,
+                ObjectToClip = model * camera.Transform.View * camera.Projection,
                 WorldToObject = model.Invert()
             });
             uboParameters.SetData(new UniParameters()

@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.Enums;
 using Triangle.Core.Graphics;
@@ -9,31 +8,35 @@ using Triangle.Render.Models;
 
 namespace Triangle.Render.Materials;
 
-public class ShadowMappingDepthMat(TrContext context) : GlobalMat(context, "ShadowMappingDepth")
+public class DepthDebugMat(TrContext context) : GlobalMat(context, "DepthDebug")
 {
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
     private struct UniParameters
     {
         [FieldOffset(0)]
-        public Matrix4X4<float> LightSpace;
+        public float NearPlane;
+
+        [FieldOffset(4)]
+        public float FarPlane;
     }
     #endregion
 
     private TrBuffer<UniParameters> uboParameters = null!;
 
-    public Matrix4X4<float> LightSpace { get; set; }
+    public float NearPlane { get; set; }
+
+    public float FarPlane { get; set; }
 
     protected override TrRenderPass CreateRenderPass()
     {
         uboParameters = new(Context);
 
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/ShadowMappingDepth/ShadowMappingDepth.vert.spv".Path());
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/ShadowMappingDepth/ShadowMappingDepth.frag.spv".Path());
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/DepthDebug/DepthDebug.vert.spv".Path());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/DepthDebug/DepthDebug.frag.spv".Path());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
         renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);
-        renderPipeline.TriangleFace = TrTriangleFace.Front;
 
         return new TrRenderPass(Context, [renderPipeline]);
     }
@@ -42,7 +45,8 @@ public class ShadowMappingDepthMat(TrContext context) : GlobalMat(context, "Shad
     {
         uboParameters.SetData(new UniParameters()
         {
-            LightSpace = LightSpace
+            NearPlane = NearPlane,
+            FarPlane = FarPlane
         });
 
         renderPipeline.BindUniformBlock(UniformBufferBindingStart + 0, uboParameters);

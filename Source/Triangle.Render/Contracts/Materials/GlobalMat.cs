@@ -297,10 +297,10 @@ public abstract class GlobalMat : TrMaterial
         _uboTransforms.SetData(new UniTransforms()
         {
             Model = model,
-            View = parameters.Camera.View,
+            View = parameters.Camera.Transform.View,
             Projection = parameters.Camera.Projection,
             ObjectToWorld = model,
-            ObjectToClip = model * parameters.Camera.View * parameters.Camera.Projection,
+            ObjectToClip = model * parameters.Camera.Transform.View * parameters.Camera.Projection,
             WorldToObject = model.Invert()
         });
         _uboVectors.SetData(new UniVectors()

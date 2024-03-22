@@ -209,7 +209,7 @@ public class SceneController
             showMatrix = selectedObjects.First().Transform.Model;
         }
 
-        float[] viewArray = _scene.Camera.View.ToArray();
+        float[] viewArray = _scene.Camera.Transform.View.ToArray();
         float[] projectionArray = _scene.Camera.Projection.ToArray();
         float[] showMatrixArray = showMatrix.ToArray();
         if (IsTransformObject = ImGuizmo.Manipulate(ref viewArray[0], ref projectionArray[0], _scene.GizmosOperation, _scene.GizmosSpace, ref showMatrixArray[0]))

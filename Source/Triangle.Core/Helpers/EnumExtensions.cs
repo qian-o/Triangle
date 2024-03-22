@@ -149,6 +149,10 @@ public static class EnumExtensions
             TrPixelFormat.RG16F => (GLEnum.RG16f, GLEnum.RG, GLEnum.Float),
             TrPixelFormat.RGB16F => (GLEnum.Rgb16f, GLEnum.Rgb, GLEnum.Float),
             TrPixelFormat.RGBA16F => (GLEnum.Rgba16f, GLEnum.Rgba, GLEnum.Float),
+            TrPixelFormat.DepthComponent16 => (GLEnum.DepthComponent16, GLEnum.DepthComponent, GLEnum.UnsignedShort),
+            TrPixelFormat.DepthComponent24 => (GLEnum.DepthComponent24, GLEnum.DepthComponent, GLEnum.UnsignedInt),
+            TrPixelFormat.DepthComponent32 => (GLEnum.DepthComponent32, GLEnum.DepthComponent, GLEnum.UnsignedInt),
+            TrPixelFormat.DepthComponent32F => (GLEnum.DepthComponent32f, GLEnum.DepthComponent, GLEnum.Float),
             _ => throw new NotSupportedException("不支持的像素格式。")
         };
     }

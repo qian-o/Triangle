@@ -9,7 +9,7 @@ using Triangle.Render.Models;
 
 namespace Triangle.Render.Materials;
 
-public class ShadowMappingDepthMat(TrContext context) : GlobalMat(context, "ShadowMappingDepth")
+public class ShadowMappingMat(TrContext context) : GlobalMat(context, "ShadowMapping")
 {
     #region Uniforms
     [StructLayout(LayoutKind.Explicit)]
@@ -28,12 +28,12 @@ public class ShadowMappingDepthMat(TrContext context) : GlobalMat(context, "Shad
     {
         uboParameters = new(Context);
 
-        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/ShadowMappingDepth/ShadowMappingDepth.vert.spv".Path());
-        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/ShadowMappingDepth/ShadowMappingDepth.frag.spv".Path());
+        using TrShader vert = new(Context, TrShaderType.Vertex, "Resources/Shaders/ShadowMapping/ShadowMapping.vert.spv".Path());
+        using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/ShadowMapping/ShadowMapping.frag.spv".Path());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
-        renderPipeline.SetRenderLayer(TrRenderLayer.Opaque);
-        renderPipeline.TriangleFace = TrTriangleFace.Front;
+        renderPipeline.SetRenderLayer(TrRenderLayer.Transparent);
+        renderPipeline.DepthFunction = TrDepthFunction.Equal;
 
         return new TrRenderPass(Context, [renderPipeline]);
     }
