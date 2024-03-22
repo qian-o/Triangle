@@ -4,7 +4,7 @@
 
 #define BUFFEER_BINDING_START 1
 
-struct SampleTransforms
+struct InstancedTransforms
 {
     mat4 Model;
     mat4 ObjectToWorld;
@@ -18,9 +18,9 @@ layout(std140, binding = 0) buffer Matrix
 }
 Buffer_Matrix;
 
-SampleTransforms GetSampleTransforms(int index)
+InstancedTransforms GetInstancedTransforms(int index)
 {
-    SampleTransforms transforms;
+    InstancedTransforms transforms;
     transforms.Model = Buffer_Matrix.Data[index];
     transforms.ObjectToWorld = transforms.Model;
     transforms.ObjectToClip = Uni_Transforms.Projection * Uni_Transforms.View * transforms.Model;

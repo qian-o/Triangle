@@ -13,7 +13,7 @@ Out;
 
 void main()
 {
-    SampleTransforms transforms = GetSampleTransforms(INSTANCE_ID);
+    InstancedTransforms transforms = GetInstancedTransforms(INSTANCE_ID);
 
     Out.InstanceID = INSTANCE_ID;
 

@@ -14,7 +14,7 @@ Out;
 
 void main()
 {
-    SampleTransforms transforms = GetSampleTransforms(INSTANCE_ID);
+    InstancedTransforms transforms = GetInstancedTransforms(INSTANCE_ID);
 
     Out.InstanceID = INSTANCE_ID;
     Out.WorldNormal = normalize((In_Normal * mat3(transforms.WorldToObject)));
