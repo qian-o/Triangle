@@ -32,7 +32,8 @@ public class ShadowMappingMat(TrContext context) : GlobalMat(context, "ShadowMap
         using TrShader frag = new(Context, TrShaderType.Fragment, "Resources/Shaders/ShadowMapping/ShadowMapping.frag.spv".Path());
 
         TrRenderPipeline renderPipeline = new(Context, [vert, frag]);
-        renderPipeline.SetRenderLayer(TrRenderLayer.Transparent);
+        renderPipeline.SetRenderLayer(TrRenderLayer.Overlay);
+        renderPipeline.IsDepthTest = true;
         renderPipeline.DepthFunction = TrDepthFunction.Equal;
 
         return new TrRenderPass(Context, [renderPipeline]);
