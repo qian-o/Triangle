@@ -60,7 +60,8 @@ public class Tutorial09(IInputContext input, TrContext context) : BaseTutorial(i
         floor.Transform.Scaled(new Vector3D<float>(20.0f, 1.0f, 20.0f));
 
         wall = new("Wall", [cube], diffusePixelLevelMat);
-        wall.Transform.Translate(new Vector3D<float>(0.0f, 4.0f, -10.5f));
+        wall.Transform.Translate(new Vector3D<float>(10.5f, 4.0f, 0.0f));
+        wall.Transform.Rotate(new Vector3D<float>(0.0f, 90.0f, 0.0f));
         wall.Transform.Scaled(new Vector3D<float>(20.0f, 10.0f, 1.0f));
 
         SceneController.Add(floor);
@@ -84,7 +85,6 @@ public class Tutorial09(IInputContext input, TrContext context) : BaseTutorial(i
         Matrix4X4<float> lightProjection = Matrix4X4.CreateOrthographic(40.0f, 40.0f, 0.0f, 100.0f);
         Matrix4X4<float> lightView = Matrix4X4.CreateLookAt(new Vector3D<float>(0.0f, 0.0f, 0.0f), DirectionalLight.Direction, new Vector3D<float>(0.0f, 1.0f, 0.0f));
         Matrix4X4<float> lightSpace = lightView * lightProjection;
-        Matrix4X4<float> bias = Matrix4X4.CreateScale(new Vector3D<float>(0.5f, 0.5f, 0.5f)) * Matrix4X4.CreateTranslation(new Vector3D<float>(0.5f, 0.5f, 0.5f));
 
         depthFrame.Update(4096, 4096);
         depthFrame.Bind();
@@ -110,7 +110,7 @@ public class Tutorial09(IInputContext input, TrContext context) : BaseTutorial(i
 
         diffusePixelLevelMat.Draw([floor, wall, .. cubes], [Parameters]);
 
-        shadowMappingMat.LightSpace = lightSpace * bias;
+        shadowMappingMat.LightSpace = lightSpace;
         shadowMappingMat.Channel0 = depthFrame.Texture;
         shadowMappingMat.Draw([floor, wall, .. cubes], [Parameters]);
     }
