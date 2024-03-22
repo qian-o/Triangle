@@ -32,7 +32,7 @@ public partial class TrTransform
     public Vector3D<float> Forward => Vector3D.Transform(DefaultForward, Rotation);
 
     public Matrix4X4<float> Model => Matrix4X4.CreateScale(Scale) * Matrix4X4.CreateFromQuaternion(Rotation) * Matrix4X4.CreateTranslation(Position);
-    
+
     public Matrix4X4<float> View => Matrix4X4.CreateLookAt(Position, Position + Forward, Up);
 
     public void Translate(Vector3D<float> translation, TrSpace relativeTo = TrSpace.Local)
