@@ -2,7 +2,7 @@
 using Triangle.Render.Applications;
 using Triangle.Render.Models;
 
-Dictionary<string,string> includes = new()
+Dictionary<string, string> includes = new()
 {
     { "TrVertex.glsl", "Resources/Shaders/TrVertex.glsl".Path() },
     { "TrUtils.glsl", "Resources/Shaders/TrUtils.glsl".Path() },
