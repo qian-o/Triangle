@@ -128,8 +128,11 @@ public class Tutorial09(IInputContext input, TrContext context) : BaseTutorial(i
     protected override void Destroy(bool disposing = false)
     {
         depthFrame.Dispose();
+        debugFrame.Dispose();
 
         shadowMappingDepthMat.Dispose();
+        depthDebugMat.Dispose();
         diffusePixelLevelMat.Dispose();
+        shadowMappingMat.Dispose();
     }
 }
