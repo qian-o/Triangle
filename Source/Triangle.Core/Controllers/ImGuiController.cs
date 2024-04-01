@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Numerics;
+﻿using System.Numerics;
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGuizmo;
 using Silk.NET.Input;
@@ -103,22 +102,21 @@ public unsafe class ImGuiController : Disposable
 
         ImGuizmo.SetImGuiContext(_context);
 
-        ImGuiIOPtr iO = ImGui.GetIO();
+        ImGuiIOPtr io = ImGui.GetIO();
 
         if (imGuiFontConfig.HasValue)
         {
-            nint glyph_ranges = imGuiFontConfig.Value.GetGlyphRange?.Invoke(iO) ?? 0;
-            iO.Fonts.AddFontFromFileTTF(imGuiFontConfig.Value.FontPath, imGuiFontConfig.Value.FontSize, null, (char*)glyph_ranges);
+            nint glyph_ranges = imGuiFontConfig.Value.GetGlyphRange?.Invoke(io) ?? 0;
+            io.Fonts.AddFontFromFileTTF(imGuiFontConfig.Value.FontPath, imGuiFontConfig.Value.FontSize, null, (char*)glyph_ranges);
 
             AddResourceFont(FontAwesome6.FontIconFileNameFAR, FontAwesome6.IconMin, FontAwesome6.IconMax);
             AddResourceFont(FontAwesome6.FontIconFileNameFAS, FontAwesome6.IconMin, FontAwesome6.IconMax);
         }
 
         onConfigureIO?.Invoke();
-        iO.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
+        io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
         CreateDeviceResources();
-        SetKeyMappings();
         SetPerFrameImGuiData(1f / 60f);
         BeginFrame();
     }
@@ -222,80 +220,116 @@ public unsafe class ImGuiController : Disposable
     /// <param name="deltaSeconds"></param>
     private void SetPerFrameImGuiData(float deltaSeconds)
     {
-        ImGuiIOPtr iO = ImGui.GetIO();
+        ImGuiIOPtr io = ImGui.GetIO();
 
-        iO.DisplaySize = new Vector2(_windowWidth, _windowHeight);
+        io.DisplaySize = new Vector2(_windowWidth, _windowHeight);
 
         if (_windowWidth > 0 && _windowHeight > 0)
         {
-            iO.DisplayFramebufferScale = new Vector2(_view.FramebufferSize.X / _windowWidth, _view.FramebufferSize.Y / _windowHeight);
+            io.DisplayFramebufferScale = new Vector2(_view.FramebufferSize.X / _windowWidth, _view.FramebufferSize.Y / _windowHeight);
         }
 
-        iO.DeltaTime = deltaSeconds;
+        io.DeltaTime = deltaSeconds;
     }
 
     private void UpdateImGuiInput()
     {
-        ImGuiIOPtr iO = ImGui.GetIO();
+        ImGuiIOPtr io = ImGui.GetIO();
 
         IMouse mouse = _input.Mice[0];
         IKeyboard keyboard = _input.Keyboards[0];
-
-        iO.MouseDown[0] = mouse.IsButtonPressed(MouseButton.Left);
-        iO.MouseDown[1] = mouse.IsButtonPressed(MouseButton.Right);
-        iO.MouseDown[2] = mouse.IsButtonPressed(MouseButton.Middle);
-
-        Point point = new((int)mouse.Position.X, (int)mouse.Position.Y);
-        iO.MousePos = new Vector2(point.X, point.Y);
-
         ScrollWheel scrollWheel = mouse.ScrollWheels[0];
-        iO.MouseWheel = scrollWheel.Y;
-        iO.MouseWheelH = scrollWheel.X;
 
-        Key[] array = _keyEnumArr;
-        foreach (Key key in array)
-        {
-            if (key != Key.Unknown)
-            {
-                iO.KeysDown[(int)key] = keyboard.IsKeyPressed(key);
-            }
-        }
+        io.AddMousePosEvent(mouse.Position.X, mouse.Position.Y);
+        io.AddMouseButtonEvent(0, mouse.IsButtonPressed(MouseButton.Left));
+        io.AddMouseButtonEvent(1, mouse.IsButtonPressed(MouseButton.Right));
+        io.AddMouseButtonEvent(2, mouse.IsButtonPressed(MouseButton.Middle));
+        io.AddMouseButtonEvent(3, mouse.IsButtonPressed(MouseButton.Button4));
+        io.AddMouseButtonEvent(4, mouse.IsButtonPressed(MouseButton.Button5));
+        io.AddMouseWheelEvent(scrollWheel.X, scrollWheel.Y);
 
         foreach (char pressedChar in _pressedChars)
         {
-            iO.AddInputCharacter(pressedChar);
+            io.AddInputCharacter(pressedChar);
+        }
+
+        foreach (Key key in _keyEnumArr)
+        {
+            if (key != Key.Unknown && TryMapKey(key, out ImGuiKey imGuiKey))
+            {
+                io.AddKeyEvent(imGuiKey, keyboard.IsKeyPressed(key));
+            }
         }
 
         _pressedChars.Clear();
-        iO.KeyCtrl = keyboard.IsKeyPressed(Key.ControlLeft) || keyboard.IsKeyPressed(Key.ControlRight);
-        iO.KeyAlt = keyboard.IsKeyPressed(Key.AltLeft) || keyboard.IsKeyPressed(Key.AltRight);
-        iO.KeyShift = keyboard.IsKeyPressed(Key.ShiftLeft) || keyboard.IsKeyPressed(Key.ShiftRight);
-        iO.KeySuper = keyboard.IsKeyPressed(Key.SuperLeft) || keyboard.IsKeyPressed(Key.SuperRight);
     }
 
-    private static void SetKeyMappings()
+    /// <summary>
+    /// Tries to map a Silk.NET Key to an ImGuiKey.
+    /// </summary>
+    /// <param name="key">key</param>
+    /// <param name="key">key</param>
+    /// <returns></returns>
+    private static bool TryMapKey(Key key, out ImGuiKey result)
     {
-        ImGuiIOPtr iO = ImGui.GetIO();
+        static ImGuiKey KeyToImGuiKeyShortcut(Key keyToConvert, Key startKey1, ImGuiKey startKey2)
+        {
+            int changeFromStart1 = (int)keyToConvert - (int)startKey1;
+            return startKey2 + changeFromStart1;
+        }
 
-        iO.KeyMap[512] = 258;
-        iO.KeyMap[513] = 263;
-        iO.KeyMap[514] = 262;
-        iO.KeyMap[515] = 265;
-        iO.KeyMap[516] = 264;
-        iO.KeyMap[517] = 266;
-        iO.KeyMap[518] = 267;
-        iO.KeyMap[519] = 268;
-        iO.KeyMap[520] = 269;
-        iO.KeyMap[522] = 261;
-        iO.KeyMap[523] = 259;
-        iO.KeyMap[525] = 257;
-        iO.KeyMap[526] = 256;
-        iO.KeyMap[546] = 65;
-        iO.KeyMap[548] = 67;
-        iO.KeyMap[567] = 86;
-        iO.KeyMap[569] = 88;
-        iO.KeyMap[570] = 89;
-        iO.KeyMap[571] = 90;
+        result = key switch
+        {
+            >= Key.F1 and <= Key.F24 => KeyToImGuiKeyShortcut(key, Key.F1, ImGuiKey.F1),
+            >= Key.Keypad0 and <= Key.Keypad9 => KeyToImGuiKeyShortcut(key, Key.Keypad0, ImGuiKey.Keypad0),
+            >= Key.A and <= Key.Z => KeyToImGuiKeyShortcut(key, Key.A, ImGuiKey.A),
+            >= Key.Number0 and <= Key.Number9 => KeyToImGuiKeyShortcut(key, Key.Number0, ImGuiKey.Key0),
+            Key.ShiftLeft or Key.ShiftRight => ImGuiKey.ModShift,
+            Key.ControlLeft or Key.ControlRight => ImGuiKey.ModCtrl,
+            Key.AltLeft or Key.AltRight => ImGuiKey.ModAlt,
+            Key.SuperLeft or Key.SuperRight => ImGuiKey.ModSuper,
+            Key.Menu => ImGuiKey.Menu,
+            Key.Up => ImGuiKey.UpArrow,
+            Key.Down => ImGuiKey.DownArrow,
+            Key.Left => ImGuiKey.LeftArrow,
+            Key.Right => ImGuiKey.RightArrow,
+            Key.Enter => ImGuiKey.Enter,
+            Key.Escape => ImGuiKey.Escape,
+            Key.Space => ImGuiKey.Space,
+            Key.Tab => ImGuiKey.Tab,
+            Key.Backspace => ImGuiKey.Backspace,
+            Key.Insert => ImGuiKey.Insert,
+            Key.Delete => ImGuiKey.Delete,
+            Key.PageUp => ImGuiKey.PageUp,
+            Key.PageDown => ImGuiKey.PageDown,
+            Key.Home => ImGuiKey.Home,
+            Key.End => ImGuiKey.End,
+            Key.CapsLock => ImGuiKey.CapsLock,
+            Key.ScrollLock => ImGuiKey.ScrollLock,
+            Key.PrintScreen => ImGuiKey.PrintScreen,
+            Key.Pause => ImGuiKey.Pause,
+            Key.NumLock => ImGuiKey.NumLock,
+            Key.KeypadDivide => ImGuiKey.KeypadDivide,
+            Key.KeypadMultiply => ImGuiKey.KeypadMultiply,
+            Key.KeypadSubtract => ImGuiKey.KeypadSubtract,
+            Key.KeypadAdd => ImGuiKey.KeypadAdd,
+            Key.KeypadDecimal => ImGuiKey.KeypadDecimal,
+            Key.KeypadEnter => ImGuiKey.KeypadEnter,
+            Key.GraveAccent => ImGuiKey.GraveAccent,
+            Key.Minus => ImGuiKey.Minus,
+            Key.Equal => ImGuiKey.Equal,
+            Key.LeftBracket => ImGuiKey.LeftBracket,
+            Key.RightBracket => ImGuiKey.RightBracket,
+            Key.Semicolon => ImGuiKey.Semicolon,
+            Key.Apostrophe => ImGuiKey.Apostrophe,
+            Key.Comma => ImGuiKey.Comma,
+            Key.Period => ImGuiKey.Period,
+            Key.Slash => ImGuiKey.Slash,
+            Key.BackSlash => ImGuiKey.Backslash,
+            _ => ImGuiKey.None
+        };
+
+        return result != ImGuiKey.None;
     }
 
     /// <summary>
@@ -556,12 +590,12 @@ public unsafe class ImGuiController : Disposable
     /// </summary>
     private void RecreateFontDeviceTexture()
     {
-        ImGuiIOPtr iO = ImGui.GetIO();
+        ImGuiIOPtr io = ImGui.GetIO();
 
         byte* pixels;
         int width;
         int height;
-        iO.Fonts.GetTexDataAsRGBA32(&pixels, &width, &height);
+        io.Fonts.GetTexDataAsRGBA32(&pixels, &width, &height);
 
         _gl.GetInteger(GLEnum.TextureBinding2D, out int lastTexture);
 
@@ -574,7 +608,7 @@ public unsafe class ImGuiController : Disposable
         _fontTexture.Write((uint)width, (uint)height, TrPixelFormat.RGBA8, pixels);
         _fontTexture.UpdateParameters();
 
-        iO.Fonts.SetTexID((nint)_fontTexture.Handle);
+        io.Fonts.SetTexID((nint)_fontTexture.Handle);
         _gl.BindTexture(GLEnum.Texture2D, (uint)lastTexture);
     }
 
