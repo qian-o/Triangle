@@ -191,7 +191,8 @@ public static unsafe class TrMeshFactory
                                            | PostProcessSteps.GenerateNormals
                                            | PostProcessSteps.GenerateSmoothNormals
                                            | PostProcessSteps.GenerateUVCoords
-                                           | PostProcessSteps.FlipUVs
+                                           | PostProcessSteps.OptimizeMeshes
+                                           | PostProcessSteps.OptimizeGraph
                                            | PostProcessSteps.PreTransformVertices;
 
             using Assimp importer = Assimp.GetApi();
@@ -233,8 +234,16 @@ public static unsafe class TrMeshFactory
                 {
                     vertices[i].Position = (*&mesh->MVertices[i]).ToGeneric();
                     vertices[i].Normal = (*&mesh->MNormals[i]).ToGeneric();
-                    vertices[i].Tangent = (*&mesh->MTangents[i]).ToGeneric();
-                    vertices[i].Bitangent = (*&mesh->MBitangents[i]).ToGeneric();
+
+                    if (mesh->MTangents != null)
+                    {
+                        vertices[i].Tangent = (*&mesh->MTangents[i]).ToGeneric();
+                    }
+
+                    if (mesh->MBitangents != null)
+                    {
+                        vertices[i].Bitangent = (*&mesh->MBitangents[i]).ToGeneric();
+                    }
 
                     if (mesh->MColors[0] != null)
                     {
