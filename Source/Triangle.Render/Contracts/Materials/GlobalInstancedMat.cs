@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Concurrent;
+using System.Collections.ObjectModel;
 using Silk.NET.Maths;
 using Triangle.Core;
 using Triangle.Core.GameObjects;
@@ -36,14 +37,60 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
 
         if (pages > 1)
         {
+            Matrix4X4<float>[] transforms = new Matrix4X4<float>[models.Length];
+            Parallel.ForEach(Partitioner.Create(0, models.Length), range =>
+            {
+                for (int i = range.Item1; i < range.Item2; i++)
+                {
+                    transforms[i] = models[i].Transform.Model;
+                }
+            });
+
             for (int i = 0; i < pages; i++)
             {
-                InternalDraw([.. models.Skip(i * MaxSamplerSize).Take(MaxSamplerSize)], i * MaxSamplerSize, parameters);
+                InternalDraw([.. models.Skip(i * MaxSamplerSize).Take(MaxSamplerSize)], [.. transforms.Skip(i * MaxSamplerSize).Take(MaxSamplerSize)], i * MaxSamplerSize, parameters);
             }
         }
         else
         {
-            InternalDraw(models, 0, parameters);
+            InternalDraw(models, [.. models.Select(item => item.Transform.Model)], 0, parameters);
+        }
+    }
+
+    public void Draw(TrMesh mesh, Matrix4X4<float>[] transforms, params object[] args)
+    {
+        if (args.FirstOrDefault(item => item is GlobalParameters) is not GlobalParameters parameters)
+        {
+            throw new ArgumentException("Invalid arguments.");
+        }
+
+        int length = transforms.Length;
+
+        TrMesh[] meshes = new TrMesh[length];
+        Array.Fill(meshes, mesh);
+
+        int[] indices = Enumerable.Range(0, length).ToArray();
+
+        int pages = (int)Math.Ceiling((double)length / MaxSamplerSize);
+
+        if (pages > 1)
+        {
+            for (int i = 0; i < pages; i++)
+            {
+                int skip = i * MaxSamplerSize;
+
+                UpdateMatrixSampler([.. transforms.Skip(skip).Take(MaxSamplerSize)]);
+                UpdateSampler([.. indices.Skip(skip).Take(MaxSamplerSize)]);
+
+                Draw([.. meshes.Skip(skip).Take(MaxSamplerSize)], parameters);
+            }
+        }
+        else
+        {
+            UpdateMatrixSampler(transforms);
+            UpdateSampler(indices);
+
+            Draw(meshes, parameters);
         }
     }
 
@@ -66,13 +113,14 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
         _bufferMatrix.SetData(models);
     }
 
-    private void InternalDraw(TrModel[] models, int beginIndex, GlobalParameters parameters)
+    private void InternalDraw(TrModel[] models, Matrix4X4<float>[] transforms, int beginIndex, GlobalParameters parameters)
     {
         (TrModel Model, ReadOnlyCollection<TrMesh> Meshes)[] map = [.. models.Select(item => (item, item.Meshes))];
 
         foreach (string name in map.SelectMany(item => item.Meshes).Select(item => item.Name).Distinct())
         {
             List<TrModel> drawModels = new(map.Length);
+            List<Matrix4X4<float>> drawTransforms = new(map.Length);
             List<int> indices = new(map.Length);
             List<TrMesh> meshes = new(map.Length);
 
@@ -81,12 +129,13 @@ public unsafe abstract class GlobalInstancedMat(TrContext context, string name) 
                 if (map[i].Meshes.FirstOrDefault(item => item.Name == name) is TrMesh mesh)
                 {
                     drawModels.Add(models[i]);
+                    drawTransforms.Add(transforms[i]);
                     indices.Add(beginIndex + i);
                     meshes.Add(mesh);
                 }
             }
 
-            UpdateMatrixSampler([.. drawModels.Select(item => item.Transform.Model)]);
+            UpdateMatrixSampler([.. drawTransforms]);
             UpdateSampler([.. indices]);
 
             Draw([.. meshes], parameters);

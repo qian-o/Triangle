@@ -228,26 +228,35 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 
     public void BindUniformBlock(uint bindingPoint, TrTexture? texture)
     {
-        GL gl = Context.GL;
+        if (texture != null)
+        {
+            GL gl = Context.GL;
 
-        gl.ActiveTexture(GLEnum.Texture0 + (int)bindingPoint);
-        gl.BindTexture(GLEnum.Texture2D, texture != null ? texture.Handle : 0);
+            gl.ActiveTexture(GLEnum.Texture0 + (int)bindingPoint);
+            gl.BindTexture(GLEnum.Texture2D, texture.Handle);
+        }
     }
 
     public void BindUniformBlock(uint bindingPoint, TrCubeMap? cubeMap)
     {
-        GL gl = Context.GL;
+        if (cubeMap != null)
+        {
+            GL gl = Context.GL;
 
-        gl.ActiveTexture(GLEnum.Texture0 + (int)bindingPoint);
-        gl.BindTexture(GLEnum.TextureCubeMap, cubeMap != null ? cubeMap.Handle : 0);
+            gl.ActiveTexture(GLEnum.Texture0 + (int)bindingPoint);
+            gl.BindTexture(GLEnum.TextureCubeMap, cubeMap.Handle);
+        }
     }
 
     public void BindUniformBlock(uint bindingPoint, TrPixelBuffer? pixelBuffer)
     {
-        GL gl = Context.GL;
+        if (pixelBuffer != null)
+        {
+            GL gl = Context.GL;
 
-        gl.ActiveTexture(GLEnum.Texture0 + (int)bindingPoint);
-        gl.BindTexture(GLEnum.Texture2D, pixelBuffer != null ? pixelBuffer.Texture.Handle : 0);
+            gl.ActiveTexture(GLEnum.Texture0 + (int)bindingPoint);
+            gl.BindTexture(GLEnum.Texture2D, pixelBuffer.Texture.Handle);
+        }
     }
 
     public void BindBufferBlock<T>(uint bindingPoint, TrBuffer<T> ssbo) where T : unmanaged
