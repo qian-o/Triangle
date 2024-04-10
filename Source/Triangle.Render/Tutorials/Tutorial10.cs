@@ -23,6 +23,7 @@ public class Tutorial10(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void Loaded()
     {
+        //321
         diffusePixelLevelMat = new(Context)
         {
             Diffuse = new Vector4D<float>(0.7960f, 0.7960f, 0.7960f, 1.0f)
