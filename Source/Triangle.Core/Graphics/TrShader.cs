@@ -19,7 +19,8 @@ public unsafe class TrShader : TrGraphics<TrContext>
             byte[] bytes = File.ReadAllBytes(source);
             uint size = (uint)bytes.Length;
 
-            gl.ShaderBinary(1, Handle, GLEnum.ShaderBinaryFormatSpirV, bytes[0], size);
+            uint[] shaders = [Handle];
+            gl.ShaderBinary((uint)shaders.Length, ref shaders[0], GLEnum.ShaderBinaryFormatSpirV, ref bytes[0], size);
             gl.SpecializeShader(Handle, "main", 0, null, null);
         }
         else
