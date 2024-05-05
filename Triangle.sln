@@ -8,12 +8,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		.globalconfig = .globalconfig
+		README-en.md = README-en.md
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Triangle.Core", "Source\Triangle.Core\Triangle.Core.csproj", "{650B65F1-5031-472F-AD8E-78899416F3F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triangle.Render", "Source\Triangle.Render\Triangle.Render.csproj", "{3484E8C5-1090-4EFB-AB68-C91C9AF978EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Triangle.Render", "Source\Triangle.Render\Triangle.Render.csproj", "{3484E8C5-1090-4EFB-AB68-C91C9AF978EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
