@@ -483,64 +483,17 @@ public unsafe class ImGuiController : Disposable
         _gl.BindVertexArray((uint)lastVertexArrayObject);
 
         _gl.BindBuffer(GLEnum.ArrayBuffer, (uint)lastArrayBuffer);
-        _gl.BlendEquationSeparate((GLEnum)lastBlendEquationRgb, (GLEnum)lastBlendEquationAlpha);
-        _gl.BlendFuncSeparate((GLEnum)lastBlendSrcRgb, (GLEnum)lastBlendDstRgb, (GLEnum)lastBlendSrcAlpha, (GLEnum)lastBlendDstAlpha);
+        
+        _trContext.IsBlend = lastEnableBlend;
+        _trContext.BlendEquationSeparate = new TrBlendEquationSeparate(((BlendEquationModeEXT)lastBlendEquationRgb).ToTr(), ((BlendEquationModeEXT)lastBlendEquationAlpha).ToTr());
+        _trContext.BlendFuncSeparate = new TrBlendFuncSeparate(((BlendingFactor)lastBlendSrcRgb).ToTr(), ((BlendingFactor)lastBlendDstRgb).ToTr(), ((BlendingFactor)lastBlendSrcAlpha).ToTr(), ((BlendingFactor)lastBlendDstAlpha).ToTr());
+        _trContext.IsCullFace = lastEnableCullFace;
+        _trContext.IsDepthTest = lastEnableDepthTest;
+        _trContext.IsStencilTest = lastEnableStencilTest;
+        _trContext.IsScissorTest = lastEnableScissorTest;
+        _trContext.IsPrimitiveRestart = lastEnablePrimitiveRestart;
+        _trContext.Polygon = new TrPolygon(TrTriangleFace.FrontAndBack, ((PolygonMode)lastPolygonMode[0]).ToTr());
 
-        if (lastEnableBlend)
-        {
-            _gl.Enable(GLEnum.Blend);
-        }
-        else
-        {
-            _gl.Disable(GLEnum.Blend);
-        }
-
-        if (lastEnableCullFace)
-        {
-            _gl.Enable(GLEnum.CullFace);
-        }
-        else
-        {
-            _gl.Disable(GLEnum.CullFace);
-        }
-
-        if (lastEnableDepthTest)
-        {
-            _gl.Enable(GLEnum.DepthTest);
-        }
-        else
-        {
-            _gl.Disable(GLEnum.DepthTest);
-        }
-
-        if (lastEnableStencilTest)
-        {
-            _gl.Enable(GLEnum.StencilTest);
-        }
-        else
-        {
-            _gl.Disable(GLEnum.StencilTest);
-        }
-
-        if (lastEnableScissorTest)
-        {
-            _gl.Enable(GLEnum.ScissorTest);
-        }
-        else
-        {
-            _gl.Disable(GLEnum.ScissorTest);
-        }
-
-        if (lastEnablePrimitiveRestart)
-        {
-            _gl.Enable(GLEnum.PrimitiveRestart);
-        }
-        else
-        {
-            _gl.Disable(GLEnum.PrimitiveRestart);
-        }
-
-        _gl.PolygonMode(GLEnum.FrontAndBack, (GLEnum)lastPolygonMode[0]);
         _gl.Scissor(lastScissorBox[0], lastScissorBox[1], (uint)lastScissorBox[2], (uint)lastScissorBox[3]);
     }
 
@@ -558,7 +511,7 @@ public unsafe class ImGuiController : Disposable
         _pipeline = new(_trContext, [vs, fs])
         {
             IsBlend = true,
-            BlendEquation = TrBlendEquation.Add,
+            BlendEquationSeparate = new TrBlendEquationSeparate(TrBlendEquation.Add, TrBlendEquation.Add),
             BlendFuncSeparate = new TrBlendFuncSeparate(TrBlendFactor.SrcAlpha, TrBlendFactor.OneMinusSrcAlpha, TrBlendFactor.One, TrBlendFactor.OneMinusSrcAlpha),
             IsCullFace = false,
             IsDepthTest = false,

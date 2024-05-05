@@ -133,29 +133,6 @@ public static class EnumExtensions
         };
     }
 
-    public static (GLEnum Target, GLEnum Format, GLEnum Type) ToGL(this TrPixelFormat pixelFormat)
-    {
-        return pixelFormat switch
-        {
-            TrPixelFormat.R8 => (GLEnum.R8, GLEnum.Red, GLEnum.UnsignedByte),
-            TrPixelFormat.RG8 => (GLEnum.RG8, GLEnum.RG, GLEnum.UnsignedByte),
-            TrPixelFormat.RGB8 => (GLEnum.Rgb8, GLEnum.Rgb, GLEnum.UnsignedByte),
-            TrPixelFormat.RGBA8 => (GLEnum.Rgba8, GLEnum.Rgba, GLEnum.UnsignedByte),
-            TrPixelFormat.R16 => (GLEnum.R16, GLEnum.Red, GLEnum.UnsignedShort),
-            TrPixelFormat.RG16 => (GLEnum.RG16, GLEnum.RG, GLEnum.UnsignedShort),
-            TrPixelFormat.RGB16 => (GLEnum.Rgb16, GLEnum.Rgb, GLEnum.UnsignedShort),
-            TrPixelFormat.RGBA16 => (GLEnum.Rgba16, GLEnum.Rgba, GLEnum.UnsignedShort),
-            TrPixelFormat.R16F => (GLEnum.R16f, GLEnum.Red, GLEnum.Float),
-            TrPixelFormat.RG16F => (GLEnum.RG16f, GLEnum.RG, GLEnum.Float),
-            TrPixelFormat.RGB16F => (GLEnum.Rgb16f, GLEnum.Rgb, GLEnum.Float),
-            TrPixelFormat.RGBA16F => (GLEnum.Rgba16f, GLEnum.Rgba, GLEnum.Float),
-            TrPixelFormat.DepthComponent16 => (GLEnum.DepthComponent16, GLEnum.DepthComponent, GLEnum.Float),
-            TrPixelFormat.DepthComponent24 => (GLEnum.DepthComponent24, GLEnum.DepthComponent, GLEnum.Float),
-            TrPixelFormat.DepthComponent32F => (GLEnum.DepthComponent32f, GLEnum.DepthComponent, GLEnum.Float),
-            _ => throw new NotSupportedException("不支持的像素格式。")
-        };
-    }
-
     public static GLEnum ToGL(this TrCubeMapFace textureCubeMap)
     {
         return textureCubeMap switch
@@ -178,6 +155,181 @@ public static class EnumExtensions
             TrPolygonMode.Line => GLEnum.Line,
             TrPolygonMode.Point => GLEnum.Point,
             _ => throw new NotSupportedException("不支持的多边形模式。")
+        };
+    }
+
+    public static TrDepthFunction ToTr(this DepthFunction depthFunction)
+    {
+        return depthFunction switch
+        {
+            DepthFunction.Never => TrDepthFunction.Never,
+            DepthFunction.Less => TrDepthFunction.Less,
+            DepthFunction.Equal => TrDepthFunction.Equal,
+            DepthFunction.Lequal => TrDepthFunction.LessOrEqual,
+            DepthFunction.Greater => TrDepthFunction.Greater,
+            DepthFunction.Notequal => TrDepthFunction.NotEqual,
+            DepthFunction.Gequal => TrDepthFunction.GreaterOrEqual,
+            DepthFunction.Always => TrDepthFunction.Always,
+            _ => throw new NotSupportedException("不支持的深度函数。")
+        };
+    }
+
+    public static TrStencilFunction ToTr(this StencilFunction stencilFunction)
+    {
+        return stencilFunction switch
+        {
+            StencilFunction.Never => TrStencilFunction.Never,
+            StencilFunction.Less => TrStencilFunction.Less,
+            StencilFunction.Equal => TrStencilFunction.Equal,
+            StencilFunction.Lequal => TrStencilFunction.LessOrEqual,
+            StencilFunction.Greater => TrStencilFunction.Greater,
+            StencilFunction.Notequal => TrStencilFunction.NotEqual,
+            StencilFunction.Gequal => TrStencilFunction.GreaterOrEqual,
+            StencilFunction.Always => TrStencilFunction.Always,
+            _ => throw new NotSupportedException("不支持的模板函数。")
+        };
+    }
+
+    public static TrTriangleFace ToTr(this TriangleFace triangleFace)
+    {
+        return triangleFace switch
+        {
+            TriangleFace.Front => TrTriangleFace.Front,
+            TriangleFace.Back => TrTriangleFace.Back,
+            TriangleFace.FrontAndBack => TrTriangleFace.FrontAndBack,
+            _ => throw new NotSupportedException("不支持的三角形面。")
+        };
+    }
+
+    public static TrFrontFaceDirection ToTr(this FrontFaceDirection frontFaceDirection)
+    {
+        return frontFaceDirection switch
+        {
+            FrontFaceDirection.Ccw => TrFrontFaceDirection.CounterClockwise,
+            FrontFaceDirection.CW => TrFrontFaceDirection.Clockwise,
+            _ => throw new NotSupportedException("不支持的正面方向。")
+        };
+    }
+
+    public static TrBlendFactor ToTr(this BlendingFactor blendFactor)
+    {
+        return blendFactor switch
+        {
+            BlendingFactor.Zero => TrBlendFactor.Zero,
+            BlendingFactor.One => TrBlendFactor.One,
+            BlendingFactor.SrcColor => TrBlendFactor.SrcColor,
+            BlendingFactor.OneMinusSrcColor => TrBlendFactor.OneMinusSrcColor,
+            BlendingFactor.DstColor => TrBlendFactor.DstColor,
+            BlendingFactor.OneMinusDstColor => TrBlendFactor.OneMinusDstColor,
+            BlendingFactor.SrcAlpha => TrBlendFactor.SrcAlpha,
+            BlendingFactor.OneMinusSrcAlpha => TrBlendFactor.OneMinusSrcAlpha,
+            BlendingFactor.DstAlpha => TrBlendFactor.DstAlpha,
+            BlendingFactor.OneMinusDstAlpha => TrBlendFactor.OneMinusDstAlpha,
+            BlendingFactor.ConstantColor => TrBlendFactor.ConstantColor,
+            BlendingFactor.OneMinusConstantColor => TrBlendFactor.OneMinusConstantColor,
+            BlendingFactor.ConstantAlpha => TrBlendFactor.ConstantAlpha,
+            BlendingFactor.OneMinusConstantAlpha => TrBlendFactor.OneMinusConstantAlpha,
+            BlendingFactor.SrcAlphaSaturate => TrBlendFactor.SrcAlphaSaturate,
+            _ => throw new NotSupportedException("不支持的混合因子。")
+        };
+    }
+
+    public static TrBlendEquation ToTr(this BlendEquationModeEXT blendEquation)
+    {
+        return blendEquation switch
+        {
+            BlendEquationModeEXT.FuncAdd => TrBlendEquation.Add,
+            BlendEquationModeEXT.FuncSubtract => TrBlendEquation.Subtract,
+            BlendEquationModeEXT.FuncReverseSubtract => TrBlendEquation.ReverseSubtract,
+            BlendEquationModeEXT.Min => TrBlendEquation.Min,
+            BlendEquationModeEXT.Max => TrBlendEquation.Max,
+            _ => throw new NotSupportedException("不支持的混合方程。")
+        };
+    }
+
+    public static TrShaderType ToTr(this ShaderType shaderType)
+    {
+        return shaderType switch
+        {
+            ShaderType.VertexShader => TrShaderType.Vertex,
+            ShaderType.GeometryShader => TrShaderType.Geometry,
+            ShaderType.FragmentShader => TrShaderType.Fragment,
+            ShaderType.ComputeShader => TrShaderType.Compute,
+            _ => throw new NotSupportedException("不支持的着色器类型。")
+        };
+    }
+
+    public static TrTextureWrap ToTr(this TextureWrapMode textureWrap)
+    {
+        return textureWrap switch
+        {
+            TextureWrapMode.Repeat => TrTextureWrap.Repeat,
+            TextureWrapMode.MirroredRepeat => TrTextureWrap.MirroredRepeat,
+            TextureWrapMode.ClampToEdge => TrTextureWrap.ClampToEdge,
+            TextureWrapMode.ClampToBorder => TrTextureWrap.ClampToBorder,
+            _ => throw new NotSupportedException("不支持的纹理包裹。")
+        };
+    }
+
+    public static TrTextureFilter ToTr(this TextureMinFilter textureMinFilter)
+    {
+        return textureMinFilter switch
+        {
+            TextureMinFilter.Nearest => TrTextureFilter.Nearest,
+            TextureMinFilter.Linear => TrTextureFilter.Linear,
+            TextureMinFilter.NearestMipmapNearest => TrTextureFilter.NearestMipmapNearest,
+            TextureMinFilter.LinearMipmapNearest => TrTextureFilter.LinearMipmapNearest,
+            TextureMinFilter.NearestMipmapLinear => TrTextureFilter.NearestMipmapLinear,
+            TextureMinFilter.LinearMipmapLinear => TrTextureFilter.LinearMipmapLinear,
+            _ => throw new NotSupportedException("不支持的纹理过滤。")
+        };
+    }
+
+    public static TrCubeMapFace ToTr(this TextureTarget textureTarget)
+    {
+        return textureTarget switch
+        {
+            TextureTarget.TextureCubeMapPositiveX => TrCubeMapFace.PositiveX,
+            TextureTarget.TextureCubeMapNegativeX => TrCubeMapFace.NegativeX,
+            TextureTarget.TextureCubeMapPositiveY => TrCubeMapFace.PositiveY,
+            TextureTarget.TextureCubeMapNegativeY => TrCubeMapFace.NegativeY,
+            TextureTarget.TextureCubeMapPositiveZ => TrCubeMapFace.PositiveZ,
+            TextureTarget.TextureCubeMapNegativeZ => TrCubeMapFace.NegativeZ,
+            _ => throw new NotSupportedException("不支持的立方体贴图。")
+        };
+    }
+
+    public static TrPolygonMode ToTr(this PolygonMode polygonMode)
+    {
+        return polygonMode switch
+        {
+            PolygonMode.Fill => TrPolygonMode.Fill,
+            PolygonMode.Line => TrPolygonMode.Line,
+            PolygonMode.Point => TrPolygonMode.Point,
+            _ => throw new NotSupportedException("不支持的多边形模式。")
+        };
+    }
+
+    public static (GLEnum Target, GLEnum Format, GLEnum Type) ToGL(this TrPixelFormat pixelFormat)
+    {
+        return pixelFormat switch
+        {
+            TrPixelFormat.R8 => (GLEnum.R8, GLEnum.Red, GLEnum.UnsignedByte),
+            TrPixelFormat.RG8 => (GLEnum.RG8, GLEnum.RG, GLEnum.UnsignedByte),
+            TrPixelFormat.RGB8 => (GLEnum.Rgb8, GLEnum.Rgb, GLEnum.UnsignedByte),
+            TrPixelFormat.RGBA8 => (GLEnum.Rgba8, GLEnum.Rgba, GLEnum.UnsignedByte),
+            TrPixelFormat.R16 => (GLEnum.R16, GLEnum.Red, GLEnum.UnsignedShort),
+            TrPixelFormat.RG16 => (GLEnum.RG16, GLEnum.RG, GLEnum.UnsignedShort),
+            TrPixelFormat.RGB16 => (GLEnum.Rgb16, GLEnum.Rgb, GLEnum.UnsignedShort),
+            TrPixelFormat.RGBA16 => (GLEnum.Rgba16, GLEnum.Rgba, GLEnum.UnsignedShort),
+            TrPixelFormat.R16F => (GLEnum.R16f, GLEnum.Red, GLEnum.Float),
+            TrPixelFormat.RG16F => (GLEnum.RG16f, GLEnum.RG, GLEnum.Float),
+            TrPixelFormat.RGB16F => (GLEnum.Rgb16f, GLEnum.Rgb, GLEnum.Float),
+            TrPixelFormat.RGBA16F => (GLEnum.Rgba16f, GLEnum.Rgba, GLEnum.Float),
+            TrPixelFormat.DepthComponent16 => (GLEnum.DepthComponent16, GLEnum.DepthComponent, GLEnum.Float),
+            TrPixelFormat.DepthComponent24 => (GLEnum.DepthComponent24, GLEnum.DepthComponent, GLEnum.Float),
+            TrPixelFormat.DepthComponent32F => (GLEnum.DepthComponent32f, GLEnum.DepthComponent, GLEnum.Float),
+            _ => throw new NotSupportedException("不支持的像素格式。")
         };
     }
 

@@ -61,7 +61,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 
     public TrBlendFactor DestinationFactor { get; set; } = TrBlendFactor.OneMinusSrcAlpha;
 
-    public TrBlendEquation BlendEquation { get; set; } = TrBlendEquation.Add;
+    public TrBlendEquationSeparate BlendEquationSeparate { get; set; } = TrBlendEquationSeparate.Default;
 
     public TrBlendFuncSeparate BlendFuncSeparate { get; set; } = TrBlendFuncSeparate.Default;
 
@@ -114,7 +114,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 IsBlend = false;
                 SourceFactor = TrBlendFactor.One;
                 DestinationFactor = TrBlendFactor.Zero;
-                BlendEquation = TrBlendEquation.Add;
+                BlendEquationSeparate = TrBlendEquationSeparate.Default;
                 BlendFuncSeparate = TrBlendFuncSeparate.Default;
                 IsScissorTest = false;
                 IsPrimitiveRestart = false;
@@ -137,7 +137,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 IsBlend = false;
                 SourceFactor = TrBlendFactor.One;
                 DestinationFactor = TrBlendFactor.Zero;
-                BlendEquation = TrBlendEquation.Add;
+                BlendEquationSeparate = TrBlendEquationSeparate.Default;
                 BlendFuncSeparate = TrBlendFuncSeparate.Default;
                 IsScissorTest = false;
                 IsPrimitiveRestart = false;
@@ -160,7 +160,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 IsBlend = false;
                 SourceFactor = TrBlendFactor.One;
                 DestinationFactor = TrBlendFactor.Zero;
-                BlendEquation = TrBlendEquation.Add;
+                BlendEquationSeparate = TrBlendEquationSeparate.Default;
                 BlendFuncSeparate = TrBlendFuncSeparate.Default;
                 IsScissorTest = false;
                 IsPrimitiveRestart = false;
@@ -183,7 +183,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 IsBlend = true;
                 SourceFactor = TrBlendFactor.SrcAlpha;
                 DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
-                BlendEquation = TrBlendEquation.Add;
+                BlendEquationSeparate = TrBlendEquationSeparate.Default;
                 BlendFuncSeparate = TrBlendFuncSeparate.Default;
                 IsScissorTest = false;
                 IsPrimitiveRestart = false;
@@ -206,7 +206,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
                 IsBlend = true;
                 SourceFactor = TrBlendFactor.SrcAlpha;
                 DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
-                BlendEquation = TrBlendEquation.Add;
+                BlendEquationSeparate = TrBlendEquationSeparate.Default;
                 BlendFuncSeparate = TrBlendFuncSeparate.Default;
                 IsScissorTest = false;
                 IsPrimitiveRestart = false;
@@ -286,7 +286,7 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
         Context.IsBlend = IsBlend;
         Context.SourceFactor = SourceFactor;
         Context.DestinationFactor = DestinationFactor;
-        Context.BlendEquation = BlendEquation;
+        Context.BlendEquationSeparate = BlendEquationSeparate;
         Context.BlendFuncSeparate = BlendFuncSeparate;
         Context.IsScissorTest = IsScissorTest;
         Context.IsPrimitiveRestart = IsPrimitiveRestart;

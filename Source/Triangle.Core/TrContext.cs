@@ -30,7 +30,7 @@ public class TrContext : Disposable
     private bool isBlend;
     private TrBlendFactor sourceFactor;
     private TrBlendFactor destinationFactor;
-    private TrBlendEquation blendEquation;
+    private TrBlendEquationSeparate blendEquationSeparate;
     private TrBlendFuncSeparate blendFuncSeparate;
     private bool isScissorTest;
     private bool isPrimitiveRestart;
@@ -57,7 +57,7 @@ public class TrContext : Disposable
         IsBlend = true;
         SourceFactor = TrBlendFactor.SrcAlpha;
         DestinationFactor = TrBlendFactor.OneMinusSrcAlpha;
-        BlendEquation = TrBlendEquation.Add;
+        BlendEquationSeparate = TrBlendEquationSeparate.Default;
         BlendFuncSeparate = TrBlendFuncSeparate.Default;
         IsScissorTest = false;
         IsPrimitiveRestart = false;
@@ -310,16 +310,16 @@ public class TrContext : Disposable
         }
     }
 
-    public TrBlendEquation BlendEquation
+    public TrBlendEquationSeparate BlendEquationSeparate
     {
-        get => blendEquation;
+        get => blendEquationSeparate;
         set
         {
-            if (blendEquation != value || !isInitialized)
+            if (blendEquationSeparate != value || !isInitialized)
             {
-                blendEquation = value;
+                blendEquationSeparate = value;
 
-                GL.BlendEquation(value.ToGL());
+                GL.BlendEquationSeparate(value.ModeRGB.ToGL(), value.ModeAlpha.ToGL());
             }
         }
     }
