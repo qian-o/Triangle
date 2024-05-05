@@ -20,4 +20,4 @@
 - https://www.shadertoy.com/
 
 ## The implementation of this renderer refers to the following books:
-- ¡¶Unity ShaderÈëÃÅ¾«Òª¡·
+- 《Unity Shader入门精要》
