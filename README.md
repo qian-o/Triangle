@@ -21,3 +21,9 @@
 
 ## 该渲染器的实现参考了以下书籍：
 - 《Unity Shader入门精要》
+
+## 渲染器部分截图：
+![1](https://github.com/qian-o/Triangle/assets/84434846/991a7f40-573e-4e2c-928c-2f29890079ef)
+![2](https://github.com/qian-o/Triangle/assets/84434846/0fd61802-eb8c-4d82-979d-871fc84dd72a)
+![3](https://github.com/qian-o/Triangle/assets/84434846/1a441a98-9ef9-4a99-a15c-14e9a156a789)
+![4](https://github.com/qian-o/Triangle/assets/84434846/82dc513e-d447-4c89-8a9c-168645f30cdd)
