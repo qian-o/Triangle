@@ -1,6 +1,6 @@
 # Triangle
 
-[中文简体](https://github.com/qian-o/Triangle/blob/master/README.md) | [English](https://github.com/qian-o/Triangle/blob/master/README-en.md)
+[涓枃绠�浣揮(https://github.com/qian-o/Triangle/blob/master/README.md) | [English](https://github.com/qian-o/Triangle/blob/master/README-en.md)
 
 ## This is a renderer based on OpenGL 4.6.
 ## First of all, it is not a game engine, nor a modeling software, it is just a renderer, but it does not provide a standard rendering pipeline, but provides a simple rendering framework, users can customize the rendering pipeline according to their own needs.
@@ -20,4 +20,4 @@
 - https://www.shadertoy.com/
 
 ## The implementation of this renderer refers to the following books:
-- 《Unity Shader入门精要》
+- 隆露Unity Shader脠毛脙脜戮芦脪陋隆路
