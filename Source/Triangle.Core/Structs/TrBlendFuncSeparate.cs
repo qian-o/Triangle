@@ -1,4 +1,5 @@
-﻿using Triangle.Core.Enums;
+﻿using System.Diagnostics.CodeAnalysis;
+using Triangle.Core.Enums;
 
 namespace Triangle.Core.Structs;
 
@@ -13,4 +14,28 @@ public struct TrBlendFuncSeparate(TrBlendFactor srcRGB, TrBlendFactor dstRGB, Tr
     public TrBlendFactor SrcAlpha = srcAlpha;
 
     public TrBlendFactor DstAlpha = dstAlpha;
+
+    public override readonly bool Equals([NotNullWhen(true)] object? obj)
+    {
+        return obj is TrBlendFuncSeparate separate
+               && SrcRGB == separate.SrcRGB
+               && DstRGB == separate.DstRGB
+               && SrcAlpha == separate.SrcAlpha
+               && DstAlpha == separate.DstAlpha;
+    }
+
+    public override readonly int GetHashCode()
+    {
+        return HashCode.Combine(SrcRGB, DstRGB, SrcAlpha, DstAlpha);
+    }
+
+    public static bool operator ==(TrBlendFuncSeparate left, TrBlendFuncSeparate right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(TrBlendFuncSeparate left, TrBlendFuncSeparate right)
+    {
+        return !(left == right);
+    }
 }

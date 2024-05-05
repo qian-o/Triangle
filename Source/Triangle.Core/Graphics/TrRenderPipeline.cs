@@ -2,7 +2,6 @@
 using Triangle.Core.Contracts.Graphics;
 using Triangle.Core.Enums;
 using Triangle.Core.Exceptions;
-using Triangle.Core.Helpers;
 using Triangle.Core.Structs;
 
 namespace Triangle.Core.Graphics;
@@ -272,96 +271,27 @@ public unsafe class TrRenderPipeline : TrGraphics<TrContext>
 
         gl.UseProgram(Handle);
 
-        gl.ColorMask(IsColorWrite, IsColorWrite, IsColorWrite, IsColorWrite);
-
-        if (IsDepthTest)
-        {
-            gl.Enable(GLEnum.DepthTest);
-        }
-        else
-        {
-            gl.Disable(GLEnum.DepthTest);
-        }
-
-        gl.DepthMask(IsDepthWrite);
-
-        gl.DepthFunc(DepthFunction.ToGL());
-
-        if (IsStencilTest)
-        {
-            gl.Enable(GLEnum.StencilTest);
-        }
-        else
-        {
-            gl.Disable(GLEnum.StencilTest);
-        }
-
-        gl.StencilMask((uint)(IsStencilWrite ? 0xFF : 0x00));
-
-        gl.StencilFunc(StencilFunction.ToGL(), StencilReference, StencilMask);
-
-        gl.StencilOp(GLEnum.Keep, GLEnum.Keep, GLEnum.Keep);
-
-        if (IsCullFace)
-        {
-            gl.Enable(GLEnum.CullFace);
-        }
-        else
-        {
-            gl.Disable(GLEnum.CullFace);
-        }
-
-        gl.CullFace(TriangleFace.ToGL());
-        gl.FrontFace(FrontFaceDirection.ToGL());
-
-        if (IsBlend)
-        {
-            gl.Enable(GLEnum.Blend);
-        }
-        else
-        {
-            gl.Disable(GLEnum.Blend);
-        }
-
-        gl.BlendFunc(SourceFactor.ToGL(), DestinationFactor.ToGL());
-
-        gl.BlendEquation(BlendEquation.ToGL());
-
-        gl.BlendFuncSeparate(BlendFuncSeparate.SrcRGB.ToGL(), BlendFuncSeparate.DstRGB.ToGL(), BlendFuncSeparate.SrcAlpha.ToGL(), BlendFuncSeparate.DstAlpha.ToGL());
-
-        if (IsScissorTest)
-        {
-            gl.Enable(GLEnum.ScissorTest);
-        }
-        else
-        {
-            gl.Disable(GLEnum.ScissorTest);
-        }
-
-        if (IsPrimitiveRestart)
-        {
-            gl.Enable(GLEnum.PrimitiveRestart);
-        }
-        else
-        {
-            gl.Disable(GLEnum.PrimitiveRestart);
-        }
-
-        gl.PolygonMode(Polygon.Face.ToGL(), Polygon.Mode.ToGL());
-        gl.LineWidth(Polygon.LineWidth);
-        gl.PointSize(Polygon.PointSize);
-
-        if (IsMultisample)
-        {
-            gl.Enable(GLEnum.Multisample);
-        }
-        else
-        {
-            gl.Disable(GLEnum.Multisample);
-        }
-
-        // Other settings, not controlled by the render pipeline.
-        gl.Enable(GLEnum.TextureCubeMapSeamless);
+        Context.IsColorWrite = IsColorWrite;
+        Context.IsDepthTest = IsDepthTest;
+        Context.IsDepthWrite = IsDepthWrite;
+        Context.DepthFunction = DepthFunction;
+        Context.IsStencilTest = IsStencilTest;
+        Context.IsStencilWrite = IsStencilWrite;
+        Context.StencilFunction = StencilFunction;
+        Context.StencilReference = StencilReference;
+        Context.StencilMask = StencilMask;
+        Context.IsCullFace = IsCullFace;
+        Context.TriangleFace = TriangleFace;
+        Context.FrontFaceDirection = FrontFaceDirection;
+        Context.IsBlend = IsBlend;
+        Context.SourceFactor = SourceFactor;
+        Context.DestinationFactor = DestinationFactor;
+        Context.BlendEquation = BlendEquation;
+        Context.BlendFuncSeparate = BlendFuncSeparate;
+        Context.IsScissorTest = IsScissorTest;
+        Context.IsPrimitiveRestart = IsPrimitiveRestart;
+        Context.Polygon = Polygon;
+        Context.IsMultisample = IsMultisample;
     }
 
     public void Unbind()
