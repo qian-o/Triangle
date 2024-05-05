@@ -12,6 +12,7 @@
 - 基于 ImGui 的 GUI 和窗口小工具。
 - 对 Pass、Pipeline、Shader、Texture、Model、Material、Light 等一系列渲染器资源的管理。
 - 对 Shadertoy 的支持。
+- 基于 BepuPhysics 的物理引擎。
 
 ## 该渲染器只是一个入门级的渲染器，如果你想学习 OpenGL 渲染器的实现，可以参考该渲染器的实现。
 
@@ -22,7 +23,7 @@
 ## 该渲染器的实现参考了以下书籍：
 - 《Unity Shader入门精要》
 
-## 渲染器部分截图：
+## 该渲染器部分截图：
 ![1](https://github.com/qian-o/Triangle/assets/84434846/991a7f40-573e-4e2c-928c-2f29890079ef)
 ![2](https://github.com/qian-o/Triangle/assets/84434846/0fd61802-eb8c-4d82-979d-871fc84dd72a)
 ![3](https://github.com/qian-o/Triangle/assets/84434846/1a441a98-9ef9-4a99-a15c-14e9a156a789)
