@@ -9,18 +9,11 @@ public class TrModel(string name) : TrGameObject(name)
 {
     private readonly TrMesh[] _meshes = [];
     private readonly TrMaterial[] _materials = [];
-    private readonly Dictionary<TrMesh, TrMaterial> _indexer = [];
 
     public TrModel(string name, TrMesh[] meshes, TrMaterial materials) : this(name)
     {
         _meshes = meshes;
-        _materials = new TrMaterial[meshes.Length];
-
-        for (int i = 0; i < _meshes.Length; i++)
-        {
-            _materials[i] = materials;
-            _indexer.Add(_meshes[i], materials);
-        }
+        _materials = [materials];
     }
 
     public TrModel(string name, TrMesh[] meshes, TrMaterial[] materials) : this(name)
@@ -32,23 +25,6 @@ public class TrModel(string name) : TrGameObject(name)
 
         _meshes = meshes;
         _materials = materials;
-
-        for (int i = 0; i < _meshes.Length; i++)
-        {
-            _indexer.Add(_meshes[i], _materials[i]);
-        }
-    }
-
-    public TrModel(string name, TrMesh[] meshes, TrMaterial[] materials, Dictionary<TrMesh, TrMaterial> indexer) : this(name)
-    {
-        if (meshes.Length != materials.Length && meshes.Length != indexer.Count)
-        {
-            throw new ArgumentException("The number of meshes and materials must be the same.");
-        }
-
-        _meshes = meshes;
-        _materials = materials;
-        _indexer = indexer;
     }
 
     public ReadOnlyCollection<TrMesh> Meshes => new(_meshes);
@@ -84,7 +60,7 @@ public class TrModel(string name) : TrGameObject(name)
     {
         foreach (TrMesh mesh in Meshes)
         {
-            _indexer[mesh].Draw([mesh], [Transform.Model, .. args]);
+            _materials[mesh.MaterialIndex].Draw([mesh], [Transform.Model, .. args]);
         }
     }
 
@@ -100,6 +76,5 @@ public class TrModel(string name) : TrGameObject(name)
 
     protected override void Destroy(bool disposing = false)
     {
-        _indexer.Clear();
     }
 }

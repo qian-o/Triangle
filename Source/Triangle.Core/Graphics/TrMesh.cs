@@ -19,7 +19,7 @@ public unsafe class TrMesh : TrGraphics<TrContext>
     private readonly TrVertex[] _vertices;
     private readonly uint[] _indices;
 
-    public TrMesh(TrContext context, string name, TrVertex[] vertices, uint[] indices) : base(context)
+    public TrMesh(TrContext context, string name, TrVertex[] vertices, uint[] indices, uint materialIndex = 0) : base(context)
     {
         _vertices = vertices;
         _indices = indices;
@@ -30,6 +30,7 @@ public unsafe class TrMesh : TrGraphics<TrContext>
         Handle = gl.CreateVertexArray();
         VerticesBuffer = gl.CreateBuffer();
         IndicesBuffer = gl.CreateBuffer();
+        MaterialIndex = materialIndex;
 
         fixed (TrVertex* verticesPtr = vertices)
         {
@@ -57,6 +58,8 @@ public unsafe class TrMesh : TrGraphics<TrContext>
     public uint VerticesBuffer { get; }
 
     public uint IndicesBuffer { get; }
+
+    public uint MaterialIndex { get; }
 
     public int VerticesLength => _vertices.Length;
 

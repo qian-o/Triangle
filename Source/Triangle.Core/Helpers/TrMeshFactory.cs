@@ -205,11 +205,28 @@ public static unsafe class TrMeshFactory
 
             List<TrMesh> temp = [];
 
+            ProcessMaterials();
             ProcessNode(scene->MRootNode);
 
             meshes = [.. temp];
 
             _models.Add(file, meshes);
+
+            void ProcessMaterials()
+            {
+                for (uint i = 0; i < scene->MNumMaterials; i++)
+                {
+                    Material* material = scene->MMaterials[i];
+                }
+            }
+
+            void ProcessMaterial(Material* material)
+            {
+                for (uint i = 0; i < material->MNumProperties; i++)
+                {
+
+                }
+            }
 
             void ProcessNode(Node* node)
             {
@@ -270,7 +287,7 @@ public static unsafe class TrMeshFactory
                     }
                 }
 
-                return new(context, $"{file} - {mesh->MName.AsString}", vertices, indices);
+                return new(context, $"{file} - {mesh->MName.AsString}", vertices, indices, mesh->MMaterialIndex);
             }
         }
 
