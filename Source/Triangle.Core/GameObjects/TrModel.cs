@@ -18,9 +18,14 @@ public class TrModel(string name) : TrGameObject(name)
 
     public TrModel(string name, TrMesh[] meshes, TrMaterial[] materials) : this(name)
     {
-        if (meshes.Length != materials.Length)
+        if (meshes.Length == 0 || materials.Length == 0)
         {
-            throw new ArgumentException("The number of meshes and materials must be the same.");
+            throw new ArgumentException("Meshes and materials must not be empty.");
+        }
+
+        if (meshes.Select(item => item.MaterialIndex).Max() >= materials.Length)
+        {
+            throw new ArgumentException("The material index of the mesh must be less than the number of materials.");
         }
 
         _meshes = meshes;
@@ -60,7 +65,7 @@ public class TrModel(string name) : TrGameObject(name)
     {
         foreach (TrMesh mesh in Meshes)
         {
-            _materials[mesh.MaterialIndex].Draw([mesh], [Transform.Model, .. args]);
+            _materials[mesh.MaterialIndex >= _materials.Length ? 0 : mesh.MaterialIndex].Draw([mesh], [Transform.Model, .. args]);
         }
     }
 

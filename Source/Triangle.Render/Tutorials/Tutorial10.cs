@@ -28,7 +28,7 @@ public class Tutorial10(IInputContext input, TrContext context) : BaseTutorial(i
             Diffuse = new Vector4D<float>(0.7960f, 0.7960f, 0.7960f, 1.0f)
         };
 
-        scene = new("Scene", Context.AssimpParsing(Path.Combine("Resources", "Models", "Battle of the Trash god.fbx")), diffusePixelLevelMat);
+        scene = new("Scene", Context.AssimpParsing(Path.Combine("Resources", "Models", "Battle of the Trash god.fbx")).Meshes, diffusePixelLevelMat);
         scene.Transform.Translate(new Vector3D<float>(0.0f, 0.0f, -75.0f));
         scene.Transform.Rotate(new Vector3D<float>(0.0f, 89.9f, 0.0f));
         scene.Transform.Scaled(new Vector3D<float>(0.01f, 0.01f, 0.01f));
