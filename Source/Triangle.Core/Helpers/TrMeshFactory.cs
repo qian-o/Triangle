@@ -289,7 +289,7 @@ public static unsafe class TrMeshFactory
             {
                 for (uint i = 0; i < material->MNumProperties; i++)
                 {
-
+                    // TODO: Process material properties.
                 }
 
                 return new TrMaterialProperty(context);
