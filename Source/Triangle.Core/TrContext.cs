@@ -13,7 +13,7 @@ public class TrContext : Disposable
     public const int MaxExecutionCount = 10;
 
     private readonly ConcurrentQueue<Action> _actions = new();
-    private readonly bool isInitialized;
+    private readonly bool _isInitialized;
 
     private bool isColorWrite;
     private bool isDepthTest;
@@ -67,7 +67,7 @@ public class TrContext : Disposable
         // Other settings, not controlled by the render pipeline.
         GL.Enable(GLEnum.TextureCubeMapSeamless);
 
-        isInitialized = true;
+        _isInitialized = true;
     }
 
     public GL GL { get; }
@@ -77,7 +77,7 @@ public class TrContext : Disposable
         get => isColorWrite;
         set
         {
-            if (isColorWrite != value || !isInitialized)
+            if (isColorWrite != value || !_isInitialized)
             {
                 isColorWrite = value;
 
@@ -91,7 +91,7 @@ public class TrContext : Disposable
         get => isDepthTest;
         set
         {
-            if (isDepthTest != value || !isInitialized)
+            if (isDepthTest != value || !_isInitialized)
             {
                 isDepthTest = value;
 
@@ -112,7 +112,7 @@ public class TrContext : Disposable
         get => isDepthWrite;
         set
         {
-            if (isDepthWrite != value || !isInitialized)
+            if (isDepthWrite != value || !_isInitialized)
             {
                 isDepthWrite = value;
 
@@ -126,7 +126,7 @@ public class TrContext : Disposable
         get => depthFunction;
         set
         {
-            if (depthFunction != value || !isInitialized)
+            if (depthFunction != value || !_isInitialized)
             {
                 depthFunction = value;
 
@@ -140,7 +140,7 @@ public class TrContext : Disposable
         get => isStencilTest;
         set
         {
-            if (isStencilTest != value || !isInitialized)
+            if (isStencilTest != value || !_isInitialized)
             {
                 isStencilTest = value;
 
@@ -161,7 +161,7 @@ public class TrContext : Disposable
         get => isStencilWrite;
         set
         {
-            if (isStencilWrite != value || !isInitialized)
+            if (isStencilWrite != value || !_isInitialized)
             {
                 isStencilWrite = value;
 
@@ -175,7 +175,7 @@ public class TrContext : Disposable
         get => stencilFunction;
         set
         {
-            if (stencilFunction != value || !isInitialized)
+            if (stencilFunction != value || !_isInitialized)
             {
                 stencilFunction = value;
 
@@ -189,7 +189,7 @@ public class TrContext : Disposable
         get => stencilReference;
         set
         {
-            if (stencilReference != value || !isInitialized)
+            if (stencilReference != value || !_isInitialized)
             {
                 stencilReference = value;
 
@@ -203,7 +203,7 @@ public class TrContext : Disposable
         get => stencilMask;
         set
         {
-            if (stencilMask != value || !isInitialized)
+            if (stencilMask != value || !_isInitialized)
             {
                 stencilMask = value;
 
@@ -217,7 +217,7 @@ public class TrContext : Disposable
         get => isCullFace;
         set
         {
-            if (isCullFace != value || !isInitialized)
+            if (isCullFace != value || !_isInitialized)
             {
                 isCullFace = value;
 
@@ -238,7 +238,7 @@ public class TrContext : Disposable
         get => triangleFace;
         set
         {
-            if (triangleFace != value || !isInitialized)
+            if (triangleFace != value || !_isInitialized)
             {
                 triangleFace = value;
 
@@ -252,7 +252,7 @@ public class TrContext : Disposable
         get => frontFaceDirection;
         set
         {
-            if (frontFaceDirection != value || !isInitialized)
+            if (frontFaceDirection != value || !_isInitialized)
             {
                 frontFaceDirection = value;
 
@@ -266,7 +266,7 @@ public class TrContext : Disposable
         get => isBlend;
         set
         {
-            if (isBlend != value || !isInitialized)
+            if (isBlend != value || !_isInitialized)
             {
                 isBlend = value;
 
@@ -287,7 +287,7 @@ public class TrContext : Disposable
         get => sourceFactor;
         set
         {
-            if (sourceFactor != value || !isInitialized)
+            if (sourceFactor != value || !_isInitialized)
             {
                 sourceFactor = value;
 
@@ -301,7 +301,7 @@ public class TrContext : Disposable
         get => destinationFactor;
         set
         {
-            if (destinationFactor != value || !isInitialized)
+            if (destinationFactor != value || !_isInitialized)
             {
                 destinationFactor = value;
 
@@ -315,7 +315,7 @@ public class TrContext : Disposable
         get => blendEquationSeparate;
         set
         {
-            if (blendEquationSeparate != value || !isInitialized)
+            if (blendEquationSeparate != value || !_isInitialized)
             {
                 blendEquationSeparate = value;
 
@@ -329,7 +329,7 @@ public class TrContext : Disposable
         get => blendFuncSeparate;
         set
         {
-            if (blendFuncSeparate != value || !isInitialized)
+            if (blendFuncSeparate != value || !_isInitialized)
             {
                 blendFuncSeparate = value;
 
@@ -343,7 +343,7 @@ public class TrContext : Disposable
         get => isScissorTest;
         set
         {
-            if (isScissorTest != value || !isInitialized)
+            if (isScissorTest != value || !_isInitialized)
             {
                 isScissorTest = value;
 
@@ -364,7 +364,7 @@ public class TrContext : Disposable
         get => isPrimitiveRestart;
         set
         {
-            if (isPrimitiveRestart != value || !isInitialized)
+            if (isPrimitiveRestart != value || !_isInitialized)
             {
                 isPrimitiveRestart = value;
 
@@ -385,7 +385,7 @@ public class TrContext : Disposable
         get => polygon;
         set
         {
-            if (polygon != value || !isInitialized)
+            if (polygon != value || !_isInitialized)
             {
                 polygon = value;
 
@@ -401,7 +401,7 @@ public class TrContext : Disposable
         get => isMultisample;
         set
         {
-            if (isMultisample != value || !isInitialized)
+            if (isMultisample != value || !_isInitialized)
             {
                 isMultisample = value;
 

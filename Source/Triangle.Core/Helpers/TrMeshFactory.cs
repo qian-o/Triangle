@@ -9,7 +9,7 @@ namespace Triangle.Core.Helpers;
 public static unsafe class TrMeshFactory
 {
     private static readonly Dictionary<string, TrMesh> _meshes = [];
-    private static readonly Dictionary<string, TrMesh[]> _models = [];
+    private static readonly Dictionary<string, Tuple<TrMesh[], TrMaterialProperty[]>> _models = [];
 
     public static TrMesh GetCube(this TrContext context, float size = 0.5f)
     {
@@ -78,7 +78,7 @@ public static unsafe class TrMeshFactory
 
     public static TrMesh GetCapsule(this TrContext context)
     {
-        return AssimpParsing(context, Path.Combine("Resources", "Models", "Capsule.glb"))[0];
+        return AssimpParsing(context, Path.Combine("Resources", "Models", "Capsule.glb")).Meshes[0];
     }
 
     public static TrMesh GetSphere(this TrContext context, float radius = 0.5f)
@@ -131,7 +131,7 @@ public static unsafe class TrMeshFactory
 
     public static TrMesh GetStar(this TrContext context)
     {
-        return AssimpParsing(context, Path.Combine("Resources", "Models", "Star.glb"))[0];
+        return AssimpParsing(context, Path.Combine("Resources", "Models", "Star.glb")).Meshes[0];
     }
 
     public static TrMesh GetCanvas(this TrContext context)
@@ -182,9 +182,9 @@ public static unsafe class TrMeshFactory
         return mesh;
     }
 
-    public static TrMesh[] AssimpParsing(this TrContext context, string file)
+    public static (TrMesh[] Meshes, TrMaterialProperty[] MaterialProperties) AssimpParsing(this TrContext context, string file)
     {
-        if (!_models.TryGetValue(file, out TrMesh[]? meshes))
+        if (!_models.TryGetValue(file, out Tuple<TrMesh[], TrMaterialProperty[]>? tuple))
         {
             const PostProcessSteps steps = PostProcessSteps.CalculateTangentSpace
                                            | PostProcessSteps.Triangulate
@@ -203,13 +203,15 @@ public static unsafe class TrMeshFactory
                 throw new TrException($"Assimp parsing failed. Error: {importer.GetErrorStringS()}");
             }
 
-            List<TrMesh> temp = [];
+            List<TrMesh> tempMeshes = [];
+            List<TrMaterialProperty> tempMaterialProperties = [];
 
             ProcessNode(scene->MRootNode);
+            ProcessMaterials();
 
-            meshes = [.. temp];
+            tuple = new([.. tempMeshes], [.. tempMaterialProperties]);
 
-            _models.Add(file, meshes);
+            _models.Add(file, tuple);
 
             void ProcessNode(Node* node)
             {
@@ -217,7 +219,7 @@ public static unsafe class TrMeshFactory
                 {
                     Mesh* mesh = scene->MMeshes[node->MMeshes[i]];
 
-                    temp.Add(ProcessMesh(mesh));
+                    tempMeshes.Add(ProcessMesh(mesh));
                 }
 
                 for (uint i = 0; i < node->MNumChildren; i++)
@@ -270,10 +272,20 @@ public static unsafe class TrMeshFactory
                     }
                 }
 
-                return new(context, $"{file} - {mesh->MName.AsString}", vertices, indices);
+                return new(context, $"{file} - {mesh->MName.AsString}", vertices, indices, mesh->MMaterialIndex);
+            }
+
+            void ProcessMaterials()
+            {
+                for (uint i = 0; i < scene->MNumMaterials; i++)
+                {
+                    Material* material = scene->MMaterials[i];
+
+                    tempMaterialProperties.Add(new TrMaterialProperty(context, material));
+                }
             }
         }
 
-        return meshes;
+        return (tuple.Item1, tuple.Item2);
     }
 }
