@@ -281,18 +281,8 @@ public static unsafe class TrMeshFactory
                 {
                     Material* material = scene->MMaterials[i];
 
-                    tempMaterialProperties.Add(ProcessMaterial(material));
+                    tempMaterialProperties.Add(new TrMaterialProperty(context, material));
                 }
-            }
-
-            TrMaterialProperty ProcessMaterial(Material* material)
-            {
-                for (uint i = 0; i < material->MNumProperties; i++)
-                {
-                    // TODO: Process material properties.
-                }
-
-                return new TrMaterialProperty(context);
             }
         }
 

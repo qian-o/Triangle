@@ -1,9 +1,31 @@
-﻿using Silk.NET.Maths;
+﻿using System.Runtime.CompilerServices;
+using Silk.NET.Maths;
 
 namespace Triangle.Core.Helpers;
 
-public static class MathExtensions
+public unsafe static class MathExtensions
 {
+    public static Vector2D<T> ToVector2D<T>(this nint data) where T : unmanaged, IFormattable, IEquatable<T>, IComparable<T>
+    {
+        T* ptrT = (T*)data;
+
+        return new Vector2D<T>(Unsafe.Read<T>(ptrT++), Unsafe.Read<T>(ptrT));
+    }
+
+    public static Vector3D<T> ToVector3D<T>(this nint data) where T : unmanaged, IFormattable, IEquatable<T>, IComparable<T>
+    {
+        T* ptrT = (T*)data;
+
+        return new Vector3D<T>(Unsafe.Read<T>(ptrT++), Unsafe.Read<T>(ptrT++), Unsafe.Read<T>(ptrT));
+    }
+
+    public static Vector4D<T> ToVector4D<T>(this nint data) where T : unmanaged, IFormattable, IEquatable<T>, IComparable<T>
+    {
+        T* ptrT = (T*)data;
+
+        return new Vector4D<T>(Unsafe.Read<T>(ptrT++), Unsafe.Read<T>(ptrT++), Unsafe.Read<T>(ptrT++), Unsafe.Read<T>(ptrT));
+    }
+
     public static Matrix4X4<T> Invert<T>(this Matrix4X4<T> value) where T : unmanaged, IFormattable, IEquatable<T>, IComparable<T>
     {
         Matrix4X4.Invert(value, out Matrix4X4<T> result);
