@@ -11,7 +11,7 @@ namespace Triangle.Render.Contracts.Materials;
 public unsafe abstract class GlobalInstancedMat(TrContext context, string name) : GlobalMat(context, name)
 {
     public const uint BufferBindingStart = 1;
-    public const int MaxSamplerSize = 1024;
+    public const int MaxSamplerSize = 5000000;
 
     private readonly TrBuffer<Matrix4X4<float>> _bufferMatrix = new(context, MaxSamplerSize);
 

@@ -30,8 +30,8 @@ public class Tutorial11(IInputContext input, TrContext context) : BaseTutorial(i
     {
         cubeMesh = Context.GetCube();
 
-        const int columns = 1000;
-        const int rows = 1000;
+        const int columns = 2000;
+        const int rows = 2000;
 
         int length = columns * rows;
 
