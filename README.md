@@ -3,7 +3,7 @@
 [中文简体](https://github.com/qian-o/Triangle/blob/master/README.md) | [English](https://github.com/qian-o/Triangle/blob/master/README-en.md)
 
 ## 这是一个基于 OpenGL 4.6 的渲染器。
-### 首先，他不是一个游戏引擎，也不是一个建模软件，他只是一个渲染器，但是该渲染器并未提供标准的渲染管线，而是提供了一个简单的渲染器框架，用户可以根据自己的需求来自定义渲染管线。
+### TA 提供了一个简单的渲染器框架，用户可以根据自己的需求来自定义渲染管线。
 ## 该渲染器提供了以下功能：
 - 基于 OpenGL 4.6 的渲染器框架。
 - 基于 SPIR-V 的着色器编译器。
