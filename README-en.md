@@ -3,7 +3,7 @@
 [中文简体](https://github.com/qian-o/Triangle/blob/master/README.md) | [English](https://github.com/qian-o/Triangle/blob/master/README-en.md)
 
 ## This is a renderer based on OpenGL 4.6.
-### First of all, it is not a game engine, nor a modeling software, it is just a renderer, but the renderer does not provide a standard rendering pipeline, but provides a simple rendering framework, users can customize the rendering pipeline according to their own needs.
+### TA provides a simple rendering framework, users can customize the rendering pipeline according to their own needs.
 ## This renderer provides the following functions:
 - A 3D renderer based on OpenGL 4.6.
 - Shader compiler based on SPIR-V.
