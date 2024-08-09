@@ -129,7 +129,7 @@ public class Tutorial08(IInputContext input, TrContext context) : BaseTutorial(i
 
     protected override void SceneDrawContentInWindow()
     {
-        Vector2 size = ImGui.GetContentRegionMax();
+        Vector2 size = ImGui.GetContentRegionAvail();
         size.Y -= 20;
 
         ImGui.SetCursorPos(new Vector2(10, size.Y));
